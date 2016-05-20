@@ -84,15 +84,21 @@
 
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wismartzy's Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
+0x02 审计框架简介1、iWebshop是单一入口系统，所有的处理都要通过入口文件123456789101112131415161718192021222324252627282930313233343">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iWebshop 4.4 SQL Injection">
+<meta property="og:url" content="http://yoursite.com/2016/05/20/iWebshop-4-4-SQL-Injection/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
-<meta property="og:description">
+<meta property="og:description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
+0x02 审计框架简介1、iWebshop是单一入口系统，所有的处理都要通过入口文件123456789101112131415161718192021222324252627282930313233343">
+<meta property="og:image" content="http://yoursite.com/images/iwebshop-1.png">
+<meta property="og:updated_time" content="2016-05-20T15:16:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wismartzy's Blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="iWebshop 4.4 SQL Injection">
+<meta name="twitter:description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
+0x02 审计框架简介1、iWebshop是单一入口系统，所有的处理都要通过入口文件123456789101112131415161718192021222324252627282930313233343">
+<meta name="twitter:image" content="http://yoursite.com/images/iwebshop-1.png">
 
 
 
@@ -110,7 +116,7 @@
   };
 </script>
 
-  <title> Wismartzy's Blog </title>
+  <title> iWebshop 4.4 SQL Injection | Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -131,9 +137,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -210,9 +214,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -232,10 +236,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/05/20/iWebshop-4-4-SQL-Injection/" itemprop="url">
-                  iWebshop 4.4 SQL Injection
-                </a>
+                iWebshop 4.4 SQL Injection
               
             
           </h1>
@@ -275,9 +276,7 @@
       
 
       
-        
-          
-            <h2 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h2><p>iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。</p>
+        <h2 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h2><p>iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。</p>
 <h2 id="0x02-审计"><a href="#0x02-审计" class="headerlink" title="0x02 审计"></a>0x02 审计</h2><h3 id="框架简介"><a href="#框架简介" class="headerlink" title="框架简介"></a>框架简介</h3><p>1、iWebshop是单一入口系统，所有的处理都要通过入口文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2、系统框架对当前```URL```路径进行分析，找到```controller(控制器)```和```action(动作)```，去调用控制器文件里面的动作方法。</span><br><span class="line"></span><br><span class="line">3、在```action```动作中可以读取数据，处理业务逻辑，然后把完成的数据渲染到视图，给终端客户呈现出来。</span><br><span class="line"></span><br><span class="line">### 漏洞概况</span><br><span class="line"></span><br><span class="line">&gt; 漏洞功能：后台-&gt;系统-&gt;配送方式-&gt;回收站-&gt;恢复</span><br><span class="line"></span><br><span class="line">&gt; 漏洞文件：/controllers/system.php</span><br><span class="line"></span><br><span class="line">### 审计</span><br><span class="line"></span><br><span class="line">/controllers/system.php</span><br><span class="line"></span><br><span class="line">~~~php</span><br><span class="line">	/**</span><br><span class="line">	 * @brief 配送方式删除和还原</span><br><span class="line">	 */</span><br><span class="line">	public function delivery_operate()</span><br><span class="line">	&#123;</span><br><span class="line">		$id = IReq::get(&apos;id&apos;);</span><br><span class="line">		$op = IReq::get(&apos;op&apos;);</span><br><span class="line">        if(is_array($id)) $id = implode(&apos;,&apos;,$id);</span><br><span class="line"></span><br><span class="line">        if(empty($id))</span><br><span class="line">        &#123;</span><br><span class="line">        	if($op == &apos;del&apos; || $op == &apos;recover&apos;)</span><br><span class="line">        	&#123;</span><br><span class="line">        		$this-&gt;redirect(&apos;delivery_recycle&apos;,false);</span><br><span class="line">        	&#125;</span><br><span class="line">        	else</span><br><span class="line">        	&#123;</span><br><span class="line">        		$this-&gt;redirect(&apos;delivery&apos;,false);</span><br><span class="line">        	&#125;</span><br><span class="line">        	Util::showMessage(&apos;请选择要操作的选项&apos;);</span><br><span class="line">        	exit;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		$delivery     =  new IModel(&apos;delivery&apos;);</span><br><span class="line">		$deliveryData = $delivery-&gt;query(&apos;id in (&apos;.$id.&apos;)&apos;,&apos;name&apos;);</span><br><span class="line">		$deliveryName = array();</span><br><span class="line">		foreach($deliveryData as $val)</span><br><span class="line">		&#123;</span><br><span class="line">			$deliveryName[] = $val[&apos;name&apos;];</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$logObj = new log(&apos;db&apos;);</span><br><span class="line"></span><br><span class="line">		//物理删除</span><br><span class="line">		if($op==&apos;del&apos;)</span><br><span class="line">		&#123;</span><br><span class="line">			$delivery-&gt;del(&apos;id in(&apos;.$id.&apos;)&apos;);</span><br><span class="line"></span><br><span class="line">			$logObj-&gt;write(&apos;operation&apos;,array(&quot;管理员:&quot;.$this-&gt;admin[&apos;admin_name&apos;],&quot;删除了回收站中的配送方式&quot;,&quot;被删除的配送方式为：&quot;.join(&apos;,&apos;,$deliveryName)));</span><br><span class="line"></span><br><span class="line">			$this-&gt;redirect(&apos;delivery_recycle&apos;);</span><br><span class="line">		&#125;</span><br><span class="line">		else if($op ==&apos;recover&apos;)//还原</span><br><span class="line">		&#123;</span><br><span class="line">			$delivery-&gt;setData(array(&apos;is_delete&apos;=&gt;0));</span><br><span class="line">			if($delivery-&gt;update(&apos;id in(&apos;.$id.&apos;)&apos;))</span><br><span class="line">			&#123;</span><br><span class="line">				$logObj-&gt;write(&apos;operation&apos;,array(&apos;管理员:&apos;.$this-&gt;admin[&apos;admin_name&apos;],&apos;恢复了回收站中的配送方式&apos;,&apos;被恢复的配送方式为：&apos;.join(&apos;,&apos;,$deliveryName)));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			$this-&gt;redirect(&apos;delivery_recycle&apos;);</span><br><span class="line">		&#125;</span><br><span class="line">		else//逻辑删除</span><br><span class="line">		&#123;</span><br><span class="line">			$delivery-&gt;setData(array(&apos;is_delete&apos;=&gt;1));</span><br><span class="line">			if($delivery-&gt;update(&apos;id in(&apos;.$id.&apos;)&apos;))</span><br><span class="line">			&#123;</span><br><span class="line">				$logObj-&gt;write(&apos;operation&apos;,array(&quot;管理员:&quot;.$this-&gt;admin[&apos;admin_name&apos;],&quot;把配送方式移除到回收站中&quot;,&quot;被移除到回收站中的配送方式为：&quot;.join(&apos;,&apos;,$deliveryName)));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			$this-&gt;redirect(&apos;delivery&apos;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">~~~</span><br><span class="line"></span><br><span class="line">跟进```$id = IReq::get(&apos;id&apos;);</span><br></pre></td></tr></table></figure></p>
 <p>/lib/core/util/req_class.php</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * <span class="doctag">@class</span> IReq</span><br><span class="line"> * <span class="doctag">@brief</span> 获取$_GET,$_POST的数据</span><br><span class="line"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IReq</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * <span class="doctag">@brief</span> 获取键为$key的 $_GET 和 $_POST 传送方式的数据</span><br><span class="line">	 * <span class="doctag">@param</span> string $key $_GET 或 $_POST 的键</span><br><span class="line">	 * <span class="doctag">@param</span> string $type 传送方式 值: false:默认(先get后post); get:get方式; post:post方式;</span><br><span class="line">	 * <span class="doctag">@return</span> string $_GET 或者 $_POST 的值</span><br><span class="line">	 * <span class="doctag">@note</span> 优先获取 $_GET 方式的数据,如果不存在则获取 $_POST 方式的数据</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key, $type=false)</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		<span class="comment">//默认方式</span></span><br><span class="line">		<span class="keyword">if</span>($type==<span class="keyword">false</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[$key])) <span class="keyword">return</span> $_GET[$key];</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[$key])) <span class="keyword">return</span> $_POST[$key];</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//get方式</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>($type==<span class="string">'get'</span> &amp;&amp; <span class="keyword">isset</span>($_GET[$key]))</span><br><span class="line">			<span class="keyword">return</span> $_GET[$key];</span><br><span class="line"></span><br><span class="line">		<span class="comment">//post方式</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>($type==<span class="string">'post'</span> &amp;&amp; <span class="keyword">isset</span>($_POST[$key]))</span><br><span class="line">			<span class="keyword">return</span> $_POST[$key];</span><br><span class="line"></span><br><span class="line">		<span class="comment">//无匹配</span></span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -289,16 +288,19 @@
 <p>请求效果如下</p>
 <p><img src="/images/iwebshop-1.png" alt="iWebshop"></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -309,16 +311,15 @@
 
       
       
-        <div class="post-eof"></div>
-      
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -326,6 +327,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -345,8 +350,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -382,6 +396,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-背景"><span class="nav-number">1.</span> <span class="nav-text">0x01 背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-审计"><span class="nav-number">2.</span> <span class="nav-text">0x02 审计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#框架简介"><span class="nav-number">2.1.</span> <span class="nav-text">框架简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-漏洞验证"><span class="nav-number">3.</span> <span class="nav-text">0x03 漏洞验证</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -478,6 +503,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
