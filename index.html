@@ -170,7 +170,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -180,7 +180,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -246,7 +246,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-30T22:14:56+08:00" content="2016-05-30">
               2016-05-30
             </time>
@@ -310,7 +310,7 @@
 <blockquote>
 <p><a href="https://username:password@www.example.com/index.html" target="_blank" rel="external">https://username:password@www.example.com/index.html</a></p>
 </blockquote>
-<p>也就是说浏览器是支持something@domain这样格式的URL的，利用这个特性可以绕过服务器端对URL的简单过滤，下图实际返回的内容正是ssrftest.xxx.dnslog.info的内容。</p>
+<p>也就是说浏览器是支持something@domain这样格式的URL的，利用这个特性可以绕过服务器端对URL的简单过滤，可以看到，下图中实际访问的地址是ssrftest.xxx.dnslog.info。</p>
 <p><img src="/images/ssrf-6.png" alt="URL特性"></p>
 <h2 id="xip-io"><a href="#xip-io" class="headerlink" title="xip.io"></a>xip.io</h2><p><a href="http://xip.io/" target="_blank" rel="external">xip.io</a>为任意ip地址提供了DNS泛解析</p>
 <pre><code>        10.0.0.1.xip.io   resolves to   10.0.0.1
@@ -319,16 +319,16 @@
 foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
 </code></pre><h2 id="ip地址进制转换"><a href="#ip地址进制转换" class="headerlink" title="ip地址进制转换"></a>ip地址进制转换</h2><p>比如127.0.0.1的8进制=017700000001</p>
 <p><img src="/images/ssrf-7.png" alt="IP地址进制转换"></p>
-<h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><blockquote>
-<p>如果业务不需要从内部拿资源，那么就黑名单内网ip吧</p>
-<p>限制请求协议仅为HTTP</p>
-<p>控制返回信息，若正常业务请求的文件类型是特定的，那么在返回给用户前先验证下，避免被用户利用。若有报错信息，请直接返回统一error样式。</p>
-</blockquote>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote>
-<p><a href="http://drops.wooyun.org/papers/146" target="_blank" rel="external">http://drops.wooyun.org/papers/146</a></p>
-<p><a href="https://sobug.com/article/detail/11" target="_blank" rel="external">https://sobug.com/article/detail/11</a></p>
-<p><a href="http://www.freebuf.com/articles/web/20407.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/20407.html</a></p>
-</blockquote>
+<h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><ul>
+<li>如果业务不需要从内部拿资源，那么就黑名单内网ip吧</li>
+<li>限制请求协议仅为HTTP</li>
+<li>控制返回信息，若正常业务请求的文件类型是特定的，那么在返回给用户前先验证下，避免被用户利用。若有报错信息，请直接返回统一error样式。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://drops.wooyun.org/papers/146" target="_blank" rel="external">http://drops.wooyun.org/papers/146</a></li>
+<li><a href="https://sobug.com/article/detail/11" target="_blank" rel="external">https://sobug.com/article/detail/11</a></li>
+<li><a href="http://www.freebuf.com/articles/web/20407.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/20407.html</a></li>
+</ul>
 
           
         
@@ -391,7 +391,7 @@ foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-23T16:27:23+08:00" content="2016-05-23">
               2016-05-23
             </time>
@@ -722,7 +722,7 @@ Disallow: /
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-20T22:21:09+08:00" content="2016-05-20">
               2016-05-20
             </time>
@@ -857,7 +857,7 @@ Disallow: /
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">3</span>
-              <span class="site-state-item-name">posts</span>
+              <span class="site-state-item-name">Artikel</span>
             </a>
           </div>
 
@@ -867,7 +867,7 @@ Disallow: /
             <div class="site-state-item site-state-tags">
               <a href="/tags">
                 <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               </a>
             </div>
           
@@ -911,7 +911,7 @@ Disallow: /
 </div>
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="http://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
