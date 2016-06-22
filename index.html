@@ -170,7 +170,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -180,7 +180,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -233,6 +233,140 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/22/Second-Order-SQL-Injection/" itemprop="url">
+                  Second Order SQL Injection
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <time itemprop="dateCreated" datetime="2016-06-22T17:47:19+08:00" content="2016-06-22">
+              2016-06-22
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/22/Second-Order-SQL-Injection/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/22/Second-Order-SQL-Injection/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>从乌云平台公开的案例来看，大部分的SQL注入漏洞均发生在单个HTTP请求和响应中，也就是说要触发漏洞，需经过以下步骤：</p>
+<ul>
+<li>客户端请求构造payload并发起请求</li>
+<li>服务端执行了payload</li>
+<li>客户端收到响应结果</li>
+</ul>
+<p>而二阶（Second Order）SQL注入相对来说更隐晦一些，需经过以下步骤：</p>
+<ul>
+<li>客户端构造payload并发起请求</li>
+<li>服务端存储payload</li>
+<li>客户端发起另一请求</li>
+<li>服务端执行了存储的payload</li>
+<li>客户端收到响应结果</li>
+</ul>
+<p>可以对比看到，二阶注入很隐蔽，很难被黑盒测试检测到，这也是现在各大漏洞平台二阶注入案例少的原因之一吧。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>二阶可以理解为两步吧，当将用户的输入存储在某个地方，然后在另一处功能的SQL语句中使用它的时候，既没有进行正确的过滤也没有使用参数化查询，这就造成了二阶注入。至于它的影响的话和普通SQL注入没什么差别。</p>
+<p>下面代码来自于<a href="https://github.com/Audi-1/sqli-labs" target="_blank" rel="external">sqli-labs</a> </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Less-5/index.php</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">//including the Mysql connect parameters.</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"../sql-connections/sql-connect.php"</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// take the variables</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'id'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">$id=$_GET[<span class="string">'id'</span>];</span><br><span class="line"><span class="comment">//logging the connection parameters to a file for analysis.</span></span><br><span class="line">$fp=fopen(<span class="string">'result.txt'</span>,<span class="string">'a'</span>);</span><br><span class="line">fwrite($fp,<span class="string">'ID:'</span>.$id.<span class="string">"\n"</span>);</span><br><span class="line">fclose($fp);</span><br><span class="line"></span><br><span class="line"><span class="comment">// connectivity</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br><span class="line">$result=mysql_query($sql);</span><br><span class="line">$row = mysql_fetch_array($result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($row)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="5" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;/font&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="3" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;/br&gt;&lt;/font&gt;"</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font color= "#0000ff" font size= 3&gt;'</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="keyword">echo</span> <span class="string">"Please input the ID as parameter with numeric value"</span>;&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>代码里的<code>$id</code>被直接保存到了<code>result.txt</code>文件，为了更形象的表示出二阶注入，我新写了一个页面。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Less-5/second.php</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">//including the Mysql connect parameters.</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"../sql-connections/sql-connect.php"</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$fp = fopen(<span class="string">'result.txt'</span>,<span class="string">'r'</span>);</span><br><span class="line"><span class="keyword">while</span>(!feof($fp)) &#123;</span><br><span class="line">    $line = fgets($fp);</span><br><span class="line">    $arrId = explode(<span class="string">":"</span>, $line);</span><br><span class="line">    $id = trim($arrId[<span class="number">1</span>], <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">    $sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br><span class="line">    $result=mysql_query($sql);</span><br><span class="line">    $row = mysql_fetch_array($result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($row)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="5" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;/font&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="3" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;/br&gt;&lt;/font&gt;"</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font color= "#0000ff" font size= 3&gt;'</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">fclose($fp);</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><code>second.php</code>从<code>result.txt</code>文件里读取记录，获取<code>$id</code>的值并代入SQL查询。具体攻击步骤如下：</p>
+<ul>
+<li><p>访问<code>index.php</code>，构造参数<code>id</code>值为<code>1&#39; and (select 1 from (select count(*),concat(version(),0x7e,floor(rand()*2))a from information_schema.tables group by a)b)#</code>，完整URL如下</p>
+<pre><code>http://localhost:8888/sqli-labs/Less-5/?id=1&apos; and (select 1 from (select count(*),concat(version(),0x7e,floor(rand()*2))a from information_schema.tables group by a)b)#
+</code></pre></li>
+<li><p><code>id</code>的值被写入了<code>result.txt</code></p>
+</li>
+<li>发起另一请求，访问<code>second.php</code></li>
+<li><p>SQL语句报错，回显出了数据库版本信息</p>
+<p>  <img src="/images/second-order-1.png" alt="second-order-1"></p>
+</li>
+</ul>
+<h1 id="检测方式"><a href="#检测方式" class="headerlink" title="检测方式"></a>检测方式</h1><p>就其本身来说就是个SQL注入，只不过触发方式相对隐晦了一些。一般情况下很难用自动化工具扫出来，最好可以白盒审计源代码，我一般在审计源码的时候会对所有数据库执行的语句做日志记录，对可能出现注入的点输入对应payload，然后查看日志来分析是否有注入问题。当然黑盒情况下也是可能找到二阶注入的，可以利用cloudeye等平台构造合适的payload（cloudeye支持callback哦）来发现这些隐晦的注入问题。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>二阶注入比普通的SQL注入更难检测，因为漏洞触发点并不在攻击者提交请求的页面。其防御方式和普通SQL注入没差别，使用参数化查询语句，分离数据和代码。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/" itemprop="url">
                   Redaxo CMS 5.0.0 SQL Injection
                 </a>
@@ -246,7 +380,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-06-04T21:28:39+08:00" content="2016-06-04">
               2016-06-04
             </time>
@@ -389,7 +523,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-30T22:14:56+08:00" content="2016-05-30">
               2016-05-30
             </time>
@@ -534,7 +668,7 @@ foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-23T16:27:23+08:00" content="2016-05-23">
               2016-05-23
             </time>
@@ -865,7 +999,7 @@ Disallow: /
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-20T22:21:09+08:00" content="2016-05-20">
               2016-05-20
             </time>
@@ -999,8 +1133,8 @@ Disallow: /
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
-              <span class="site-state-item-name">posts</span>
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">Artikel</span>
             </a>
           </div>
 
@@ -1010,7 +1144,7 @@ Disallow: /
             <div class="site-state-item site-state-tags">
               <a href="/tags">
                 <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               </a>
             </div>
           
@@ -1054,7 +1188,7 @@ Disallow: /
 </div>
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="http://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
