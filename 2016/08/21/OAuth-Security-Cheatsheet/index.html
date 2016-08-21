@@ -98,7 +98,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <meta property="og:image" content="http://yoursite.com/images/auth-3.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-4.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-5.png">
-<meta property="og:updated_time" content="2016-08-21T05:37:53.000Z">
+<meta property="og:updated_time" content="2016-08-21T05:39:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth Security Cheatsheet">
 <meta name="twitter:description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
@@ -306,7 +306,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <p><img src="/images/oath-1.png" alt="oath-1"></p>
 <p>它对有社交登录和有能力为已存在的主账户添加一个登陆选项的客户端有用（下面是来自<code>pinterest.com</code>的截图）</p>
 <p><img src="/images/oath-2.png" alt="oath-2"></p>
-<p><img src="/images/oath-21.png" alt="oath-2-1"></p>
+<p><img src="/images/oath-21.png" alt="oath-21"></p>
 <p><strong>修复：</strong>在发送用户跳转到服务提供商的请求时生成一个随机值并且保存在<code>cookie</code>或者<code>session</code>里面，当用户从服务提供商返回的时候确认你收到的<code>state</code>参数值和之前保存在<code>cookies</code>或<code>session</code>里面的那个值相等。</p>
 <p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<code>omniauth(https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562)</code>这种情况下是有可能控制固定<code>state</code>的。</p>
 <p>这是另外一个OAuth设计问题 - 有时候开发者想要使用<code>state</code>表达出自己的目的，尽管你能同时发送这样的值<code>state=welcome_landing.random_nonce</code>但是毫无疑问它看起来很丑陋，一个简洁的方案是使用<a href="https://tools.ietf.org/html/draft-bradley-oauth-jwt-encoded-state-00" target="_blank" rel="external">JSON Web Token作为state</a>。</p>
