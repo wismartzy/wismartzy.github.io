@@ -98,7 +98,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <meta property="og:image" content="http://yoursite.com/images/auth-3.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-4.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-5.png">
-<meta property="og:updated_time" content="2016-08-21T05:33:08.000Z">
+<meta property="og:updated_time" content="2016-08-21T05:37:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth Security Cheatsheet">
 <meta name="twitter:description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
@@ -179,7 +179,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -189,7 +189,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -252,7 +252,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-08-21T12:53:56+08:00" content="2016-08-21">
               2016-08-21
             </time>
@@ -295,18 +295,18 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <p>3、服务提供商检查<code>redirect_uri</code>是否在重定向URI的白名单中（主机，路径，查询参数，<code>hash</code>必须是静态的）。每一个<code>redirect_uri</code>它不能是一个参数，还必须要有响应的返回类型，默认是<code>query</code>，移动app是<code>hash</code>。<code>state</code>参数必须由服务供应商要求（尽管规范上说该参数是可选的—对大多数开发者来说这就是不需要的代名词）。</p>
 <p>4、用户在服务提供商域下看到同意/拒绝按钮，在点击同意按钮后受<code>CSRF Token</code>防护的<code>POST</code>表单被提交到相同的<code>URL</code>（不要像<code>Outlook</code>或<code>Doorkeeper</code>或者在授权的时候<code>CSRF</code>攻击服务提供商）。</p>
 <p>5、<code>response_type</code>为<code>query</code>时候重定向到<code>CLIENT/callback?access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在中央服务器，并且每个API请求用<code>appsecret_proof</code>签名），<code>response_type</code>为<code>hash</code>的时候会重定向到<code>CLIENT/callback#access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在本地应用里，并不需要<code>appsecret_proof</code>）。这两种情况下客户端都一定要检查<code>STATE</code>是否等于来自<code>season</code>的<code>provider-state</code>。</p>
-<p>6、为什么<code>access_token</code>从不过期？因为我们不再需要<code>refresh_token/code</code>。用<code>refresh_token</code>攻击者能使用<code>access_token</code>获得一个窗口去发送垃圾邮件或者下载所有受害者的社交图片。仅当<code>access_token</code>过期，根据规范，客户端应该使用<code>refresh_token</code>和<code>client_secret</code>去获取一个新的<code>token</code>。除了这个场景，我们将需要最早由<code>Facebook</code>引入的<code>appsecret_proof</code>。如果<code>response_type</code>为<code>query</code>的时候，<code>token</code>被返回，那么每一个到服务提供商的请求一定要有<code>access_token</code>和<code>appsecret_proof=hash_hmac(&#39;sha256&#39;, $access_token, $client_secret);</code>。现在如果攻击者泄露<code>access_token</code>，<code>token</code>毫无价值。即使他们偷了你的<code>client_secret</code>，你也能很简单的换掉。</p>
+<p>6、为什么<code>access_token</code>从不过期？因为我们不再需要<code>refresh_token/code</code>。用<code>refresh_token</code>攻击者能使用<code>access_token</code>获得一个窗口去发送垃圾邮件或者下载所有受害者的社交图片。仅当<code>access_token</code>过期，根据规范，客户端应该使用<code>refresh_token</code>和<code>client_secret</code>去获取一个新的<code>token</code>。除了这个场景，我们将需要最早由Facebook引入的<code>appsecret_proof</code>。如果<code>response_type</code>为<code>query</code>的时候，<code>token</code>被返回，那么每一个到服务提供商的请求一定要有<code>access_token</code>和<code>appsecret_proof=hash_hmac(&#39;sha256&#39;, $access_token, $client_secret);</code>。现在如果攻击者泄露<code>access_token</code>，<code>token</code>毫无价值。即使他们偷了你的<code>client_secret</code>，你也能很简单的换掉。</p>
 <p>7、可选的，但是是推荐的。在连接账户之前，你应该询问用户是否要连接到例如<code>myfbemail@email.com</code>的Facebook账户。因为有很多的攻击比如<code>cookie forcing</code>, <code>login/logout CSRF</code>, <code>RECONNECT</code>能够静默将用户登录到服务提供商的恶意账户里。</p>
 <h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>这个文档描述常见的<code>OAuth/Single Sign On/OpenID</code>相关的漏洞。很多跨站交互容易受到不同类型的泄露和劫持。</p>
 <p>Hacker和开发者都能通过阅读它收获益处。</p>
 <p>OAuth是一个重要的功能，他负责对访问用户敏感数据进行认证和授权。糟糕的实现OAuth是一个接管账户的可靠方式，不像XSS，它很容易利用，但是对受害者来说很难避免（NoScript不会有作用，因为这个攻击不需要JavaScript）。<br>由于OAuth，许多初创公司包括SoundCloud，Foursquare，Airbnb，About.me、Bit.ly、Pinterest、Digg，StumbleUpon，Songkick有帐户劫持漏洞。并且很多网站仍然是脆弱的。我们的动机是让人们意识到“社交登录”的风险，我们鼓励你非常小心地使用OAuth。<br>这个小抄并不会解释OAuth是怎样的工作流程，请自行去<a href="http://oauth.net" target="_blank" rel="external">官方站点</a>查看</p>
 <h1 id="授权code流"><a href="#授权code流" class="headerlink" title="授权code流"></a>授权code流</h1><h2 id="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"><a href="#通过连接攻击者提供的服务提供商账户导致客户端账户被劫持" class="headerlink" title="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"></a>通过连接攻击者提供的服务提供商账户导致客户端账户被劫持</h2><p>正如<a href="http://homakov.blogspot.hk/2012/07/saferweb-most-common-oauth2.html" target="_blank" rel="external">最常见的OAuth2漏洞</a>里面说的，换句话说就是<code>CSRF</code>。</p>
-<p>服务提供商通过重定向用户代理（译者注：浏览器）到<code>SITE/oauth/callback?code=CODE</code>来返回授权code，现在客户端必须发送授权code和客户端凭证、redirect_uri一起来获得access_token</p>
-<p>如果客户端执行的时候没有使用state参数去减轻CSRF问题，我们可以很容易的使用我们的服务提供商账户连接受害者的客户端账户。</p>
+<p>服务提供商通过重定向用户代理（译者注：浏览器）到<code>SITE/oauth/callback?code=CODE</code>来返回授权code，现在客户端必须发送授权code和客户端凭证、<code>redirect_uri</code>一起来获得<code>access_token</code></p>
+<p>如果客户端执行的时候没有使用<code>state</code>参数去减轻<code>CSRF</code>问题，我们可以很容易的使用我们的服务提供商账户连接受害者的客户端账户。</p>
 <p><img src="/images/oath-1.png" alt="oath-1"></p>
 <p>它对有社交登录和有能力为已存在的主账户添加一个登陆选项的客户端有用（下面是来自<code>pinterest.com</code>的截图）</p>
 <p><img src="/images/oath-2.png" alt="oath-2"></p>
-<p> <img src="/images/oath-21.png" alt="oath-2-1"></p>
+<p><img src="/images/oath-21.png" alt="oath-2-1"></p>
 <p><strong>修复：</strong>在发送用户跳转到服务提供商的请求时生成一个随机值并且保存在<code>cookie</code>或者<code>session</code>里面，当用户从服务提供商返回的时候确认你收到的<code>state</code>参数值和之前保存在<code>cookies</code>或<code>session</code>里面的那个值相等。</p>
 <p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<code>omniauth(https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562)</code>这种情况下是有可能控制固定<code>state</code>的。</p>
 <p>这是另外一个OAuth设计问题 - 有时候开发者想要使用<code>state</code>表达出自己的目的，尽管你能同时发送这样的值<code>state=welcome_landing.random_nonce</code>但是毫无疑问它看起来很丑陋，一个简洁的方案是使用<a href="https://tools.ietf.org/html/draft-bradley-oauth-jwt-encoded-state-00" target="_blank" rel="external">JSON Web Token作为state</a>。</p>
@@ -455,10 +455,10 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -475,7 +475,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">8</span>
-              <span class="site-state-item-name">posts</span>
+              <span class="site-state-item-name">Artikel</span>
             </a>
           </div>
 
@@ -485,7 +485,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
             <div class="site-state-item site-state-tags">
               <a href="/tags">
                 <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               </a>
             </div>
           
@@ -540,7 +540,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 </div>
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="http://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
