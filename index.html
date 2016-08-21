@@ -170,7 +170,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -180,7 +180,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -233,6 +233,184 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/21/OAuth-Security-Cheatsheet/" itemprop="url">
+                  OAuth Security Cheatsheet
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <time itemprop="dateCreated" datetime="2016-08-21T12:53:56+08:00" content="2016-08-21">
+              2016-08-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/21/OAuth-Security-Cheatsheet/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/21/OAuth-Security-Cheatsheet/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="State-Of-The-Art-OAuth2-Homakov-Edition"><a href="#State-Of-The-Art-OAuth2-Homakov-Edition" class="headerlink" title="State-Of-The-Art OAuth2 Homakov Edition"></a>State-Of-The-Art OAuth2 Homakov Edition</h1><p>考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足<strong>secure-by-default</strong>的OAuth版本-Homakov</p>
+<p>CSRF防护初始请求<code>/connect/provider</code>的时候，总是使用和需要<code>state</code>参数，不允许动态的<code>redirect_uri</code>，默认不允许<code>response_type=hash</code>（以前是<code>token</code>），废弃<code>refresh_token</code>和<code>token</code>，而不是用<code>appsecret_proof</code>去认证每个<code>access_token</code>，仔细检查用户想要连接的服务提供商账户，<code>access_token</code>永不过期（把它当做公开的<code>user_id</code>）</p>
+<p>1、用户点击连接服务提供商的按钮，无论是发起一个<code>POST</code>表单提交（受<code>CSRF Token</code>防护的）到<code>/connect/provider_name</code>，还是由<code>GET</code>导航到<code>/connect/provider?csrf_token=TOKEN</code>，初始步骤一定要受<code>CSRF</code>防护，它不应该被来自其他源的连接触发，必须有来自于用户的明确的确认。</p>
+<p>2、在服务端<code>/connect/provider</code>客户端的控制器应该确认<code>csrf_token</code>和来自于<code>session</code>里的<code>token</code>一致，然后生成<code>state token</code>（CSRF Token，确保OAuth流程完整性），并命名为<code>&lt;provider&gt;-state</code>存储在<code>session</code>里。然后跳转到<code>provider.com/oauth/authorize?client_id=CLIENT_ID&amp;redirect_uri=CLIENT/callback&amp;state=STAT</code>，<code>scope</code>参数是可选的（应该仅仅允许被认证过的客户端接触一些关键的作用域）</p>
+<p>3、服务提供商检查<code>redirect_uri</code>是否在重定向URI的白名单中（主机，路径，查询参数，<code>hash</code>必须是静态的）。每一个<code>redirect_uri</code>它不能是一个参数，还必须要有响应的返回类型，默认是<code>query</code>，移动app是<code>hash</code>。<code>state</code>参数必须由服务供应商要求（尽管规范上说该参数是可选的—对大多数开发者来说这就是不需要的代名词）。</p>
+<p>4、用户在服务提供商域下看到同意/拒绝按钮，在点击同意按钮后受<code>CSRF Token</code>防护的<code>POST</code>表单被提交到相同的<code>URL</code>（不要像<code>Outlook</code>或<code>Doorkeeper</code>或者在授权的时候<code>CSRF</code>攻击服务提供商）。</p>
+<p>5、<code>response_type</code>为<code>query</code>时候重定向到<code>CLIENT/callback?access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在中央服务器，并且每个API请求用<code>appsecret_proof</code>签名），<code>response_type</code>为<code>hash</code>的时候会重定向到<code>CLIENT/callback#access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在本地应用里，并不需要<code>appsecret_proof</code>）。这两种情况下客户端都一定要检查<code>STATE</code>是否等于来自<code>season</code>的<code>provider-state</code>。</p>
+<p>6、为什么<code>access_token</code>从不过期？因为我们不再需要<code>refresh_token/code</code>。用<code>refresh_token</code>攻击者能使用<code>access_token</code>获得一个窗口去发送垃圾邮件或者下载所有受害者的社交图片。仅当<code>access_token</code>过期，根据规范，客户端应该使用<code>refresh_token</code>和<code>client_secret</code>去获取一个新的<code>token</code>。除了这个场景，我们将需要最早由<code>Facebook</code>引入的<code>appsecret_proof</code>。如果<code>response_type</code>为<code>query</code>的时候，<code>token</code>被返回，那么每一个到服务提供商的请求一定要有<code>access_token</code>和<code>appsecret_proof=hash_hmac(&#39;sha256&#39;, $access_token, $client_secret);</code>。现在如果攻击者泄露<code>access_token</code>，<code>token</code>毫无价值。即使他们偷了你的<code>client_secret</code>，你也能很简单的换掉。</p>
+<p>7、可选的，但是是推荐的。在连接账户之前，你应该询问用户是否要连接到例如<code>myfbemail@email.com</code>的Facebook账户。因为有很多的攻击比如<code>cookie forcing</code>, <code>login/logout CSRF</code>, <code>RECONNECT</code>能够静默将用户登录到服务提供商的恶意账户里。</p>
+<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>这个文档描述常见的<code>OAuth/Single Sign On/OpenID</code>相关的漏洞。很多跨站交互容易受到不同类型的泄露和劫持。</p>
+<p>Hacker和开发者都能通过阅读它收获益处。</p>
+<p>OAuth是一个重要的功能，他负责对访问用户敏感数据进行认证和授权。糟糕的实现OAuth是一个接管账户的可靠方式，不像XSS，它很容易利用，但是对受害者来说很难避免（NoScript不会有作用，因为这个攻击不需要JavaScript）。<br>由于OAuth，许多初创公司包括SoundCloud，Foursquare，Airbnb，About.me、Bit.ly、Pinterest、Digg，StumbleUpon，Songkick有帐户劫持漏洞。并且很多网站仍然是脆弱的。我们的动机是让人们意识到“社交登录”的风险，我们鼓励你非常小心地使用OAuth。<br>这个小抄并不会解释OAuth是怎样的工作流程，请自行去<a href="http://oauth.net" target="_blank" rel="external">官方站点</a>查看</p>
+<h1 id="授权code流"><a href="#授权code流" class="headerlink" title="授权code流"></a>授权code流</h1><h2 id="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"><a href="#通过连接攻击者提供的服务提供商账户导致客户端账户被劫持" class="headerlink" title="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"></a>通过连接攻击者提供的服务提供商账户导致客户端账户被劫持</h2><p>正如<a href="http://homakov.blogspot.hk/2012/07/saferweb-most-common-oauth2.html" target="_blank" rel="external">最常见的OAuth2漏洞</a>里面说的，换句话说就是<code>CSRF</code>。</p>
+<p>服务提供商通过重定向用户代理（译者注：浏览器）到<code>SITE/oauth/callback?code=CODE</code>来返回授权code，现在客户端必须发送授权code和客户端凭证、redirect_uri一起来获得access_token</p>
+<p>如果客户端执行的时候没有使用state参数去减轻CSRF问题，我们可以很容易的使用我们的服务提供商账户连接受害者的客户端账户。</p>
+<p><img src="/images/oath-1.png" alt="oath-1"></p>
+<p>它对有社交登录和有能力为已存在的主账户添加一个登陆选项的客户端有用（下面是来自<code>pinterest.com</code>的截图）</p>
+<p><img src="/images/oath-2.png" alt="oath-2"></p>
+<p> <img src="/images/oath-2.1.png" alt="oath-2-1"></p>
+<p><strong>修复：</strong>在发送用户跳转到服务提供商的请求时生成一个随机值并且保存在<code>cookie</code>或者<code>session</code>里面，当用户从服务提供商返回的时候确认你收到的<code>state</code>参数值和之前保存在<code>cookies</code>或<code>session</code>里面的那个值相等。</p>
+<p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<code>omniauth(https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562)</code>这种情况下是有可能控制固定<code>state</code>的。</p>
+<p>这是另外一个OAuth设计问题 - 有时候开发者想要使用<code>state</code>表达出自己的目的，尽管你能同时发送这样的值<code>state=welcome_landing.random_nonce</code>但是毫无疑问它看起来很丑陋，一个简洁的方案是使用<a href="https://tools.ietf.org/html/draft-bradley-oauth-jwt-encoded-state-00" target="_blank" rel="external">JSON Web Token作为state</a>。</p>
+<h2 id="服务提供商乱用固定会话导致客户端账户劫持"><a href="#服务提供商乱用固定会话导致客户端账户劫持" class="headerlink" title="服务提供商乱用固定会话导致客户端账户劫持"></a>服务提供商乱用固定会话导致客户端账户劫持</h2><p>尽管客户端合理的校验了<code>state</code>参数，我们仍然可能在服务提供商替换认证<code>cookie</code>为攻击者的账户：在登录（VK, Facebook）时候使用<code>CSRF</code>，头部注入，或者<code>cookie forcing or tossing</code>。</p>
+<p>然后我们仅仅载入一个<code>GET</code>请求触发连接（<code>omniauth中/user/auth/facebook</code>），Facebook将返回攻击者的用户信息（uid=攻击者的uid）并且它最终将连接攻击者的服务提供商账户到受害者的客户端账户。</p>
+<p><strong>修复：</strong>确保添加一个新的社交连接需要一个有效的<code>csrf_token</code>，因为这是不可能触发<code>CSRF</code>的过程。理想情况下，使用<code>POST</code>而不是<code>GET</code>。</p>
+<p>Facebook拒绝从他们那边修复登录时的<code>CSRF</code>，所以很多库仍然易受攻击。不要期望服务提供商给你可靠的认证数据。</p>
+<h2 id="泄露授权code导致账户劫持"><a href="#泄露授权code导致账户劫持" class="headerlink" title="泄露授权code导致账户劫持"></a>泄露授权code导致账户劫持</h2><p>OAuth文档很清楚的指明了服务提供商必须检查第一次的<code>redirect_uri</code>等于客户端用来获取<code>access_token</code>的<code>redirect_uri</code>。我们并没有真正的检查它因为它看起来很难出错。令人惊讶的是很多服务提供商错了：Foursquare (reported), VK (report, in Russian), Github (可能泄露私有项目的tokens), 和很多“自研”的单点登录插件。</p>
+<p>攻击方式很直接：在客户端域内找到一个漏洞页面，插入跨域图片或者一个链接到你的网站，然后使用这个页面地址作为<code>redirect_uri</code>。当受害者载入构造好的URL，它将引导受害者到<code>leaking_page?code=CODE</code>，并且受害者的用户代理将授权code暴露在http头的Referrer字段。</p>
+<p><img src="/images/auth-3.png" alt="auth-3"></p>
+<p>现在你能重新使用泄露的授权code和实际的<code>redirect_uri</code>去登录受害者账户。</p>
+<p><strong>修复：</strong>灵活的<code>redirect_uri</code>是一个不好的做法，但是，如果你需要它，那么每次请求授权code的时候存储<code>redirect_uri</code>并且在<code>access_token</code>生成的时候校验它。</p>
+<h1 id="隐式流"><a href="#隐式流" class="headerlink" title="隐式流"></a>隐式流</h1><h2 id="在打开跳转链接的时候泄露access-token-signed-request"><a href="#在打开跳转链接的时候泄露access-token-signed-request" class="headerlink" title="在打开跳转链接的时候泄露access_token/signed_request"></a>在打开跳转链接的时候泄露access_token/signed_request</h2><p>这是过去被媒体宣传为“重定向覆盖”的攻击，但事实上它已经被发现很多年了。你仅需要找到一个客户端域名或者其子域名的重定向漏洞，把该地址作为<code>redirect_uri</code>并且替换<code>response_type</code>为<code>token</code>,<code>signed_request</code>发送出去，302跳转将会保留<code>#fragment</code>，而攻击者的Javascript代码可以访问<code>location.hash</code>（即为url的<code>fragment</code>字段值）。</p>
+<p>泄露<code>access_token</code>能够被用来发送垃圾邮件和破坏你的隐私。此外，泄露的<code>signed_request</code>是更敏感的数据。通过在你完全授权用Facebook登录的客户端找到一个重定向漏洞。</p>
+<p><strong>修复：</strong>在应用的设置里仅允许一个<code>redirect_uri</code>白名单。</p>
+<p><img src="/images/auth-4.png" alt="auth-4"></p>
+<h2 id="使用攻击者的客户端发出的access-token导致账户劫持"><a href="#使用攻击者的客户端发出的access-token导致账户劫持" class="headerlink" title="使用攻击者的客户端发出的access_token导致账户劫持"></a>使用攻击者的客户端发出的access_token导致账户劫持</h2><p>也被称为<a href="http://homakov.blogspot.com/2012/08/oauth2-one-accesstoken-to-rule-them-all.html" target="_blank" rel="external">One Token to Rule Them All</a>，这个bug与移动端和客户端应用有关，因为他们经常直接使用用户提供的<code>access_token</code>。</p>
+<p>想象一下，用户有很多“授权秘钥”并且给任何他想要登录的新网站一个秘钥。一个恶意的站点管理员能够使用用户的的秘钥去登陆他的客户已经登录过的其他站点。</p>
+<p><a href="/images/auth-5.png">auth-5</a></p>
+<p><strong>修复：</strong> 在接受用户提供的<code>access_token</code>前检查下它是否是你的<code>client_id</code>在<code>https://graph.facebook.com/app?fields=id&amp;access_token=TOKEN</code>生成的。</p>
+<h1 id="传输和JS-SDK漏洞"><a href="#传输和JS-SDK漏洞" class="headerlink" title="传输和JS SDK漏洞"></a>传输和JS SDK漏洞</h1><p>为了更好的支持客户端应用（或者浏览器应用），一些OAuth2服务提供商添加了一些隐式流外的自定义规格变体。涉及到一个代理/中继页作为访问<code>token</code>的路由。这个代理和客户端应用的页面通讯或者通过标准的HTML5的<code>postMessage API</code>，或者使用旧的方式：指定<code>window name</code>和url（也被叫做<code>Fragment</code>传输），还有Adobe Flash的<code>LocalConnection API</code></p>
+<p>不管选择的方法是什么，确保代理呢个个仅和目标源交换信息是很重要的，不接受来自伪造的应用的页面，并且最终去确认这些客户端的检查和服务端的检查是一致的。客户端安全传输失败通常导致下面两种问题：</p>
+<ul>
+<li>泄露数据给攻击者（<a href="http://prosecco.gforge.inria.fr/CVE/Facebook_JS_2012.html" target="_blank" rel="external">授权和认证绕过</a>）</li>
+<li>信任来自攻击者的数据（<a href="https://people.eecs.berkeley.edu/~dawnsong/papers/2010%20emperors%20new%20api.pdf" target="_blank" rel="external">session固话攻击</a>）</li>
+</ul>
+<p>另外，现代web应用趋向于丰富的javascript前端库，以及不安全的客户端通讯导致超越OAuth本身的更严重的攻击。</p>
+<p><strong>修复：</strong></p>
+<ul>
+<li>完全禁用所有旧的客户端通讯方法（<code>Flash</code>或者<code>Fragment</code>），使用<code>postMessage</code></li>
+<li>检查所有进和出的消息的源，仅允许目标应用的域</li>
+<li>确保所有客户端源检查和服务端源检查一致</li>
+<li>在与另一方开始数据传输前用加密的随机数校验</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>##泄露客户端凭证威胁<br>客户端凭证不再像它听起来那样重要。你唯一能做的是使用泄露的页面泄露授权code，然后手动为它们获取<code>access_token</code>（提供泄露的<code>redirect_uri</code>，而不是实际的）。尽管这个威胁当服务提供商使用静态<code>redirect_uri</code>的时候能够得到缓解。</p>
+<h2 id="session固话（OAuth1-0）"><a href="#session固话（OAuth1-0）" class="headerlink" title="session固话（OAuth1.0）"></a>session固话（OAuth1.0）</h2><p>OAuth2和OAuth1最主要的不同在于你传给服务提供商的参数。第一个版本里你发送所有的参数给服务提供商然后获取对应<code>request_token</code>。接着你引导用户到<code>provider?request_token=TOKEN</code>，然后在授权用户完后重定向返回到<code>client/callback?request_token=SAME_TOKEN</code>。</p>
+<p>在这里固话的意思是我们能欺骗用户接受我们提供的发送给我们的Token1，然后在客户端的<code>callback</code>里重用Token1</p>
+<p>这个不是严重的漏洞，因为主要是基于网络钓鱼。<a href="http://homakov.blogspot.jp/2014/01/token-fixation-in-paypal.html" target="_blank" rel="external">FYI Paypal express checkout has this bug</a></p>
+<h2 id="中间服务提供商"><a href="#中间服务提供商" class="headerlink" title="中间服务提供商"></a>中间服务提供商</h2><p>许多初创公司都用Facebook连接，与此同时，他们也是服务提供商。作为服务提供商，他们必须重定向用户到第三方站点，这些“开放的重定向”你没法修复。它使得这个链成为可能：Facebook -&gt; 中间服务提供商 -&gt; 客户端的回调，导致FB的<code>token</code>泄露。</p>
+<p>要修复这个问题，Facebook在回调URL的后面添加<code>#_=_</code>。你调用的时候应该去掉<code>fragment</code>来防止泄露。以这种方式重定向：<br><code>Location: YOUR_CLIENT/callback?code=code#</code></p>
+<h2 id="用技巧绕过redirect-uri校验"><a href="#用技巧绕过redirect-uri校验" class="headerlink" title="用技巧绕过redirect_uri校验"></a>用技巧绕过redirect_uri校验</h2><p>如果你被允许设置子目录，下面是目录遍历的技巧：</p>
+<ol>
+<li>/old/path/../../new/path</li>
+<li>/old/path/%2e%2e/%2e%2e/new/path</li>
+<li>/old/path/%252e%252e/%252e%252e/new/path</li>
+<li>/new/path///../../old/path/</li>
+<li>/old/path/.%0a./.%0d./new/path (For Rails, because it strips \n\d\0)</li>
+</ol>
+<h2 id="重放攻击"><a href="#重放攻击" class="headerlink" title="重放攻击"></a>重放攻击</h2><p>授权code通过<code>GET</code>发送，并将存储在日志中，服务提供商一定要在使用或过期5分钟内删除它。</p>
+<h2 id="开放的重定向泄露授权code"><a href="#开放的重定向泄露授权code" class="headerlink" title="开放的重定向泄露授权code"></a>开放的重定向泄露授权code</h2><p>通常你需要<code>referrer</code>泄露页面去泄露查询参数。这有两种通过开放的重定向来实现的技巧：</p>
+<ul>
+<li>当重定向使用<code>&lt;meta&gt;</code>标签而不是302状态和<code>Location</code>头的话，它将泄露跳转页面的<code>referrer</code>到下一个请求中。</li>
+<li>当你管理<code>redirect_uri</code>的尾部去添加<code>%23</code>（#），它将导致在<code>fragment</code>位置发送授权code<code>Location: http://CLIENT/callback/../open_redirect?to=evil#&amp;code=CODE</code></li>
+</ul>
+<h1 id="贡献者"><a href="#贡献者" class="headerlink" title="贡献者"></a>贡献者</h1><p>@homakov(<a href="https://twitter.com/homakov" target="_blank" rel="external">https://twitter.com/homakov</a>), @isciurus(<a href="https://twitter.com/isciurus" target="_blank" rel="external">https://twitter.com/isciurus</a>) and you?</p>
+<hr>
+<blockquote>
+<p>原文地址：<a href="http://www.oauthsecurity.com" target="_blank" rel="external">http://www.oauthsecurity.com</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/26/wget-redirection-vulnerability/" itemprop="url">
                   wget redirection vulnerability
                 </a>
@@ -246,7 +424,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-07-26T11:55:18+08:00" content="2016-07-26">
               2016-07-26
             </time>
@@ -385,7 +563,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-06-30T15:01:06+08:00" content="2016-06-30">
               2016-06-30
             </time>
@@ -564,7 +742,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-06-22T17:47:19+08:00" content="2016-06-22">
               2016-06-22
             </time>
@@ -635,7 +813,7 @@
 </li>
 </ul>
 <h1 id="检测方式"><a href="#检测方式" class="headerlink" title="检测方式"></a>检测方式</h1><p>就其本身来说就是个SQL注入，只不过触发方式相对隐晦了一些。一般情况下很难用自动化工具扫出来，最好可以白盒审计源代码，我一般在审计源码的时候会对所有数据库执行的语句做日志记录，对可能出现注入的点输入对应payload，然后查看日志来分析是否有注入问题。当然黑盒情况下也是可能找到二阶注入的，可以利用cloudeye等平台构造合适的payload（cloudeye支持callback哦）来发现这些隐晦的注入问题。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>二阶注入比普通的SQL注入更难检测，因为漏洞触发点并不在攻击者提交请求的页面。其防御方式和普通SQL注入没差别，使用参数化查询语句，分离数据和代码。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>二阶注入比普通的SQL注入更难检测，因为漏洞触发点并不在攻击者提交请求的页面。其防御方式和普通SQL注入没差别，使用参数化查询语句，分离数据和代码。w</p>
 
           
         
@@ -698,7 +876,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-06-04T21:28:39+08:00" content="2016-06-04">
               2016-06-04
             </time>
@@ -841,7 +1019,7 @@
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-30T22:14:56+08:00" content="2016-05-30">
               2016-05-30
             </time>
@@ -986,7 +1164,7 @@ foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-23T16:27:23+08:00" content="2016-05-23">
               2016-05-23
             </time>
@@ -1317,7 +1495,7 @@ Disallow: /
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
             <time itemprop="dateCreated" datetime="2016-05-20T22:21:09+08:00" content="2016-05-20">
               2016-05-20
             </time>
@@ -1451,8 +1629,8 @@ Disallow: /
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
-              <span class="site-state-item-name">posts</span>
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">Artikel</span>
             </a>
           </div>
 
@@ -1461,8 +1639,8 @@ Disallow: /
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">Tags</span>
               </a>
             </div>
           
@@ -1506,7 +1684,7 @@ Disallow: /
 </div>
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="http://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
