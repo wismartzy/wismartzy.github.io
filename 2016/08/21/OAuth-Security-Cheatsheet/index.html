@@ -98,7 +98,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <meta property="og:image" content="http://yoursite.com/images/auth-3.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-4.png">
 <meta property="og:image" content="http://yoursite.com/images/auth-5.png">
-<meta property="og:updated_time" content="2016-08-21T05:39:42.000Z">
+<meta property="og:updated_time" content="2016-08-21T05:44:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth Security Cheatsheet">
 <meta name="twitter:description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
@@ -308,7 +308,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <p><img src="/images/oath-2.png" alt="oath-2"></p>
 <p><img src="/images/oath-21.png" alt="oath-21"></p>
 <p><strong>修复：</strong>在发送用户跳转到服务提供商的请求时生成一个随机值并且保存在<code>cookie</code>或者<code>session</code>里面，当用户从服务提供商返回的时候确认你收到的<code>state</code>参数值和之前保存在<code>cookies</code>或<code>session</code>里面的那个值相等。</p>
-<p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<code>omniauth(https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562)</code>这种情况下是有可能控制固定<code>state</code>的。</p>
+<p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<a href="https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562" target="_blank" rel="external">omniauth</a>这种情况下是有可能控制固定<code>state</code>的。</p>
 <p>这是另外一个OAuth设计问题 - 有时候开发者想要使用<code>state</code>表达出自己的目的，尽管你能同时发送这样的值<code>state=welcome_landing.random_nonce</code>但是毫无疑问它看起来很丑陋，一个简洁的方案是使用<a href="https://tools.ietf.org/html/draft-bradley-oauth-jwt-encoded-state-00" target="_blank" rel="external">JSON Web Token作为state</a>。</p>
 <h2 id="服务提供商乱用固定会话导致客户端账户劫持"><a href="#服务提供商乱用固定会话导致客户端账户劫持" class="headerlink" title="服务提供商乱用固定会话导致客户端账户劫持"></a>服务提供商乱用固定会话导致客户端账户劫持</h2><p>尽管客户端合理的校验了<code>state</code>参数，我们仍然可能在服务提供商替换认证<code>cookie</code>为攻击者的账户：在登录（VK, Facebook）时候使用<code>CSRF</code>，头部注入，或者<code>cookie forcing or tossing</code>。</p>
 <p>然后我们仅仅载入一个<code>GET</code>请求触发连接（<code>omniauth中/user/auth/facebook</code>），Facebook将返回攻击者的用户信息（uid=攻击者的uid）并且它最终将连接攻击者的服务提供商账户到受害者的客户端账户。</p>
