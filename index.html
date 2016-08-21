@@ -284,7 +284,7 @@
       
         
           
-            <h1 id="State-Of-The-Art-OAuth2-Homakov-Edition"><a href="#State-Of-The-Art-OAuth2-Homakov-Edition" class="headerlink" title="State-Of-The-Art OAuth2 Homakov Edition"></a>State-Of-The-Art OAuth2 Homakov Edition</h1><p>考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足<strong>secure-by-default</strong>的OAuth版本-Homakov</p>
+            <h1 id="State-Of-The-Art-OAuth2-Homakov-Edition"><a href="#State-Of-The-Art-OAuth2-Homakov-Edition" class="headerlink" title="State-Of-The-Art OAuth2 Homakov Edition"></a>State-Of-The-Art OAuth2 Homakov Edition</h1><p>考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足<strong>secure-by-default</strong>原则的OAuth版本-Homakov</p>
 <p>CSRF防护初始请求<code>/connect/provider</code>的时候，总是使用和需要<code>state</code>参数，不允许动态的<code>redirect_uri</code>，默认不允许<code>response_type=hash</code>（以前是<code>token</code>），废弃<code>refresh_token</code>和<code>token</code>，而不是用<code>appsecret_proof</code>去认证每个<code>access_token</code>，仔细检查用户想要连接的服务提供商账户，<code>access_token</code>永不过期（把它当做公开的<code>user_id</code>）</p>
 <p>1、用户点击连接服务提供商的按钮，无论是发起一个<code>POST</code>表单提交（受<code>CSRF Token</code>防护的）到<code>/connect/provider_name</code>，还是由<code>GET</code>导航到<code>/connect/provider?csrf_token=TOKEN</code>，初始步骤一定要受<code>CSRF</code>防护，它不应该被来自其他源的连接触发，必须有来自于用户的明确的确认。</p>
 <p>2、在服务端<code>/connect/provider</code>客户端的控制器应该确认<code>csrf_token</code>和来自于<code>session</code>里的<code>token</code>一致，然后生成<code>state token</code>（CSRF Token，确保OAuth流程完整性），并命名为<code>&lt;provider&gt;-state</code>存储在<code>session</code>里。然后跳转到<code>provider.com/oauth/authorize?client_id=CLIENT_ID&amp;redirect_uri=CLIENT/callback&amp;state=STAT</code>，<code>scope</code>参数是可选的（应该仅仅允许被认证过的客户端接触一些关键的作用域）</p>
