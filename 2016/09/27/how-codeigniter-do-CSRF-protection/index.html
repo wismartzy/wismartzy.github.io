@@ -1,0 +1,617 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="csrf security," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="概述关于如何启用 CSRF 防护，Codeigniter(CI) 官方文档有详细说明。
+CSRF 的防御一般比较通用的方案有：
+
+Referer验证
+Token验证
+验证码防御
+
+Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Codeigniter 是怎么做 CSRF 防护的">
+<meta property="og:url" content="http://yoursite.com/2016/09/27/how-codeigniter-do-CSRF-protection/index.html">
+<meta property="og:site_name" content="Wismartzy's Blog">
+<meta property="og:description" content="概述关于如何启用 CSRF 防护，Codeigniter(CI) 官方文档有详细说明。
+CSRF 的防御一般比较通用的方案有：
+
+Referer验证
+Token验证
+验证码防御
+
+Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大">
+<meta property="og:updated_time" content="2016-09-28T04:25:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Codeigniter 是怎么做 CSRF 防护的">
+<meta name="twitter:description" content="概述关于如何启用 CSRF 防护，Codeigniter(CI) 官方文档有详细说明。
+CSRF 的防御一般比较通用的方案有：
+
+Referer验证
+Token验证
+验证码防御
+
+Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: 'Author'
+    }
+  };
+</script>
+
+  <title> Codeigniter 是怎么做 CSRF 防护的 | Wismartzy's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Wismartzy's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Codeigniter 是怎么做 CSRF 防护的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Veröffentlicht am</span>
+            <time itemprop="dateCreated" datetime="2016-09-27T15:01:48+08:00" content="2016-09-27">
+              2016-09-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/27/how-codeigniter-do-CSRF-protection/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/27/how-codeigniter-do-CSRF-protection/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>关于如何启用 CSRF 防护，Codeigniter(CI) 官方<a href="http://codeigniter.org.cn/user_guide/libraries/security.html" target="_blank" rel="external">文档</a>有详细说明。</p>
+<p>CSRF 的防御一般比较通用的方案有：</p>
+<ul>
+<li>Referer验证</li>
+<li>Token验证</li>
+<li>验证码防御</li>
+</ul>
+<p>Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大的影响，所以目前来说，基于 token 的验证是最为可用的 CSRF 防护方案，大量开源框架都采用这种方式来抵御 CSRF 攻击的。当然，也有组合这几种的防御方案，效果比单一使用某一方案更优。</p>
+<h2 id="CI-amp-CSRF"><a href="#CI-amp-CSRF" class="headerlink" title="CI &amp; CSRF"></a>CI &amp; CSRF</h2><p>CI 默认并未开启 CSRF 防御</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /application/config/config.php</span></span><br><span class="line">$config[<span class="string">'csrf_protection'</span>] = <span class="keyword">FALSE</span>;</span><br></pre></td></tr></table></figure>
+<p>若将该值设置为<code>TRUE</code>，则 CI 会对每个 POST 请求进行 CSRF Verify</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Input.php</span></span><br><span class="line">		<span class="comment">// CSRF Protection check</span></span><br><span class="line">		<span class="keyword">if</span> ($this-&gt;_enable_csrf === <span class="keyword">TRUE</span> &amp;&amp; ! is_cli())</span><br><span class="line">		&#123;</span><br><span class="line">			$this-&gt;security-&gt;csrf_verify();</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这一步是在 Input 类的 construct 函数里进行的，这意味着一旦开启 CSRF 防御，将全局作用于所有请求，这样不得不为每个 POST 表单添加一个 token 字段，否则请求会被中断。使用 CI 内置的 <code>form_open()</code> 函数将会自动地在表单中插入一个隐藏的 CSRF 字段，但是如果用 Ajax 去提交 POST 请求，就得为每个请求手动添加 csrf_cookie_name 字段，随请求一起传给服务端。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Security.php</span></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * CSRF Verify</span><br><span class="line">	 *</span><br><span class="line">	 * <span class="doctag">@return</span>	CI_Security</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">csrf_verify</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		<span class="comment">// If it's not a POST request we will set the CSRF cookie</span></span><br><span class="line">		<span class="keyword">if</span> (strtoupper($_SERVER[<span class="string">'REQUEST_METHOD'</span>]) !== <span class="string">'POST'</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> $this-&gt;csrf_set_cookie();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Check if URI has been whitelisted from CSRF checks</span></span><br><span class="line">		<span class="keyword">if</span> ($exclude_uris = config_item(<span class="string">'csrf_exclude_uris'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			$uri = load_class(<span class="string">'URI'</span>, <span class="string">'core'</span>);</span><br><span class="line">			<span class="keyword">foreach</span> ($exclude_uris <span class="keyword">as</span> $excluded)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> (preg_match(<span class="string">'#^'</span>.$excluded.<span class="string">'$#i'</span>.(UTF8_ENABLED ? <span class="string">'u'</span> : <span class="string">''</span>), $uri-&gt;uri_string()))</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">return</span> $this;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Do the tokens exist in both the _POST and _COOKIE arrays?</span></span><br><span class="line">		<span class="keyword">if</span> ( ! <span class="keyword">isset</span>($_POST[$this-&gt;_csrf_token_name], $_COOKIE[$this-&gt;_csrf_cookie_name])</span><br><span class="line">			<span class="keyword">OR</span> $_POST[$this-&gt;_csrf_token_name] !== $_COOKIE[$this-&gt;_csrf_cookie_name]) <span class="comment">// Do the tokens match?</span></span><br><span class="line">		&#123;</span><br><span class="line">			$this-&gt;csrf_show_error();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// We kill this since we're done and we don't want to polute the _POST array</span></span><br><span class="line">		<span class="keyword">unset</span>($_POST[$this-&gt;_csrf_token_name]);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Regenerate on every submission?</span></span><br><span class="line">		<span class="keyword">if</span> (config_item(<span class="string">'csrf_regenerate'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// Nothing should last forever</span></span><br><span class="line">			<span class="keyword">unset</span>($_COOKIE[$this-&gt;_csrf_cookie_name]);</span><br><span class="line">			$this-&gt;_csrf_hash = <span class="keyword">NULL</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$this-&gt;_csrf_set_hash();</span><br><span class="line">		$this-&gt;csrf_set_cookie();</span><br><span class="line"></span><br><span class="line">		log_message(<span class="string">'info'</span>, <span class="string">'CSRF token verified'</span>);</span><br><span class="line">		<span class="keyword">return</span> $this;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p><code>csrf_verify()</code> 函数对非 POST 请求直接写 CSRF cookie，POST 请求就判断是否在 URI 的白名单里面，若不在白名单再进行判断 _POST 和 _COOKIE 里是否有 CSRF token，并且判断两者是否相等，只有在存在且相等的情况下才通过校验，否则提示错误403。这一步的逻辑其实是建立在发起 CSRF 攻击的黑客理论上无法获取第三方 cookie 基础上的，得不到 cookie 便无法构造表单里的 token，就过不了这里的 <code>csrf_verify()</code>。</p>
+<p>在校验完成后，为了不污染 _POST 数组，CI 调用 unset 函数处理了 _POST 数组里的 csrf token，重新生成新的 token 并写到 cookie。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Security.php</span></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * CSRF Set Cookie</span><br><span class="line">	 *</span><br><span class="line">	 * <span class="doctag">@codeCoverageIgnore</span></span><br><span class="line">	 * <span class="doctag">@return</span>	CI_Security</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">csrf_set_cookie</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		$expire = time() + $this-&gt;_csrf_expire;</span><br><span class="line">		$secure_cookie = (bool) config_item(<span class="string">'cookie_secure'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($secure_cookie &amp;&amp; ! is_https())</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">FALSE</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		setcookie(</span><br><span class="line">			$this-&gt;_csrf_cookie_name,</span><br><span class="line">			$this-&gt;_csrf_hash,</span><br><span class="line">			$expire,</span><br><span class="line">			config_item(<span class="string">'cookie_path'</span>),</span><br><span class="line">			config_item(<span class="string">'cookie_domain'</span>),</span><br><span class="line">			$secure_cookie,</span><br><span class="line">			config_item(<span class="string">'cookie_httponly'</span>)</span><br><span class="line">		);</span><br><span class="line">		log_message(<span class="string">'info'</span>, <span class="string">'CSRF cookie sent'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> $this;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是设置 CSRF 防御 cookie 的函数，cookie 属性可以从配置文件里读取</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /application/config/config.php</span></span><br><span class="line">$config[<span class="string">'csrf_token_name'</span>] = <span class="string">'csrf_test_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_cookie_name'</span>] = <span class="string">'csrf_cookie_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_expire'</span>] = <span class="number">7200</span>;</span><br><span class="line">$config[<span class="string">'csrf_regenerate'</span>] = <span class="keyword">TRUE</span>;</span><br><span class="line">$config[<span class="string">'csrf_exclude_uris'</span>] = <span class="keyword">array</span>();</span><br></pre></td></tr></table></figure>
+<p>cookie 有效期默认是7200秒，也就是2小时，由于一旦开启 CSRF 防御，就是全局作用于所有的请求，所以有时候难免会有误伤，但 CI 并没做到在 controller 层动态配置，而是在 Input 类初始化的位置调用 <code>csrf_verify()</code> 函数完成校验。当然，CI 开放了白名单策略，也就是配置文件里的 csrf_exclude_uris ，可以把不需要做 CSRF 防御的 uri 添加到该值里面。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/csrf-security/" rel="tag">#csrf security</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/22/Product-Design-and-Development-Safety-Baseline/" rel="next" title="产品设计与开发安全基线">
+                <i class="fa fa-chevron-left"></i> 产品设计与开发安全基线
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/27/how-codeigniter-do-CSRF-protection/"
+           data-title="Codeigniter 是怎么做 CSRF 防护的" data-url="http://yoursite.com/2016/09/27/how-codeigniter-do-CSRF-protection/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Wismartzy" />
+          <p class="site-author-name" itemprop="name">Wismartzy</p>
+          <p class="site-description motion-element" itemprop="description">Worker Security</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">Artikel</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-amp-CSRF"><span class="nav-number">2.</span> <span class="nav-text">CI & CSRF</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wismartzy</span>
+</div>
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wismartzy"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
