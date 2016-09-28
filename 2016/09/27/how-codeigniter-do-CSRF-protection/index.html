@@ -93,7 +93,7 @@ Token验证
 
 Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Codeigniter 是怎么做 CSRF 防护的">
+<meta property="og:title" content="Codeigniter 是怎么做 CSRF 防御的">
 <meta property="og:url" content="http://yoursite.com/2016/09/27/how-codeigniter-do-CSRF-protection/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="概述关于如何启用 CSRF 防护，Codeigniter(CI) 官方文档有详细说明。
@@ -104,9 +104,9 @@ Token验证
 验证码防御
 
 Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大">
-<meta property="og:updated_time" content="2016-09-28T04:29:33.000Z">
+<meta property="og:updated_time" content="2016-09-28T08:36:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Codeigniter 是怎么做 CSRF 防护的">
+<meta name="twitter:title" content="Codeigniter 是怎么做 CSRF 防御的">
 <meta name="twitter:description" content="概述关于如何启用 CSRF 防护，Codeigniter(CI) 官方文档有详细说明。
 CSRF 的防御一般比较通用的方案有：
 
@@ -132,7 +132,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
   };
 </script>
 
-  <title> Codeigniter 是怎么做 CSRF 防护的 | Wismartzy's Blog </title>
+  <title> Codeigniter 是怎么做 CSRF 防御的 | Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -190,7 +190,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Accueil
           </a>
         </li>
       
@@ -252,7 +252,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
             
             
               
-                Codeigniter 是怎么做 CSRF 防护的
+                Codeigniter 是怎么做 CSRF 防御的
               
             
           </h1>
@@ -263,7 +263,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
             <span class="post-meta-item-icon">
               <i class="fa fa-calendar-o"></i>
             </span>
-            <span class="post-meta-item-text">Posted on</span>
+            <span class="post-meta-item-text">Posté le</span>
             <time itemprop="dateCreated" datetime="2016-09-27T15:01:48+08:00" content="2016-09-27">
               2016-09-27
             </time>
@@ -318,7 +318,8 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Security.php</span></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * CSRF Set Cookie</span><br><span class="line">	 *</span><br><span class="line">	 * <span class="doctag">@codeCoverageIgnore</span></span><br><span class="line">	 * <span class="doctag">@return</span>	CI_Security</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">csrf_set_cookie</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		$expire = time() + $this-&gt;_csrf_expire;</span><br><span class="line">		$secure_cookie = (bool) config_item(<span class="string">'cookie_secure'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($secure_cookie &amp;&amp; ! is_https())</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">FALSE</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		setcookie(</span><br><span class="line">			$this-&gt;_csrf_cookie_name,</span><br><span class="line">			$this-&gt;_csrf_hash,</span><br><span class="line">			$expire,</span><br><span class="line">			config_item(<span class="string">'cookie_path'</span>),</span><br><span class="line">			config_item(<span class="string">'cookie_domain'</span>),</span><br><span class="line">			$secure_cookie,</span><br><span class="line">			config_item(<span class="string">'cookie_httponly'</span>)</span><br><span class="line">		);</span><br><span class="line">		log_message(<span class="string">'info'</span>, <span class="string">'CSRF cookie sent'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> $this;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>上面是设置 CSRF 防御 cookie 的函数，cookie 属性可以从配置文件里读取</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /application/config/config.php</span></span><br><span class="line">$config[<span class="string">'csrf_token_name'</span>] = <span class="string">'csrf_test_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_cookie_name'</span>] = <span class="string">'csrf_cookie_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_expire'</span>] = <span class="number">7200</span>;</span><br><span class="line">$config[<span class="string">'csrf_regenerate'</span>] = <span class="keyword">TRUE</span>;</span><br><span class="line">$config[<span class="string">'csrf_exclude_uris'</span>] = <span class="keyword">array</span>();</span><br></pre></td></tr></table></figure>
-<p>cookie 有效期默认是7200秒，也就是2小时，由于一旦开启 CSRF 防御，就是全局作用于所有的请求，所以有时候难免会有误伤，但 CI 并没做到在 controller 层动态配置，而是在 Input 类初始化的位置调用 <code>csrf_verify()</code> 函数完成校验。当然，CI 开放了白名单策略，也就是配置文件里的 csrf_exclude_uris ，可以把不需要做 CSRF 防御的 uri 添加到该值里面。</p>
+<p>cookie 有效期默认是7200秒，也就是2小时，由于一旦开启 CSRF 防御，就是全局作用于所有的请求，所以有时候难免会有误伤，但 CI 并没做到在 controller 层动态配置，而是在 Input 类初始化的位置调用 <code>csrf_verify()</code> 函数完成校验。当然，CI 开放了白名单策略，也就是配置文件里的 <code>$config[&#39;csrf_exclude_uris&#39;]</code> ，可以把不需要做 CSRF 防御的 uri 添加到该值里面。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从源码里不难看出 CI 通过比较 _COOKIE 和 _POST 中的 token 值来做 CSRF 防御，咋一看似乎觉得 _COOKIE 和 _POST 的内容对客户端来说都是可控的，但仔细思考一下，在 CSRF 的攻击场景下，攻击者是无法读取到受害者的 cookie 信息的，这也是该防御方式有效的前提所在。</p>
 
       
     </div>
@@ -382,7 +383,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/09/27/how-codeigniter-do-CSRF-protection/"
-           data-title="Codeigniter 是怎么做 CSRF 防护的" data-url="http://yoursite.com/2016/09/27/how-codeigniter-do-CSRF-protection/">
+           data-title="Codeigniter 是怎么做 CSRF 防御的" data-url="http://yoursite.com/2016/09/27/how-codeigniter-do-CSRF-protection/">
       </div>
     
   </div>
@@ -408,10 +409,10 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
+            Table Des Matières
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
+            Ensemble
           </li>
         </ul>
       
@@ -428,7 +429,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
           <div class="site-state-item site-state-posts">
             <a href="/archives">
               <span class="site-state-item-count">10</span>
-              <span class="site-state-item-name">posts</span>
+              <span class="site-state-item-name">articles</span>
             </a>
           </div>
 
@@ -466,7 +467,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-amp-CSRF"><span class="nav-number">2.</span> <span class="nav-text">CI & CSRF</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-amp-CSRF"><span class="nav-number">2.</span> <span class="nav-text">CI & CSRF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
         </section>
@@ -497,7 +498,7 @@ Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上
 </div>
 
 <div class="theme-info">
-  Theme -
+  Thème -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Muse
   </a>
