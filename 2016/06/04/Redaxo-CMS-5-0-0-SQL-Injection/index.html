@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="sql injection," />
+  <meta name="keywords" content="安全," />
 
 
 
@@ -89,7 +89,7 @@
 背景在逛exploit-db的时候，发现这个漏洞有点意思，就拿过来自己分析了下。Redaxo CMS是一套开源的Web门户内容管理系统（CMS），该系统支持自定义模块、插件扩展、项目备份等。
 审计根据报错信息可以定位到该文件，/redaxo-cms-5.0.0/redaxo/src/addons/medi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redaxo CMS 5.0.0 SQL Injection">
+<meta property="og:title" content="Redaxo CMS 5.0.0 SQL 注入漏洞">
 <meta property="og:url" content="http://yoursite.com/2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="来源https://www.exploit-db.com/exploits/39459/
@@ -98,9 +98,9 @@
 审计根据报错信息可以定位到该文件，/redaxo-cms-5.0.0/redaxo/src/addons/medi">
 <meta property="og:image" content="http://yoursite.com/images/redaxo-1.png">
 <meta property="og:image" content="http://yoursite.com/images/redaxo-2.png">
-<meta property="og:updated_time" content="2016-06-04T14:14:31.000Z">
+<meta property="og:updated_time" content="2017-01-09T15:40:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redaxo CMS 5.0.0 SQL Injection">
+<meta name="twitter:title" content="Redaxo CMS 5.0.0 SQL 注入漏洞">
 <meta name="twitter:description" content="来源https://www.exploit-db.com/exploits/39459/
 
 背景在逛exploit-db的时候，发现这个漏洞有点意思，就拿过来自己分析了下。Redaxo CMS是一套开源的Web门户内容管理系统（CMS），该系统支持自定义模块、插件扩展、项目备份等。
@@ -139,7 +139,7 @@
 
 
 
-  <title> Redaxo CMS 5.0.0 SQL Injection | Wismartzy's Blog </title>
+  <title> Redaxo CMS 5.0.0 SQL 注入漏洞 | Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -199,7 +199,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -209,7 +209,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -276,7 +276,7 @@
             
             
               
-                Redaxo CMS 5.0.0 SQL Injection
+                Redaxo CMS 5.0.0 SQL 注入漏洞
               
             
           </h1>
@@ -289,7 +289,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-04T21:28:39+08:00">
                 2016-06-04
@@ -403,7 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/sql-injection/" rel="tag"># sql injection</a>
+            <a href="/tags/安全/" rel="tag"># 安全</a>
           
         </div>
       
@@ -412,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/05/30/Server-side-request-forgery/" rel="next" title="Server-side request forgery">
-                <i class="fa fa-chevron-left"></i> Server-side request forgery
+              <a href="/2016/05/30/Server-side-request-forgery/" rel="next" title="SSRF 攻击小结">
+                <i class="fa fa-chevron-left"></i> SSRF 攻击小结
               </a>
             
           </div>
@@ -422,8 +422,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/06/22/Second-Order-SQL-Injection/" rel="prev" title="Second Order SQL Injection">
-                Second Order SQL Injection <i class="fa fa-chevron-right"></i>
+              <a href="/2016/06/22/Second-Order-SQL-Injection/" rel="prev" title="关于二阶 SQL 注入">
+                关于二阶 SQL 注入 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -451,7 +451,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/"
-           data-title="Redaxo CMS 5.0.0 SQL Injection" data-url="http://yoursite.com/2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/">
+           data-title="Redaxo CMS 5.0.0 SQL 注入漏洞" data-url="http://yoursite.com/2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/">
       </div>
     
   </div>
@@ -477,10 +477,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -498,8 +498,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -509,8 +509,8 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">tags</span>
               </a>
             </div>
           
@@ -574,7 +574,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">

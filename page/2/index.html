@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="安全," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,25 +84,15 @@
 
 
 
-<meta name="description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
-0x02 审计框架简介
-iWebshop是单一入口系统，所有的处理都要通过入口文件index.php来运行。系统框架对当前URL路径进行分析，找到controller(控制器)和action(动作)，去调">
-<meta property="og:type" content="article">
-<meta property="og:title" content="iWebshop 4.4 SQL 注入漏洞">
-<meta property="og:url" content="http://yoursite.com/2016/05/20/iWebshop-4-4-SQL-Injection/index.html">
+<meta name="description" content="Worker Security">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wismartzy's Blog">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
-<meta property="og:description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
-0x02 审计框架简介
-iWebshop是单一入口系统，所有的处理都要通过入口文件index.php来运行。系统框架对当前URL路径进行分析，找到controller(控制器)和action(动作)，去调">
-<meta property="og:image" content="http://yoursite.com/images/iwebshop-1.png">
-<meta property="og:image" content="http://yoursite.com/images/mysql-log.png">
-<meta property="og:updated_time" content="2017-01-09T15:41:07.000Z">
+<meta property="og:description" content="Worker Security">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iWebshop 4.4 SQL 注入漏洞">
-<meta name="twitter:description" content="0x01 背景iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。
-0x02 审计框架简介
-iWebshop是单一入口系统，所有的处理都要通过入口文件index.php来运行。系统框架对当前URL路径进行分析，找到controller(控制器)和action(动作)，去调">
-<meta name="twitter:image" content="http://yoursite.com/images/iwebshop-1.png">
+<meta name="twitter:title" content="Wismartzy's Blog">
+<meta name="twitter:description" content="Worker Security">
 
 
 
@@ -130,13 +120,13 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/05/20/iWebshop-4-4-SQL-Injection/"/>
+  <link rel="canonical" href="http://yoursite.com/page/2/"/>
 
 
 
 
 
-  <title> iWebshop 4.4 SQL 注入漏洞 | Wismartzy's Blog </title>
+  <title> Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -157,7 +147,9 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -238,9 +230,9 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -273,7 +265,10 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
             
             
               
-                iWebshop 4.4 SQL 注入漏洞
+                
+                <a class="post-title-link" href="/2016/05/20/iWebshop-4-4-SQL-Injection/" itemprop="url">
+                  iWebshop 4.4 SQL 注入漏洞
+                </a>
               
             
           </h1>
@@ -334,7 +329,9 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
       
 
       
-        <h1 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h1><p>iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。</p>
+        
+          
+            <h1 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h1><p>iWebShop是一款基于PHP语言开发b2b2c开源多用户商城系统，支持平台自营和多商家入驻、微信商城系统、手机商城系统、移动端商城系统、APP商城系统等多功能性的购物平台系统。</p>
 <h1 id="0x02-审计"><a href="#0x02-审计" class="headerlink" title="0x02 审计"></a>0x02 审计</h1><h2 id="框架简介"><a href="#框架简介" class="headerlink" title="框架简介"></a>框架简介</h2><blockquote>
 <p>iWebshop是单一入口系统，所有的处理都要通过入口文件<code>index.php</code>来运行。<br>系统框架对当前<code>URL</code>路径进行分析，找到<code>controller(控制器)</code>和<code>action(动作)</code>，去调用控制器文件里面的动作方法。<br>在<code>action</code>动作中可以读取数据，处理业务逻辑，然后把完成的数据渲染到视图，给终端客户呈现出来。</p>
 </blockquote>
@@ -362,62 +359,41 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
 <p><img src="/images/mysql-log.png" alt="iWebshop-02"></p>
 <h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><p>该漏洞产生的直接原因是<code>$id</code>变量未经过任何过滤就拼接SQL语句，因此一定要确保所有带入数据库的参数都经过了严格的过滤。当然，如果是PHP应用，推荐采用<code>PDO</code>方式操作数据库，使用参数绑定能有效的防止<code>SQL Injection</code>问题。</p>
 
+          
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/安全/" rel="tag"># 安全</a>
-          
-        </div>
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/05/23/The-Security-of-HTTP-Headers/" rel="prev" title="The Security of HTTP Headers">
-                The Security of HTTP Headers <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
           
           </div>
@@ -425,14 +401,6 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/05/20/iWebshop-4-4-SQL-Injection/"
-           data-title="iWebshop 4.4 SQL 注入漏洞" data-url="http://yoursite.com/2016/05/20/iWebshop-4-4-SQL-Injection/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -452,17 +420,8 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -511,22 +470,6 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-背景"><span class="nav-number">1.</span> <span class="nav-text">0x01 背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-审计"><span class="nav-number">2.</span> <span class="nav-text">0x02 审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#框架简介"><span class="nav-number">2.1.</span> <span class="nav-text">框架简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞概况"><span class="nav-number">2.2.</span> <span class="nav-text">漏洞概况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#审计"><span class="nav-number">2.3.</span> <span class="nav-text">审计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x03-漏洞验证"><span class="nav-number">3.</span> <span class="nav-text">0x03 漏洞验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x04-总结"><span class="nav-number">4.</span> <span class="nav-text">0x04 总结</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>
@@ -626,10 +569,6 @@ iWebshop是单一入口系统，所有的处理都要通过入口文件index.php
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
-
-
 
   
 

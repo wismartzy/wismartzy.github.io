@@ -1,0 +1,725 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="安全," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="0x01我在某次授权渗透时候碰到的场景：
+渗透对象：
+
+某电商 APP
+
+目标缺陷：
+
+API 设计不合理导致可泄露业务相关敏感信息
+
+测试过程：
+APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
+<meta property="og:type" content="article">
+<meta property="og:title" content="会说话的状态码">
+<meta property="og:url" content="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/index.html">
+<meta property="og:site_name" content="Wismartzy's Blog">
+<meta property="og:description" content="0x01我在某次授权渗透时候碰到的场景：
+渗透对象：
+
+某电商 APP
+
+目标缺陷：
+
+API 设计不合理导致可泄露业务相关敏感信息
+
+测试过程：
+APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
+<meta property="og:image" content="http://yoursite.com/images/rfc-1.png">
+<meta property="og:updated_time" content="2017-01-09T16:08:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="会说话的状态码">
+<meta name="twitter:description" content="0x01我在某次授权渗透时候碰到的场景：
+渗透对象：
+
+某电商 APP
+
+目标缺陷：
+
+API 设计不合理导致可泄露业务相关敏感信息
+
+测试过程：
+APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
+<meta name="twitter:image" content="http://yoursite.com/images/rfc-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/"/>
+
+
+
+
+
+  <title> 会说话的状态码 | Wismartzy's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Wismartzy's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Wismartzy">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Wismartzy's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Wismartzy's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                会说话的状态码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-09T23:33:23+08:00">
+                2016-09-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h2><p>我在某次授权渗透时候碰到的场景：</p>
+<p>渗透对象：</p>
+<blockquote>
+<p>某电商 APP</p>
+</blockquote>
+<p>目标缺陷：</p>
+<blockquote>
+<p>API 设计不合理导致可泄露业务相关敏感信息</p>
+</blockquote>
+<p>测试过程：</p>
+<p>APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次测试，发现服务端的返回请求状态码不是 <code>403</code> 就是 <code>404</code>，基本可以确定此处不存在订单越权查看问题，但是根据服务端返回的状态码，不难推测出如下结论：</p>
+<blockquote>
+<p>404 即该订单号对应的订单不存在</p>
+<p>403 即该订单存在，但不允许我查看</p>
+</blockquote>
+<h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h2><p>那么可以怎么利用呢？订单属于商业敏感数据，APP 开发者当然不愿意自己的实际订单数据被用户或竞争对手拿到，在这里我可以根据遍历订单编号得到的服务端返回状态码（<code>403</code> 即订单存在）确定该 APP 的实际订单量。</p>
+<p>类似场景还有，当获取用户个人主页时候，Restful 接口类似如下：</p>
+<blockquote>
+<p>GET /users/123/profile HTTP/1.1</p>
+<p>Host: target.com</p>
+</blockquote>
+<p>修改 <code>123</code> 为其他数字，根据服务端返回状态码是否为 <code>403</code> 即可判断对应用户是否存在，在确定注册用户 id 递增的情况下，那么可以在月初注册一个账户拿到用户 id，记为 <code>num1</code>，月末注册另一账户并拿到用户 id，记为 <code>num2</code>，再遍历下刚刚的接口，就能筛选出 <code>num1</code>、<code>num2</code> 之间的用户数量了，也即为一个月的新增用户数。</p>
+<p>对创业公司来说，倘若投资人以某种渠道拿到了你们产品的真实注册用户数和订单量，你觉得他还会在乎你 PPT 上的内容吗？当然，这有点夸张了XD。</p>
+<h2 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h2><p>在我看来，当一个用户访问的资源不属于自己时，服务端返回 <code>403</code> 和 <code>404</code> 都是可以的，<code>403</code> 指 Forbidden，禁止用户访问不属于自己的资源，<code>404</code> 指 Not Found，用户不能看到不属于自己的资源，也能解释通。另外，也有服务端会返回 <code>401</code>，<code>401</code> 指 Unauthorized，用户未授权访问不属于自己的资源，依然合理。</p>
+<p>那到底该用哪一个呢？去翻了下 <code>RFC2616</code>，对 <code>403</code> 状态码的解释里有这么一句：</p>
+<blockquote>
+<p>If the server does not wish to make this information available to the client, the status code 404 (Not Found) can be used instead.</p>
+</blockquote>
+<p>大概意思就是，只要服务端不想暴露信息给客户端，接口都统一返回 <code>404</code>，完整部分可以看下图：</p>
+<p><img src="/images/rfc-1.png" alt="status code rfc"></p>
+<p>针对上面我碰到的场景来说，总结一句话就是</p>
+<blockquote>
+<p>未授权用户访问有效资源时，服务端统一返回 404 更安全</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安全/" rel="tag"># 安全</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/21/OAuth-Security-Cheatsheet/" rel="next" title="OAuth Security Cheatsheet">
+                <i class="fa fa-chevron-left"></i> OAuth Security Cheatsheet
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/22/Product-Design-and-Development-Safety-Baseline/" rel="prev" title="产品设计与开发安全基线">
+                产品设计与开发安全基线 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/"
+           data-title="会说话的状态码" data-url="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Wismartzy" />
+          <p class="site-author-name" itemprop="name">Wismartzy</p>
+          <p class="site-description motion-element" itemprop="description">Worker Security</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01"><span class="nav-number">1.</span> <span class="nav-text">0x01</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02"><span class="nav-number">2.</span> <span class="nav-text">0x02</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03"><span class="nav-number">3.</span> <span class="nav-text">0x03</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wismartzy</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wismartzy"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

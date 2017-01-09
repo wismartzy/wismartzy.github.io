@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="sql injection," />
+  <meta name="keywords" content="安全," />
 
 
 
@@ -90,7 +90,7 @@
 关于二阶注入，上一篇文章有写过Second Order SQL Injection
 漏洞复现访问">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZenPhoto 1.4.8 Second Order SQL Injection">
+<meta property="og:title" content="ZenPhoto 1.4.8 二阶 SQL 注入漏洞">
 <meta property="og:url" content="http://yoursite.com/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="来源：https://www.exploit-db.com/exploits/37602/
@@ -106,9 +106,9 @@
 <meta property="og:image" content="http://yoursite.com/images/zenphoto-6.png">
 <meta property="og:image" content="http://yoursite.com/images/zenphoto-7.png">
 <meta property="og:image" content="http://yoursite.com/images/zenphoto-8.png">
-<meta property="og:updated_time" content="2016-06-30T08:19:12.000Z">
+<meta property="og:updated_time" content="2017-01-09T15:40:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZenPhoto 1.4.8 Second Order SQL Injection">
+<meta name="twitter:title" content="ZenPhoto 1.4.8 二阶 SQL 注入漏洞">
 <meta name="twitter:description" content="来源：https://www.exploit-db.com/exploits/37602/
 
 背景ZenPhoto是一款小巧的相册软件，具备RSS输出、FTP上传方式、Tag功能、评论回复等功能。基于PHP+MySQL环境，它的主旨是简单，这也就是说不管是用户还是网站管理员，都可以很容易的使用它。
@@ -148,7 +148,7 @@
 
 
 
-  <title> ZenPhoto 1.4.8 Second Order SQL Injection | Wismartzy's Blog </title>
+  <title> ZenPhoto 1.4.8 二阶 SQL 注入漏洞 | Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -208,7 +208,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -218,7 +218,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -285,7 +285,7 @@
             
             
               
-                ZenPhoto 1.4.8 Second Order SQL Injection
+                ZenPhoto 1.4.8 二阶 SQL 注入漏洞
               
             
           </h1>
@@ -298,7 +298,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-30T15:01:06+08:00">
                 2016-06-30
@@ -448,7 +448,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/sql-injection/" rel="tag"># sql injection</a>
+            <a href="/tags/安全/" rel="tag"># 安全</a>
           
         </div>
       
@@ -457,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/22/Second-Order-SQL-Injection/" rel="next" title="Second Order SQL Injection">
-                <i class="fa fa-chevron-left"></i> Second Order SQL Injection
+              <a href="/2016/06/22/Second-Order-SQL-Injection/" rel="next" title="关于二阶 SQL 注入">
+                <i class="fa fa-chevron-left"></i> 关于二阶 SQL 注入
               </a>
             
           </div>
@@ -467,8 +467,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/26/wget-redirection-vulnerability/" rel="prev" title="wget redirection vulnerability">
-                wget redirection vulnerability <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/26/wget-redirection-vulnerability/" rel="prev" title="wget 重定向漏洞（CVE-2016-4971）">
+                wget 重定向漏洞（CVE-2016-4971） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -496,7 +496,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/06/30/zenphoto-1-4-8-second-order-sql-injection/"
-           data-title="ZenPhoto 1.4.8 Second Order SQL Injection" data-url="http://yoursite.com/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">
+           data-title="ZenPhoto 1.4.8 二阶 SQL 注入漏洞" data-url="http://yoursite.com/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">
       </div>
     
   </div>
@@ -522,10 +522,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -543,8 +543,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -554,8 +554,8 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">tags</span>
               </a>
             </div>
           
@@ -619,7 +619,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
