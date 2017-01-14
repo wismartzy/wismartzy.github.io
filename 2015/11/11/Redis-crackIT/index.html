@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="安全," />
+  <meta name="keywords" content="安全,运维," />
 
 
 
@@ -84,48 +84,49 @@
 
 
 
-<meta name="description" content="0x01我在某次授权渗透时候碰到的场景：
-渗透对象：
+<meta name="description" content="关于漏洞漏洞发生的前提：
 
-某电商 APP
+1、Redis 服务暴露在公网
+2、Redis 配置未设置口令或弱口令
+3、Redis 配置文件未设置 Bind ip
+4、Redis 服务所在机器开启了 SSH 服务，且默认 22 端口对外开放
 
-目标缺陷：
-
-API 设计不合理导致可泄露业务相关敏感信息
-
-测试过程：
-APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
+说明：第1点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。
+实验首先在一台虚拟机（inet 10.0.100.210）中">
 <meta property="og:type" content="article">
-<meta property="og:title" content="会说话的状态码">
-<meta property="og:url" content="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/index.html">
+<meta property="og:title" content="Redis crackIT 漏洞">
+<meta property="og:url" content="http://yoursite.com/2015/11/11/Redis-crackIT/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
-<meta property="og:description" content="0x01我在某次授权渗透时候碰到的场景：
-渗透对象：
+<meta property="og:description" content="关于漏洞漏洞发生的前提：
 
-某电商 APP
+1、Redis 服务暴露在公网
+2、Redis 配置未设置口令或弱口令
+3、Redis 配置文件未设置 Bind ip
+4、Redis 服务所在机器开启了 SSH 服务，且默认 22 端口对外开放
 
-目标缺陷：
-
-API 设计不合理导致可泄露业务相关敏感信息
-
-测试过程：
-APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
-<meta property="og:image" content="http://yoursite.com/images/rfc-1.png">
-<meta property="og:updated_time" content="2017-01-09T16:27:00.000Z">
+说明：第1点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。
+实验首先在一台虚拟机（inet 10.0.100.210）中">
+<meta property="og:image" content="http://yoursite.com/images/redis-1.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-2.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-3.1.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-3.2.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-3.3.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-4.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-5.png">
+<meta property="og:image" content="http://yoursite.com/images/redis-6.png">
+<meta property="og:updated_time" content="2017-01-14T03:29:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="会说话的状态码">
-<meta name="twitter:description" content="0x01我在某次授权渗透时候碰到的场景：
-渗透对象：
+<meta name="twitter:title" content="Redis crackIT 漏洞">
+<meta name="twitter:description" content="关于漏洞漏洞发生的前提：
 
-某电商 APP
+1、Redis 服务暴露在公网
+2、Redis 配置未设置口令或弱口令
+3、Redis 配置文件未设置 Bind ip
+4、Redis 服务所在机器开启了 SSH 服务，且默认 22 端口对外开放
 
-目标缺陷：
-
-API 设计不合理导致可泄露业务相关敏感信息
-
-测试过程：
-APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次">
-<meta name="twitter:image" content="http://yoursite.com/images/rfc-1.png">
+说明：第1点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。
+实验首先在一台虚拟机（inet 10.0.100.210）中">
+<meta name="twitter:image" content="http://yoursite.com/images/redis-1.png">
 
 
 
@@ -153,13 +154,13 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/"/>
+  <link rel="canonical" href="http://yoursite.com/2015/11/11/Redis-crackIT/"/>
 
 
 
 
 
-  <title> 会说话的状态码 | Wismartzy's Blog </title>
+  <title> Redis crackIT 漏洞 | Wismartzy's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -272,7 +273,7 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/11/11/Redis-crackIT/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Wismartzy">
@@ -296,7 +297,7 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
             
             
               
-                会说话的状态码
+                Redis crackIT 漏洞
               
             
           </h1>
@@ -311,8 +312,8 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-09T23:33:23+08:00">
-                2016-09-09
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-11T15:50:05+08:00">
+                2015-11-11
               </time>
             
 
@@ -330,8 +331,8 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/" itemprop="commentCount"></span>
+                <a href="/2015/11/11/Redis-crackIT/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/11/Redis-crackIT/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -357,40 +358,44 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
       
 
       
-        <h2 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h2><p>我在某次授权渗透时候碰到的场景：</p>
-<p>渗透对象：</p>
+        <h2 id="关于漏洞"><a href="#关于漏洞" class="headerlink" title="关于漏洞"></a>关于漏洞</h2><p>漏洞发生的前提：</p>
 <blockquote>
-<p>某电商 APP</p>
+<p>1、Redis 服务暴露在公网</p>
+<p>2、Redis 配置未设置口令或弱口令</p>
+<p>3、Redis 配置文件未设置 Bind ip</p>
+<p>4、Redis 服务所在机器开启了 SSH 服务，且默认 22 端口对外开放</p>
 </blockquote>
-<p>目标缺陷：</p>
+<p>说明：第<code>1</code>点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>首先在一台虚拟机（<code>inet 10.0.100.210</code>）中安装了 redis，完全采用默认配置（意味着未设置 Bind ip，未设置口令）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost redis-3.0.5]<span class="comment"># ps -ef | grep redis</span></span><br><span class="line">root      4448  3629  0 15:24 pts/2    00:00:00 src/redis-server *:6379</span><br></pre></td></tr></table></figure>
+<p>另外，可以看到 Redis 还是以 root 用户启动运行的。</p>
+<p>现在从另一台机器（<code>inet 10.0.100.164</code>）去攻击此台 Redis 服务器</p>
+<h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><p>生成一个新的 SSH Public Key，并保存在文件<code>foo.txt</code>中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>; cat id_rsa.pub; <span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>) &gt; foo.txt</span><br></pre></td></tr></table></figure>
+<p><img src="/images/redis-1.png" alt="redis-1"></p>
+<p>这里有换行是关键，体现在后面将内存数据导出到<code>authorized_keys</code>文件的时候</p>
+<h3 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h3><p>将<code>foo.txt</code>内容写入 redis 内存，flushall 将清除数据库所有的 key，后面一步是将公钥保存给 crackit</p>
+<p><img src="/images/redis-2.png" alt="redis-2"></p>
+<h3 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h3><p>将内存中得数据导出到<code>authorized_keys</code>文件中</p>
+<p><img src="/images/redis-3.1.png" alt="redis-3.1"></p>
+<p>再去 Redis 服务所在的机器上去看 root 用户的<code>authorized_keys</code></p>
+<p><img src="/images/redis-3.2.png" alt="redis-3.2"></p>
+<p>可以看到我的 Public Key 已经写到了这台机器的<code>authorized_key</code>里面了，从这里也可以看出如果当时第一步的时候<code>foo.txt</code>内保存的 Public Key 没有空行，那么得到的就是一串乱码了，尽管其中含有我的 Public Key，仍然不能登录，就像下面这个样子：</p>
+<p><img src="/images/redis-3.3.png" alt="redis-3.3"></p>
+<h3 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h3><p>成功登录</p>
+<p><img src="/images/redis-4.png" alt="redis-4"></p>
+<h2 id="如何防御"><a href="#如何防御" class="headerlink" title="如何防御"></a>如何防御</h2><p>可以看到执行的命令都是 Redis 的一些正常功能，漏洞发生的本质还是配置不合理。Redis 的官方文档中明确指定了</p>
+<p><img src="/images/redis-5.png" alt="redis-5"></p>
+<p>具体如何防御可以根据前面提到的漏洞发生的前提针对性采取如下措施：</p>
 <blockquote>
-<p>API 设计不合理导致可泄露业务相关敏感信息</p>
+<p>1、Redis 不要开放到公网访问</p>
+<p>2、为 Redis 建立单独用户和强密码</p>
+<p>3、为 Redis 绑定 ip 地址</p>
+<p>4、Redis 所在服务器的 OpenSSH 服务（<code>default port 22</code>）不对外开放</p>
 </blockquote>
-<p>测试过程：</p>
-<p>APP 含有购买功能，购买后会为订单生成订单号，此处订单号并不连续且为纯数字。为了进行越权测试，我注册了两个账户，分别进行一次购买行为。测试时我用 Burp 截取查看订单功能的数据包，并修改 URL 中的订单号为任意数字，向服务端再次提交请求，经过多次测试，发现服务端的返回请求状态码不是 <code>403</code> 就是 <code>404</code>，基本可以确定此处不存在订单越权查看问题，但是根据服务端返回的状态码，不难推测出如下结论：</p>
-<blockquote>
-<p>404 即该订单号对应的订单不存在</p>
-<p>403 即该订单存在，但不允许我查看</p>
-</blockquote>
-<h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h2><p>那么可以怎么利用呢？订单属于商业敏感数据，APP 开发者当然不愿意自己的实际订单数据被用户或竞争对手拿到，在这里我可以根据遍历订单编号得到的服务端返回状态码（<code>403</code> 即订单存在）确定该 APP 的实际订单量。</p>
-<p>类似场景还有，当获取用户个人主页时候，Restful 接口类似如下：</p>
-<blockquote>
-<p>GET /users/123/profile HTTP/1.1</p>
-<p>Host: target.com</p>
-</blockquote>
-<p>修改 <code>123</code> 为其他数字，根据服务端返回状态码是否为 <code>403</code> 即可判断对应用户是否存在，在确定注册用户 id 递增的情况下，那么可以在月初注册一个账户拿到用户 id，记为 <code>num1</code>，月末注册另一账户并拿到用户 id，记为 <code>num2</code>，再遍历下刚刚的接口，就能筛选出 <code>num1</code>、<code>num2</code> 之间的用户数量了，也即为一个月的新增用户数。</p>
-<p>对创业公司来说，倘若投资人以某种渠道拿到了你们产品的真实注册用户数和订单量，你觉得他还会在乎你 PPT 上的内容吗？当然，这有点夸张了XD。</p>
-<h2 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h2><p>在我看来，当一个用户访问的资源不属于自己时，服务端返回 <code>403</code> 和 <code>404</code> 都是可以的，<code>403</code> 指 Forbidden，禁止用户访问不属于自己的资源，<code>404</code> 指 Not Found，用户不能看到不属于自己的资源，也能解释通。另外，也有服务端会返回 <code>401</code>，<code>401</code> 指 Unauthorized，用户未授权访问不属于自己的资源，依然合理。</p>
-<p>那到底该用哪一个呢？去翻了下 <code>RFC2616</code>，对 <code>403</code> 状态码的解释里有这么一句：</p>
-<blockquote>
-<p>If the server does not wish to make this information available to the client, the status code 404 (Not Found) can be used instead.</p>
-</blockquote>
-<p>大概意思就是，只要服务端不想暴露信息给客户端，接口都统一返回 <code>404</code>，完整部分可以看下图：</p>
-<p><img src="/images/rfc-1.png" alt="status code rfc"></p>
-<p>针对上面我碰到的场景来说，总结一句话就是</p>
-<blockquote>
-<p>未授权用户访问有效资源时，服务端统一返回 404 更安全</p>
-</blockquote>
+<p>当然对常见服务（Redis，MySQL，OpenSSH 等）修改其默认端口，在出现 Bug 时候也能阻止一些脚本黑客的针对默认端口的批量扫描攻击。</p>
+<h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><p>网上公布了一组调查数据“针对 15 万台对公网开放的 Redis 服务器跟踪分析，发现有 15238 台未进行认证配置，也就是说超过<code>10%</code>的服务器可以直接连接；其中又有 10312 台服务器被入侵，总比例超过<code>67%</code>”。这个是我在 ZoomEye 上搜一下全网开放 6379 端口的主机，可以看到还是有不少的</p>
+<p><img src="/images/redis-6.png" alt="redis-6"></p>
 
       
     </div>
@@ -416,6 +421,8 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
           
             <a href="/tags/安全/" rel="tag"># 安全</a>
           
+            <a href="/tags/运维/" rel="tag"># 运维</a>
+          
         </div>
       
 
@@ -423,18 +430,14 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/21/OAuth-Security-Cheatsheet/" rel="next" title="OAuth Security Cheatsheet">
-                <i class="fa fa-chevron-left"></i> OAuth Security Cheatsheet
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/22/Product-Design-and-Development-Safety-Baseline/" rel="prev" title="产品设计与开发安全基线">
-                产品设计与开发安全基线 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/20/iWebshop-4-4-SQL-Injection/" rel="prev" title="iWebshop 4.4 SQL 注入漏洞">
+                iWebshop 4.4 SQL 注入漏洞 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -461,8 +464,8 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/"
-           data-title="会说话的状态码" data-url="http://yoursite.com/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/">
+      <div class="ds-thread" data-thread-key="2015/11/11/Redis-crackIT/"
+           data-title="Redis crackIT 漏洞" data-url="http://yoursite.com/2015/11/11/Redis-crackIT/">
       </div>
     
   </div>
@@ -555,7 +558,7 @@ APP 含有购买功能，购买后会为订单生成订单号，此处订单号�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01"><span class="nav-number">1.</span> <span class="nav-text">0x01</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02"><span class="nav-number">2.</span> <span class="nav-text">0x02</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03"><span class="nav-number">3.</span> <span class="nav-text">0x03</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于漏洞"><span class="nav-number">1.</span> <span class="nav-text">关于漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验"><span class="nav-number">2.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01"><span class="nav-number">2.1.</span> <span class="nav-text">0x01</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x02"><span class="nav-number">2.2.</span> <span class="nav-text">0x02</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03"><span class="nav-number">2.3.</span> <span class="nav-text">0x03</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x04"><span class="nav-number">2.4.</span> <span class="nav-text">0x04</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何防御"><span class="nav-number">3.</span> <span class="nav-text">如何防御</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#影响"><span class="nav-number">4.</span> <span class="nav-text">影响</span></a></li></ol></div>
             
 
           </div>

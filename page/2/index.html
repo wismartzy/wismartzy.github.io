@@ -387,6 +387,172 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/11/11/Redis-crackIT/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Wismartzy">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Wismartzy's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Wismartzy's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/11/11/Redis-crackIT/" itemprop="url">
+                  Redis crackIT 漏洞
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-11T15:50:05+08:00">
+                2015-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/11/11/Redis-crackIT/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/11/Redis-crackIT/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="关于漏洞"><a href="#关于漏洞" class="headerlink" title="关于漏洞"></a>关于漏洞</h2><p>漏洞发生的前提：</p>
+<blockquote>
+<p>1、Redis 服务暴露在公网</p>
+<p>2、Redis 配置未设置口令或弱口令</p>
+<p>3、Redis 配置文件未设置 Bind ip</p>
+<p>4、Redis 服务所在机器开启了 SSH 服务，且默认 22 端口对外开放</p>
+</blockquote>
+<p>说明：第<code>1</code>点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>首先在一台虚拟机（<code>inet 10.0.100.210</code>）中安装了 redis，完全采用默认配置（意味着未设置 Bind ip，未设置口令）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost redis-3.0.5]<span class="comment"># ps -ef | grep redis</span></span><br><span class="line">root      4448  3629  0 15:24 pts/2    00:00:00 src/redis-server *:6379</span><br></pre></td></tr></table></figure>
+<p>另外，可以看到 Redis 还是以 root 用户启动运行的。</p>
+<p>现在从另一台机器（<code>inet 10.0.100.164</code>）去攻击此台 Redis 服务器</p>
+<h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><p>生成一个新的 SSH Public Key，并保存在文件<code>foo.txt</code>中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>; cat id_rsa.pub; <span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>) &gt; foo.txt</span><br></pre></td></tr></table></figure>
+<p><img src="/images/redis-1.png" alt="redis-1"></p>
+<p>这里有换行是关键，体现在后面将内存数据导出到<code>authorized_keys</code>文件的时候</p>
+<h3 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h3><p>将<code>foo.txt</code>内容写入 redis 内存，flushall 将清除数据库所有的 key，后面一步是将公钥保存给 crackit</p>
+<p><img src="/images/redis-2.png" alt="redis-2"></p>
+<h3 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h3><p>将内存中得数据导出到<code>authorized_keys</code>文件中</p>
+<p><img src="/images/redis-3.1.png" alt="redis-3.1"></p>
+<p>再去 Redis 服务所在的机器上去看 root 用户的<code>authorized_keys</code></p>
+<p><img src="/images/redis-3.2.png" alt="redis-3.2"></p>
+<p>可以看到我的 Public Key 已经写到了这台机器的<code>authorized_key</code>里面了，从这里也可以看出如果当时第一步的时候<code>foo.txt</code>内保存的 Public Key 没有空行，那么得到的就是一串乱码了，尽管其中含有我的 Public Key，仍然不能登录，就像下面这个样子：</p>
+<p><img src="/images/redis-3.3.png" alt="redis-3.3"></p>
+<h3 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h3><p>成功登录</p>
+<p><img src="/images/redis-4.png" alt="redis-4"></p>
+<h2 id="如何防御"><a href="#如何防御" class="headerlink" title="如何防御"></a>如何防御</h2><p>可以看到执行的命令都是 Redis 的一些正常功能，漏洞发生的本质还是配置不合理。Redis 的官方文档中明确指定了</p>
+<p><img src="/images/redis-5.png" alt="redis-5"></p>
+<p>具体如何防御可以根据前面提到的漏洞发生的前提针对性采取如下措施：</p>
+<blockquote>
+<p>1、Redis 不要开放到公网访问</p>
+<p>2、为 Redis 建立单独用户和强密码</p>
+<p>3、为 Redis 绑定 ip 地址</p>
+<p>4、Redis 所在服务器的 OpenSSH 服务（<code>default port 22</code>）不对外开放</p>
+</blockquote>
+<p>当然对常见服务（Redis，MySQL，OpenSSH 等）修改其默认端口，在出现 Bug 时候也能阻止一些脚本黑客的针对默认端口的批量扫描攻击。</p>
+<h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><p>网上公布了一组调查数据“针对 15 万台对公网开放的 Redis 服务器跟踪分析，发现有 15238 台未进行认证配置，也就是说超过<code>10%</code>的服务器可以直接连接；其中又有 10312 台服务器被入侵，总比例超过<code>67%</code>”。这个是我在 ZoomEye 上搜一下全网开放 6379 端口的主机，可以看到还是有不少的</p>
+<p><img src="/images/redis-6.png" alt="redis-6"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -434,7 +600,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -445,7 +611,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
