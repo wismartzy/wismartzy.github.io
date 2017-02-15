@@ -188,7 +188,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -198,7 +198,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -231,6 +231,365 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/23/The-Security-of-HTTP-Headers/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Wismartzy">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Wismartzy's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Wismartzy's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/23/The-Security-of-HTTP-Headers/" itemprop="url">
+                  The Security of HTTP Headers
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-23T16:27:23+08:00">
+                2016-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/23/The-Security-of-HTTP-Headers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/23/The-Security-of-HTTP-Headers/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>来源：<a href="http://www.contextis.com/resources/blog/security-http-headers" target="_blank" rel="external">http://www.contextis.com/resources/blog/security-http-headers</a></p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当谈论到web应用安全，我们经常考虑到的是：过滤用户的输入、加密渠道传递数据和使用安全的函数这些明显的点，而忽略在web安全上HTTP返回头部和现代web浏览器相结合产生的正面影响，这篇文章试图阐明<code>HTTP Headers</code>对web安全的主动和被动影响。</p>
+<h1 id="主动安全"><a href="#主动安全" class="headerlink" title="主动安全"></a>主动安全</h1><p>我们查阅<a href="https://www.owasp.org/index.php/Main_Page" target="_blank" rel="external">OWASP</a>推荐的<code>HTTP Headers</code>，下面这些<code>headers</code>能够被利用起来主动地增加web应用的安全性。</p>
+<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2><p>这个头部属性是告诉浏览器某个页面是否应该被展示在另一个页面中（比如在<code>IFRAME</code>标签中）。允许一个页面被加载在<code>IFRAME</code>中会造成<strong>点击劫持</strong>攻击的风险。攻击中目标站点被载入在背景位置，对受害者隐藏。然后受害者被引诱去网站上执行点击动作（例如通过一个调查或者抽奖），这些点击被处在背景位置的目标站点秘密的执行了。如果受害者当前是登录了目标站点的，那这些点击是带着用户的<code>session</code>被执行的。通过这样的方式能以用户身份执行命令，以及从用户资料里获取信息。</p>
+<p><code>X-Frame-Options</code>可以被设置为以下值：</p>
+<blockquote>
+<p>DENY</p>
+<p>SAMEORIGIN</p>
+<p>ALLOW-FROM <uri></uri></p>
+</blockquote>
+<p>除非你的应用明确的需要在<code>IFRAME</code>里载入页面，否则请设置该头部值为<code>DENY</code></p>
+<pre><code>X-Frame-Options: DENY
+</code></pre><p>如果你的应用使用<code>IFRAME</code>只是载入应用本身包含的（同源）页面，那么你应该设置该头部值为<code>SAMEORIGIN</code></p>
+<pre><code>X-Frame-Options: SAMEORIGIN
+</code></pre><p>如果你的应用使用<code>IFRAME</code>需要载入非同源下的地址，那么你应该明确定义外部的源</p>
+<pre><code>X-Frame-Options: ALLOW-FROM contextis.co.uk
+</code></pre><p>请注意<code>X-Frame-Options</code>头部的指令<code>ALLOW-FROM</code>接受一个确定的域名。没有协议，没有端口，没有路径和没有通配符。</p>
+<p>兼容矩阵：</p>
+<table>
+<thead>
+<tr>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Internet Explorer</th>
+<th>Opera</th>
+<th>Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.0</td>
+<td>3.6</td>
+<td>8.0</td>
+<td>10.5</td>
+<td>4.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Strict-Transport-Security"><a href="#Strict-Transport-Security" class="headerlink" title="Strict-Transport-Security"></a>Strict-Transport-Security</h2><p>这个头部经常缩写成<code>HSTS</code>（HTTP Strict Transport Security），告诉浏览器每当用户发送这个头部访问站点时强制使用<code>HTTPS</code>连接。所有主流浏览器都支持这个特性，并且应该：</p>
+<ul>
+<li>仅仅通过<code>HTTPS</code>连接站点</li>
+<li>转换站点所有的<code>HTTP</code>引用为<code>HTTPS</code></li>
+<li>在<code>SSL</code>证书错误时拒绝载入站点</li>
+</ul>
+<p>此外还需要注意这个头部只能通过<code>HTTPS</code>响应进行设置，也就是说用户通过<code>HTTPS</code>至少连接过一次该站点。除非你做了一些特殊的准备，（比如说将域名添加到浏览器的预置<code>HSTS</code>域名列表）。同样重要的是要注意头部信息仅在一段时间内有效：过期时间以秒为单位，推荐如下设置半年，告诉浏览器去遵从<code>STS</code>。</p>
+<pre><code>Strict-Transport-Security: max-age=15768000
+</code></pre><p>如果这条规则应该扩展到覆盖所有子域，那么可以通过在这个头部里面加入属性<code>includeSubDomains</code>：</p>
+<pre><code>Strict-Transport-Security: max-age=15768000; includeSubDomains
+</code></pre><p>一些浏览器（至少Chrome， Firefox，IE11/Edge 和 Safari）都有一个<strong>预加载列表</strong>，里面的<code>URL</code>都明确指定了他们想使用<code>HSTS</code>，如果用户打算访问该列表的这些<code>URL</code>，那么浏览器就会自动强制应用<code>HSTS</code>规则，尽管是第一次连接，否则可能会受到中间人攻击。把你的网站添加到预加载列表需要把<code>URL</code>提交到这个<a href="https://hstspreload.appspot.com/" target="_blank" rel="external">页面</a>，并追加<code>preload</code>命令在到该头部里。例如：</p>
+<pre><code>Strict-Transport-Security: max-age=15768000; includeSubDomains; preload
+</code></pre><h2 id="X-XSS-Protection"><a href="#X-XSS-Protection" class="headerlink" title="X-XSS-Protection"></a>X-XSS-Protection</h2><p>关于这个头部一直都饱受争议，甚至有人明确指定建议禁用它。那么，这个头部到底做了些什么呢？</p>
+<p>设置</p>
+<pre><code>X-XSS-Protection: 1
+</code></pre><p>这个头部的目的是告诉浏览器利用其<code>XSS</code>防护。目前仅在Chrome，Internet Explorer 和 Safari浏览器有这样的内建引擎并且能识别该头部（Firefox似乎要依赖第三方插件<code>NoScript</code>）。</p>
+<p>可能在浏览器端去过滤一些造成攻击的恶意请求看起来挺不错的，但是，其实过滤非常困难。尤其是在有人尝试试探性的检测恶意代码，过滤它并且同时又尽力维护站点正常工作。这将会导致一些过滤被绕过，甚至给先前健康的站点引入跨站脚本攻击。</p>
+<p>设置</p>
+<pre><code>X-XSS-Protection: 1; mode=block
+</code></pre><p>告诉浏览器不渲染整个页面，而是显示空白页。但是即使这样，由于方法早期有缺陷，从而导致一些大型站点（如facebook.com，live.com 和 slack.com）明确禁用<code>XSS</code>过滤器（<code>X-XSS-Protection: 0</code>）。</p>
+<p>所以尽管很难对这个头部给出一个明确的建议，似乎看起来变体<code>X-XSS-Protection: 1; mode=block</code>的写法更加成熟些，而且已经摒弃了早期的缺陷。除此之外，针对跨站脚本攻击最好的防护仍然是过滤所有的输入和输出。</p>
+<p>设置如下头部明确开启过滤器去过滤恶意的输入</p>
+<pre><code>X-XSS-Protection: 1;
+</code></pre><p>设置如下头部阻止当前检测到恶意输入的站点</p>
+<pre><code>X-XSS-Protection: 1; mode=block
+</code></pre><p>另外可以设置包含一个<code>URL</code>的<code>report</code>参数，如果<code>Webkit-XSS-Auditors</code>（Chrome，Safari）其中之一检测到攻击就会发送一个<code>POST</code>消息到<code>URL</code>，消息包含事件的详细信息：</p>
+<pre><code>X-XSS-Protection: 1; mode=block; report=https://domain.tld/folder/file.ext
+</code></pre><p>兼容矩阵</p>
+<table>
+<thead>
+<tr>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Internet Explorer</th>
+<th>Opera</th>
+<th>Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.0</td>
+<td>4.0</td>
+<td>11</td>
+<td>12</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<h2 id="X-Content-Type-Options"><a href="#X-Content-Type-Options" class="headerlink" title="X-Content-Type-Options"></a>X-Content-Type-Options</h2><p>这个头部用来阻止特定版本的IE浏览器“嗅探”页面的<code>MIME</code>类型。它是IE浏览器的一个特性，当页面（<code>Content-Type: text/plaintext</code>）包含<code>HTML</code>标签时，浏览器将其作为<code>HTML</code>解释。然而，当处理用户提供的内容时引入了跨站脚本攻击的风险。这个头部仅有一个设置项<code>nosniff</code>，这样就阻止了浏览器嗅探页面的<code>MIME</code>类型。</p>
+<pre><code>X-Content-Type-Options: nosniff
+</code></pre><p>兼容矩阵</p>
+<table>
+<thead>
+<tr>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Internet Explorer</th>
+<th>Opera</th>
+<th>Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>?</td>
+<td>?</td>
+<td>8</td>
+<td>?</td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Public-Key-Pins"><a href="#Public-Key-Pins" class="headerlink" title="Public-Key-Pins"></a>Public-Key-Pins</h2><p><code>Public-Key-Pins</code>也叫作<code>HTTP Public Key Pinning</code>（缩写为<code>HPKP</code>）是相对较新的头部，还没有被广泛的使用。然而，它具有很强的安全潜能，因为它允许网站经营者指定（<code>pin</code>，密钥）一个有效的证书，减少对CA的依赖，在过去这种方式已经被证明是容易受到攻击的（如任何CA都可以创建一个技术上可行且受信任的证书，但是并不是由你指定的）。和<code>HSTS</code>一样，浏览器开始支持记住这个密钥，并且仅仅接受证书密钥和头部提供的秘钥匹配的网站连接。然而这意味着一个意想不到的证书改动会造成访问者被锁定在网站外。因此在第一个失败的时候很有必要提供一个可用的备份证书密钥。它也应该包含一个<code>max-age</code>属性，还有指定剩余时间（秒为单位），请记住，对不知情的用户这也可能是锁定时间。</p>
+<pre><code>Public-Key-Pins: pin-sha256=&quot;&lt;sha256&gt;&quot;; pin-sha256=&quot;&lt;sha256&gt;&quot;; max-age=15768000;
+</code></pre><p>该规则如果要被扩展到覆盖所有子域，那么这个头部能通过添加属性<code>includeSubDomains</code>被扩展：</p>
+<pre><code>Public-Key-Pins: pin-sha256=&quot;&lt;sha256&gt;&quot;; pin-sha256=&quot;&lt;sha256&gt;&quot;; max-age=15768000; includeSubDomains
+</code></pre><p>兼容矩阵</p>
+<table>
+<thead>
+<tr>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Internet Explorer</th>
+<th>Opera</th>
+<th>Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>35</td>
+<td>35</td>
+<td>   -</td>
+<td>23</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Content-Security-Policy-取代-X-Content-Security-Policy-和-X-WebKit-CSP"><a href="#Content-Security-Policy-取代-X-Content-Security-Policy-和-X-WebKit-CSP" class="headerlink" title="Content-Security-Policy (取代 X-Content-Security-Policy 和 X-WebKit-CSP)"></a>Content-Security-Policy (取代 X-Content-Security-Policy 和 X-WebKit-CSP)</h2><p><code>Content-Security-Policy</code>（缩写为<code>CSP</code>）是一个灵活的方式去指定站点哪些内容可能被执行，哪些内容不能被执行。现在的一个问题是浏览器并不知道哪个源值得信任，哪个源不能被信任。比如来自<code>apis.google.com</code>的包含第三方<code>JavaScript</code>是否值得信任？唯一合理的解决方式是白名单，由开发者指定合法的资源位置。下面是一个基本的例子如何允许来自于本地和<code>apis.google.com</code>的<code>JavaScript</code></p>
+<pre><code>Content-Security-Policy: script-src &apos;self&apos; https://apis.google.com
+</code></pre><p><code>CSP</code>有一些额外的关键字，允许进行非常细粒度的访问控制，此外还要注意<code>CSP</code>是作为每个站点的模型，因此每一个站点都需要一个自己的<code>HTTP</code>头部集。</p>
+<p>兼容矩阵</p>
+<table>
+<thead>
+<tr>
+<th>Chrome</th>
+<th>Firefox</th>
+<th>Internet Explorer</th>
+<th>Opera</th>
+<th>Safari</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14</td>
+<td>4</td>
+<td> 10* /12 通过X-Content-Security-Policy</td>
+<td>15</td>
+<td>5.1* /7.1 通过X-Webkit-CSP</td>
+</tr>
+</tbody>
+</table>
+<h1 id="被动安全"><a href="#被动安全" class="headerlink" title="被动安全"></a>被动安全</h1><p>下面要介绍的头部并不会主动启用任何安全相关的特性，而是被动地影响着安全，通常通过这些头部会泄露不必要展示的信息。</p>
+<h2 id="Cookie-attributes-HttpOnly-and-Secure"><a href="#Cookie-attributes-HttpOnly-and-Secure" class="headerlink" title="Cookie attributes (HttpOnly and Secure)"></a>Cookie attributes (HttpOnly and Secure)</h2><p>与<code>cookie</code>相关的一些特殊属性经常被忽视，而设置这些属性能很大程度上减少<code>cookie</code>被偷的风险。</p>
+<h3 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h3><p><code>HttpOnly</code>属性告诉浏览器拒绝<code>JavaScript</code>访问<code>cookie</code>，这使得通过跨站脚本攻击更加困难获取访问<code>cookie</code></p>
+<pre><code>Set-Cookie: cookie=xxxxxxxxx; HttpOnly
+</code></pre><h3 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h3><p>这个属性告诉浏览器仅在<code>HTTPS</code>连接的情况下发送<code>cookie</code>信息，这个应该是所有的会话和认证相关的<code>cookie</code>规范，因为它可以轻松拦截通过未加密的<code>HTTP</code>连接。</p>
+<pre><code>Set-Cookie: cookie=xxxxxxxxx; Secure
+</code></pre><p>当然这些属性能被组合使用：</p>
+<pre><code>Set-Cookie: cookie=xxxxxxxxx; HttpOnly; Secure
+</code></pre><h2 id="Server-X-Powered-By"><a href="#Server-X-Powered-By" class="headerlink" title="Server / X-Powered-By"></a>Server / X-Powered-By</h2><p>这两个头部会显示在用的服务器软件和它的版本号，这些头部可能在调试的适合很有用，但是对用户体验没有任何用处，应该要么被去掉或者减少到不泄露任何版本信息。</p>
+<h2 id="Caching-directives"><a href="#Caching-directives" class="headerlink" title="Caching directives"></a>Caching directives</h2><p>另一个经常被忽视的问题是浏览器缓存的敏感信息，浏览器经常存储网站元素到本地高速缓存以加速浏览体验。对一些不敏感的站点和元素比如图片或样式信息来说，这样是可以的，但是对于敏感信息（比如来自<code>web</code>应用认证区域的页面）要避免这样做。这个问题在共享计算机环境（比如说办公室，学校，网咖）下变得更糟糕，其他用户可以很容易的接触到你的浏览器缓存。要告诉浏览器（可能是中间缓存，如代理）不存储任何东西在它的缓存里面需要使用如下命令：</p>
+<pre><code>Cache-Control: no-cache, no-store
+Expires: 0
+Pragma: no-cache
+</code></pre><p>要注意的是经常遇到的命令<code>Cache-Control: private</code>在共享计算机的环境中不能被认为是安全的，因为它允许浏览器去存储这些元素到他的缓存里面。</p>
+<h3 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h3><p><code>Entity Tag</code>（缩写<code>ETag</code>）头部是作缓存用途的，服务器使用特殊的算法为它提供的每个文件版本计算一个单独的<code>ETag</code>，浏览器然后能够请求服务器查看是否该<code>ETag</code>文件仍然可用，如果可用，服务器返回一个<code>304</code>状态码给浏览器，让它使用本地缓存的版本，否则服务器发送完整的资源和<code>200</code>状态码。</p>
+<p>虽然这是一个有用的头部，你会发现有时会在漏洞相关的文章或报告对它的引用。问题是<code>Apache</code>的某些版本（2.3.14之前的版本中）用于披露对于在其默认的配置提供服务的文件索引节点。索引节点可用于进一步的攻击，例如通过网络文件系统（<code>NFS</code>），使用这些<code>INode</code>节点来创建文件句柄。有问题的默认配置已经在最近版本的<code>Apache</code>得到了纠正，但是你扔应该确保在<code>httpd.conf</code>里你相应的<code>FileETag</code>设置不包含<code>INode</code>属性。下面这行是好的设置：</p>
+<pre><code>FileETag MTime Size
+</code></pre><p>下面这行不是：</p>
+<pre><code>FileETag INode MTime Size
+</code></pre><h2 id="X-Robots-Tag-和-Robots-txt"><a href="#X-Robots-Tag-和-Robots-txt" class="headerlink" title="X-Robots-Tag 和 Robots.txt"></a>X-Robots-Tag 和 Robots.txt</h2><p><code>X-Robots-Tag</code>头部能被用告诉搜索引擎（支持该头部）页面或文件如何被索引。和<code>robots.txt</code>或者<code>robots</code>的<code>meta</code>标签比起来，<code>X-Robots-Tag</code>的优点是它的头部能被全局配置，还可以调整到一个非常精细的和灵活的水平（比如正则表达式匹配特定的<code>URL</code>）。发送一个<code>meta</code>标签和媒体文件是不可能的，发送<code>HTTP</code>头部和媒体文件是没问题的。它还有优点就是在每个请求的基础上公开信息而不是在单一的文件上。试想一下，你不想让任何人知道的秘密目录，把它们列成一个清单在<code>robots.txt</code>文件上？也许因为一个不好的想法就会让所有人马上知道你想隐藏什么–你可能只是发了一个连接在你的网站上。</p>
+<p>所以你应该干脆抛弃<code>robots.txt</code>而完全依赖<code>X-Robots-Tag</code>呢？或许不会，应该在最大兼容性下将他们组合使用。然而要记住，<code>robots.txt</code>应该仅仅包含你需要索引的文件和目录。你不应该列出哪些你想要隐藏的文件，相反的，可以放置一个不允许条目在<code>robots.txt</code>文件里。</p>
+<p>阻止一切的例子：</p>
+<pre><code>User-Agent: *
+Disallow: /
+</code></pre><p>告诉爬虫索引<code>/Public/</code>目录下的所有文件，剩下的不让索引：</p>
+<pre><code>User-Agent: *
+Allow: /Public/
+Disallow: /
+</code></pre><h2 id="给不同的HTTP服务器添加自定义的头部"><a href="#给不同的HTTP服务器添加自定义的头部" class="headerlink" title="给不同的HTTP服务器添加自定义的头部"></a>给不同的HTTP服务器添加自定义的头部</h2><p>下面你能找到关于如何在不同的<code>HTTP</code>服务器软件里设置静态自定义的<code>HTTP</code>头部的例子。</p>
+<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h3><p>对于<code>Apache</code>，推荐使用模块<code>mod_headers</code>去控制<code>http</code>头。命令<code>Header</code>能够被置于配置文件的任何地方，比如：</p>
+<pre><code>&lt;Directory &quot;/var/www/dir1&quot;&gt;
+    Options +Indexes
+    Header set X-XSS-Protection “1; mode=block”
+&lt;/Directory&gt;
+</code></pre><p>要更详细的了解关于如何使用<code>mod_headers</code>设置<code>HTTP</code>头的指导请参考这个<a href="http://httpd.apache.org/docs/current/mod/mod_headers.html" target="_blank" rel="external">页面</a></p>
+<h3 id="Internet-Information-Services-IIS"><a href="#Internet-Information-Services-IIS" class="headerlink" title="Internet Information Services (IIS)"></a>Internet Information Services (IIS)</h3><p>对于<code>IIS 6.0-10.0</code>，这里有两个方式设置自定义头部：</p>
+<ul>
+<li><p>通过命令行</p>
+<pre><code>appcmd set config /section:httpProtocol /+customHeaders.[name=&apos;X-XSS-Protection&apos;,value=&apos;1; mode=block&apos;]
+</code></pre></li>
+<li><p>通过图形界面</p>
+<p>  打开<code>IIS Manager</code>，使用<strong>Conections</strong>面板找到你想要开启的头部合适的级别，双击<strong>HTTP Response Headers</strong>。现在单击<strong>Add…</strong>然后为这个头部设置你想要设置的名称和值。例子中名称将会是<code>X-XSS-Protection</code>，值将会是<code>1; mode=block</code>。</p>
+</li>
+</ul>
+<p>要更详细的了解关于如何使用<code>IIS</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders" target="_blank" rel="external">页面</a></p>
+<h3 id="Lighttpd"><a href="#Lighttpd" class="headerlink" title="Lighttpd"></a>Lighttpd</h3><p>对于<code>Lighttpd</code>推荐使用模块<code>mod_setenvs</code>去控制<code>apache</code>头部，命令<code>setenv.add-response-header</code>能够被置于配置文件的任何地方，比如：</p>
+<pre><code>setenv.add-response-header = (
+  &quot;X-XSS-Protection&quot; =&gt; &quot;1; mode=Block&quot; 
+)
+</code></pre><p>要更详细的了解关于如何使用<code>Lighttpd</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://redmine.lighttpd.net/projects/1/wiki/Docs_ModSetEnv" target="_blank" rel="external">页面</a></p>
+<h3 id="NGINX"><a href="#NGINX" class="headerlink" title="NGINX"></a>NGINX</h3><p>对于<code>NGINX</code>推荐使用模块<code>ngx_http_headers_module</code>去控制<code>HTTP</code>头，命令<code>add_header</code>能够被置于配置文件中合适的位置，比如：</p>
+<pre><code>server {
+    listen       80;
+    server_name  domain1.com www.domain1.com;
+    root         html;
+
+    location / {
+      add_header X-XSS-Protection “1; mode=Block” always
+    }
+}
+</code></pre><p>要更详细的了解关于使用<code>NGINX</code>设置<code>HTTP</code>头的指导请参考这个<a href="http://nginx.org/en/docs/http/ngx_http_headers_module.html" target="_blank" rel="external">页面</a></p>
+<h1 id="总结和结论"><a href="#总结和结论" class="headerlink" title="总结和结论"></a>总结和结论</h1><p>已经看到有或多或少的新的<code>HTTP</code>头能够主动的促进站点安全。我们还能看到有几个公认的头部可能值得重新审视，以减少被泄露的信息量。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://www.chromium.org/hsts" target="_blank" rel="external">HTTP Strict Transport Security Pre-Load.</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" target="_blank" rel="external">Mozilla Developer Network – HTTP Headers.</a></li>
+<li><a href="https://tools.ietf.org/html/rfc6797" target="_blank" rel="external">RFC6797: HTTP Strict Transport Security (HSTS).</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7034" target="_blank" rel="external">RFC7034: HTTP Header Field X-Frame-Options.</a></li>
+<li><a href="https://tools.ietf.org/html/rfc7469" target="_blank" rel="external">RFC7469: Public Key Pinning Extension for HTTP.</a></li>
+</ul>
+<hr>
+<p>PS：没有完全一字一句的翻译，有些内容翻译不出那种味道，部分内容按照自己的理解整理的。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -281,7 +640,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-20T22:21:09+08:00">
                 2016-05-20
@@ -436,7 +795,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-11T15:50:05+08:00">
                 2015-11-11
@@ -600,8 +959,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -612,7 +971,7 @@
             <div class="site-state-item site-state-tags">
               <a href="/tags">
                 <span class="site-state-item-count">6</span>
-                <span class="site-state-item-name">tags</span>
+                <span class="site-state-item-name">Tags</span>
               </a>
             </div>
           
@@ -660,7 +1019,7 @@
 
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
