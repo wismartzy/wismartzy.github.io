@@ -5,13 +5,13 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://wismartzy.github.io">
   <title>Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Worker Security">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wismartzy's Blog">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:url" content="http://wismartzy.github.io/page/2/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="Worker Security">
 <meta name="twitter:card" content="summary">
@@ -21,7 +21,7 @@
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.2d7529.css">
   <style type="text/css">
@@ -45,7 +45,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="null" class="js-avatar">
+			<img src="/images/wismartzy.png" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Wismartzy</a></h1>
@@ -68,8 +68,6 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -79,7 +77,11 @@
 		<nav class="header-nav">
 			<div class="social">
 				
+					<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+		        
 					<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 		        
 			</div>
 		</nav>
@@ -97,7 +99,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="null" class="js-avatar">
+				<img src="/images/wismartzy.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Wismartzy</h1>
@@ -114,7 +116,11 @@
 			<nav class="header-nav">
 				<div class="social">
 					
+						<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+			        
 						<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 			        
 				</div>
 			</nav>
@@ -140,6 +146,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Second-Order-SQL-Injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/22/Second-Order-SQL-Injection/">关于二阶 SQL 注入</a>
+    </h1>
+  
+
+        
+        <a href="/2016/06/22/Second-Order-SQL-Injection/" class="archive-article-date">
+  	<time datetime="2016-06-22T09:47:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>从乌云平台公开的案例来看，大部分的SQL注入漏洞均发生在单个HTTP请求和响应中，也就是说要触发漏洞，需经过以下步骤：</p>
+<ul>
+<li>客户端请求构造payload并发起请求</li>
+<li>服务端执行了payload</li>
+<li>客户端收到响应结果</li>
+</ul>
+<p>而二阶（Second Order）SQL注入相对来说更隐晦一些，需经过以下步骤：</p>
+<ul>
+<li>客户端构造payload并发起请求</li>
+<li>服务端存储payload</li>
+<li>客户端发起另一请求</li>
+<li>服务端执行了存储的payload</li>
+<li>客户端收到响应结果</li>
+</ul>
+<p>可以对比看到，二阶注入很隐蔽，很难被黑盒测试检测到，这也是现在各大漏洞平台二阶注入案例少的原因之一吧。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>二阶可以理解为两步吧，当将用户的输入存储在某个地方，然后在另一处功能的SQL语句中使用它的时候，既没有进行正确的过滤也没有使用参数化查询，这就造成了二阶注入。至于它的影响的话和普通SQL注入没什么差别。</p>
+        
+          <a class="article-more-a" href="/2016/06/22/Second-Order-SQL-Injection/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/06/22/Second-Order-SQL-Injection/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-Redaxo-CMS-5-0-0-SQL-Injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,49 +246,15 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>来源<a href="https://www.exploit-db.com/exploits/39459/" target="_blank" rel="external">https://www.exploit-db.com/exploits/39459/</a></p>
+<p>来源<a href="https://www.exploit-db.com/exploits/39459/">https://www.exploit-db.com/exploits/39459/</a></p>
 </blockquote>
 <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在逛exploit-db的时候，发现这个漏洞有点意思，就拿过来自己分析了下。Redaxo CMS是一套开源的Web门户内容管理系统（CMS），该系统支持自定义模块、插件扩展、项目备份等。</p>
 <h1 id="审计"><a href="#审计" class="headerlink" title="审计"></a>审计</h1><p>根据报错信息可以定位到该文件，<code>/redaxo-cms-5.0.0/redaxo/src/addons/mediapool/pages/media.php</code>，第582行-608行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> $where = <span class="string">'f.category_id='</span> . $rex_file_category;</span><br><span class="line">    $addTable = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">if</span> ($media_name != <span class="string">''</span>) &#123;</span><br><span class="line">        $media_name = str_replace([<span class="string">'_'</span>, <span class="string">'%'</span>], [<span class="string">'\_'</span>, <span class="string">'\%'</span>], $media_name);</span><br><span class="line">        $where = <span class="string">"(f.filename LIKE '%"</span> . $media_name . <span class="string">"%' OR f.title LIKE '%"</span> . $media_name . <span class="string">"%')"</span>;</span><br><span class="line">        <span class="keyword">if</span> (rex_addon::get(<span class="string">'mediapool'</span>)-&gt;getConfig(<span class="string">'searchmode'</span>, <span class="string">'local'</span>) != <span class="string">'global'</span> &amp;&amp; $rex_file_category != <span class="number">0</span>) &#123;</span><br><span class="line">            $addTable = rex::getTablePrefix() . <span class="string">'media_category c, '</span>;</span><br><span class="line">            $where .= <span class="string">' AND f.category_id = c.id '</span>;</span><br><span class="line">            $where .= <span class="string">" AND (c.path LIKE '%|"</span> . $rex_file_category . <span class="string">"|%' OR c.id="</span> . $rex_file_category . <span class="string">') '</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($args[<span class="string">'types'</span>])) &#123;</span><br><span class="line">        $types = [];</span><br><span class="line">        <span class="keyword">foreach</span> (explode(<span class="string">','</span>, $args[<span class="string">'types'</span>]) <span class="keyword">as</span> $type) &#123;</span><br><span class="line">            $types[] = <span class="string">'LOWER(RIGHT(f.filename, LOCATE(".", REVERSE(f.filename))-1))="'</span> . strtolower(htmlspecialchars($type)) . <span class="string">'"'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        $where .= <span class="string">' AND ('</span> . implode(<span class="string">' OR '</span>, $types) . <span class="string">')'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    $qry = <span class="string">'SELECT * FROM '</span> . $addTable . rex::getTablePrefix() . <span class="string">'media f WHERE '</span> . $where . <span class="string">' ORDER BY f.updatedate desc, f.id desc'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ----- EXTENSION POINT</span></span><br><span class="line">    $qry = rex_extension::registerPoint(<span class="keyword">new</span> rex_extension_point(<span class="string">'MEDIA_LIST_QUERY'</span>, $qry, [</span><br><span class="line">        <span class="string">'category_id'</span> =&gt; $rex_file_category,</span><br><span class="line">    ]));</span><br><span class="line">    $files = rex_sql::factory();</span><br><span class="line"><span class="comment">//   $files-&gt;setDebug();</span></span><br><span class="line">    $files-&gt;setQuery($qry);</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"> $where = <span class="string">'f.category_id='</span> . $rex_file_category;</div><div class="line">    $addTable = <span class="string">''</span>;</div><div class="line">    <span class="keyword">if</span> ($media_name != <span class="string">''</span>) &#123;</div><div class="line">        $media_name = str_replace([<span class="string">'_'</span>, <span class="string">'%'</span>], [<span class="string">'\_'</span>, <span class="string">'\%'</span>], $media_name);</div><div class="line">        $where = <span class="string">"(f.filename LIKE '%"</span> . $media_name . <span class="string">"%' OR f.title LIKE '%"</span> . $media_name . <span class="string">"%')"</span>;</div><div class="line">        <span class="keyword">if</span> (rex_addon::get(<span class="string">'mediapool'</span>)-&gt;getConfig(<span class="string">'searchmode'</span>, <span class="string">'local'</span>) != <span class="string">'global'</span> &amp;&amp; $rex_file_category != <span class="number">0</span>) &#123;</div><div class="line">            $addTable = rex::getTablePrefix() . <span class="string">'media_category c, '</span>;</div><div class="line">            $where .= <span class="string">' AND f.category_id = c.id '</span>;</div><div class="line">            $where .= <span class="string">" AND (c.path LIKE '%|"</span> . $rex_file_category . <span class="string">"|%' OR c.id="</span> . $rex_file_category . <span class="string">') '</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($args[<span class="string">'types'</span>])) &#123;</div><div class="line">        $types = [];</div><div class="line">        <span class="keyword">foreach</span> (explode(<span class="string">','</span>, $args[<span class="string">'types'</span>]) <span class="keyword">as</span> $type) &#123;</div><div class="line">            $types[] = <span class="string">'LOWER(RIGHT(f.filename, LOCATE(".", REVERSE(f.filename))-1))="'</span> . strtolower(htmlspecialchars($type)) . <span class="string">'"'</span>;</div><div class="line">        &#125;</div><div class="line">        $where .= <span class="string">' AND ('</span> . implode(<span class="string">' OR '</span>, $types) . <span class="string">')'</span>;</div><div class="line">    &#125;</div><div class="line">    $qry = <span class="string">'SELECT * FROM '</span> . $addTable . rex::getTablePrefix() . <span class="string">'media f WHERE '</span> . $where . <span class="string">' ORDER BY f.updatedate desc, f.id desc'</span>;</div><div class="line"></div><div class="line">    <span class="comment">// ----- EXTENSION POINT</span></div><div class="line">    $qry = rex_extension::registerPoint(<span class="keyword">new</span> rex_extension_point(<span class="string">'MEDIA_LIST_QUERY'</span>, $qry, [</div><div class="line">        <span class="string">'category_id'</span> =&gt; $rex_file_category,</div><div class="line">    ]));</div><div class="line">    $files = rex_sql::factory();</div><div class="line"><span class="comment">//   $files-&gt;setDebug();</span></div><div class="line">    $files-&gt;setQuery($qry);</div><div class="line">    ...</div></pre></td></tr></table></figure>
 <p>也就是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$qry = <span class="string">'SELECT * FROM '</span> . $addTable . rex::getTablePrefix() . <span class="string">'media f WHERE '</span> . $where . <span class="string">' ORDER BY f.updatedate desc, f.id desc'</span>;</span><br></pre></td></tr></table></figure>
-<p>这条sql语句存在问题了，那么关键看下    <code>$where</code>变量是否可控，继续向上找，<code>$where</code>中一共拼接了两个变量，<code>media_name</code>和<code>rex_file_category</code>，那么先看<code>media_name</code>是从哪里来的，定位到<code>/redaxo-cms-5.0.0/redaxo/src/addons/mediapool/pages/media.php</code>，第8行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$media_name = rex_request(<span class="string">'media_name'</span>, <span class="string">'string'</span>);</span><br></pre></td></tr></table></figure>
-<p>接下来继续找到<code>rex_request</code>函数的实现位置，查看对请求做了哪些封装，定位到<code>/redaxo-cms-5.0.0/redaxo/src/core/functions/function_rex_globals.php</code>，第29行-37行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * <span class="doctag">@see</span> rex_request::request()</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@package</span> redaxo\core</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rex_request</span><span class="params">($varname, $vartype = <span class="string">''</span>, $default = <span class="string">''</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> rex_request::request($varname, $vartype, $default);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到这个函数实际上是去调用了<code>rex_request</code>类的<code>request</code>方法，于是去找<code>rex_request</code>类的实现代码去，定位到<code>/redaxo-cms-5.0.0/redaxo/src/core/lib/request.php</code>，第38行-50行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">    * Returns the variable $varname of $_REQUEST and casts the value.</span><br><span class="line">    *</span><br><span class="line">    * <span class="doctag">@param</span> string $varname Variable name</span><br><span class="line">    * <span class="doctag">@param</span> string $vartype Variable type</span><br><span class="line">    * <span class="doctag">@param</span> mixed  $default Default value</span><br><span class="line">    *</span><br><span class="line">    * <span class="doctag">@return</span> mixed</span><br><span class="line">    */</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">request</span><span class="params">($varname, $vartype = <span class="string">''</span>, $default = <span class="string">''</span>)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">self</span>::arrayKeyCast($_REQUEST, $varname, $vartype, $default);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>这里又调用了<code>rex_request</code>类自身的<code>arrayKeyCast</code>方法，找到该方法的实现，第168行-194行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">     * Searches the value $needle in array $haystack and returns the casted value.</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> array      $haystack Array</span><br><span class="line">     * <span class="doctag">@param</span> string|int $needle   Value to search</span><br><span class="line">     * <span class="doctag">@param</span> string     $vartype  Variable type</span><br><span class="line">     * <span class="doctag">@param</span> mixed      $default  Default value</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@throws</span> InvalidArgumentException</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span> mixed</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">arrayKeyCast</span><span class="params">(array $haystack, $needle, $vartype, $default = <span class="string">''</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!is_scalar($needle)) &#123;<span class="comment">// 判断$needle是否是标量</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Scalar expected for $needle in arrayKeyCast()!'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (array_key_exists($needle, $haystack)) &#123;<span class="comment">// 如果$haystack含有$needle键</span></span><br><span class="line">            <span class="keyword">return</span> rex_type::cast($haystack[$needle], $vartype);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($default === <span class="string">''</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> rex_type::cast($default, $vartype);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $default;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>注意到传给<code>arrayKeyCast</code>的<code>$haystack</code>参数值是<code>$_REQUEST</code>来的，<code>$needle</code>参数值是<code>media_name</code>，<code>$vartype</code>参数值是<code>string</code>，所以进入了</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">if</span> (array_key_exists($needle, $haystack)) &#123;<span class="comment">// 如果$haystack含有$needle键</span></span><br><span class="line">            <span class="keyword">return</span> rex_type::cast($haystack[$needle], $vartype);</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>后直接调用了<code>rex_type</code>类的<code>cast</code>方法校验变量类型，找到<code>cast</code>方法的实现代码，<code>/redaxo-cms-5.0.0/redaxo/src/core/lib/util/type.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">     * Casts the variable $var to $vartype.</span><br><span class="line">     *</span><br><span class="line">     * Possible types:</span><br><span class="line">     *  - 'bool' (or 'boolean')</span><br><span class="line">     *  - 'int' (or 'integer')</span><br><span class="line">     *  - 'double'</span><br><span class="line">     *  - 'string'</span><br><span class="line">     *  - 'float'</span><br><span class="line">     *  - 'real'</span><br><span class="line">     *  - 'object'</span><br><span class="line">     *  - 'array'</span><br><span class="line">     *  - 'array[&lt;type&gt;]', e.g. 'array[int]'</span><br><span class="line">     *  - '' (don't cast)</span><br><span class="line">     *  - a callable</span><br><span class="line">     *  - array(</span><br><span class="line">     *      array(&lt;key&gt;, &lt;vartype&gt;, &lt;default&gt;),</span><br><span class="line">     *      array(&lt;key&gt;, &lt;vartype&gt;, &lt;default&gt;),</span><br><span class="line">     *      ...</span><br><span class="line">     *    )</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> mixed $var     Variable to cast</span><br><span class="line">     * <span class="doctag">@param</span> mixed $vartype Variable type</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@throws</span> InvalidArgumentException</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span> mixed Castet value</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">cast</span><span class="params">($var, $vartype)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (is_string($vartype)) &#123;</span><br><span class="line">            $casted = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">switch</span> ($vartype) &#123;</span><br><span class="line">                <span class="comment">// ---------------- PHP types</span></span><br><span class="line">                <span class="keyword">case</span> <span class="string">'bool'</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'boolean'</span>:</span><br><span class="line">                    $var = (boolean) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'int'</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'integer'</span>:</span><br><span class="line">                    $var = (int) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'double'</span>:</span><br><span class="line">                    $var = (double) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'float'</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'real'</span>:</span><br><span class="line">                    $var = (float) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'string'</span>:</span><br><span class="line">                    $var = (string) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'object'</span>:</span><br><span class="line">                    $var = (object) $var;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">'array'</span>:</span><br><span class="line">                    <span class="keyword">if</span> (<span class="string">''</span> === $var) &#123;</span><br><span class="line">                        $var = [];</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        $var = (<span class="keyword">array</span>) $var;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// kein Cast, nichts tun</span></span><br><span class="line">                <span class="keyword">case</span> <span class="string">''</span>: <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="comment">// check for array with generic type</span></span><br><span class="line">                    <span class="keyword">if</span> (strpos($vartype, <span class="string">'array['</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (<span class="keyword">empty</span>($var)) &#123;</span><br><span class="line">                            $var = [];</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            $var = (<span class="keyword">array</span>) $var;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="comment">// check if every element in the array is from the generic type</span></span><br><span class="line">                        $matches = [];</span><br><span class="line">                        <span class="keyword">if</span> (preg_match(<span class="string">'@array\[([^\]]*)\]@'</span>, $vartype, $matches)) &#123;</span><br><span class="line">                            <span class="keyword">foreach</span> ($var <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">                                <span class="keyword">try</span> &#123;</span><br><span class="line">                                    $var[$key] = <span class="keyword">self</span>::cast($value, $matches[<span class="number">1</span>]);</span><br><span class="line">                                &#125; <span class="keyword">catch</span> (InvalidArgumentException $e) &#123;</span><br><span class="line">                                    <span class="comment">// Evtl Typo im vartype, mit urspr. typ als fehler melden</span></span><br><span class="line">                                    <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Unexpected vartype "'</span> . $vartype . <span class="string">'" in cast()!'</span>);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Unexpected vartype "'</span> . $vartype . <span class="string">'" in cast()!'</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        $casted = <span class="keyword">false</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> ($casted) &#123;</span><br><span class="line">                <span class="keyword">return</span> $var;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (is_callable($vartype)) &#123;</span><br><span class="line">            $var = call_user_func($vartype, $var);</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (is_array($vartype)) &#123;</span><br><span class="line">            $var = <span class="keyword">self</span>::cast($var, <span class="string">'array'</span>);</span><br><span class="line">            $newVar = [];</span><br><span class="line">            <span class="keyword">foreach</span> ($vartype <span class="keyword">as</span> $cast) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!is_array($cast) || !<span class="keyword">isset</span>($cast[<span class="number">0</span>])) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Unexpected vartype in cast()!'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                $key = $cast[<span class="number">0</span>];</span><br><span class="line">                $innerVartype = <span class="keyword">isset</span>($cast[<span class="number">1</span>]) ? $cast[<span class="number">1</span>] : <span class="string">''</span>;</span><br><span class="line">                <span class="keyword">if</span> (array_key_exists($key, $var)) &#123;</span><br><span class="line">                    $newVar[$key] = <span class="keyword">self</span>::cast($var[$key], $innerVartype);</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (!<span class="keyword">isset</span>($cast[<span class="number">2</span>])) &#123;</span><br><span class="line">                    $newVar[$key] = <span class="keyword">self</span>::cast(<span class="string">''</span>, $innerVartype);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    $newVar[$key] = $cast[<span class="number">2</span>];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            $var = $newVar;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (is_string($vartype)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Unexpected vartype "'</span> . $vartype . <span class="string">'" in cast()!'</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'Unexpected vartype in cast()!'</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $var;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>在<code>$vartype</code>为<code>string</code>的时候，直接强制转换了下就break跳出，return了，全部过程没看到安全过滤函数的干预，所以是存在严重SQL注入问题的。</p>
-<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1><p>访问</p>
-<pre><code>http://localhost:8888/redaxo-cms-5.0.0/redaxo/index.php?page=mediapool/media&amp;rex_file_category=0
-</code></pre><p>在该页面右侧搜索框搜索任意字符串，post数据中参数<code>media_name</code>即为注入点，结合之前的分析，后端接收数据的方式为<code>$_REQUEST</code>，那么将<code>media_name</code>参数直接带到url后面以get方式请求也是可以被后端获取的。</p>
-<pre><code>http://localhost:8888/redaxo-cms-5.0.0/redaxo/index.php?page=mediapool/media&amp;rex_file_category=0&amp;media_name=abc%27)%20ORDER%20BY%2018+--+
-</code></pre><p><code>order by 18</code>报错，那么列的数目就是<code>17</code>，使用<code>union select</code>语句把页面回显位置显示出来</p>
-<p><img src="/images/redaxo-1.png" alt="huixian"></p>
-<p>可以看到回显位置有<code>10，14，16</code></p>
-<p><img src="/images/redaxo-2.png" alt="poc"></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个漏洞比较有意思的地方来了，我留意到该cms选择的<code>pdo</code>方式连接数据库，那么怎么会出这样的sql注入问题呢？说完就抽了自己一大嘴瓜子，为什么不会出这样的sql注入问题呢？毕竟代码是人写的，下面就分析下为什么造成了sql注入。</p>
-<p>首先这个锅是程序员的，明明选择了<code>pdo</code>方式连接数据库，但是写sql语句的时候却直接拼接了参数，而不是采用pdo的参数绑定或者<code>prepare</code>方式，从而造成了注入问题。</p>
-<p>定位到<code>/redaxo-cms-5.0.0/redaxo/src/addons/mediapool/pages/media.php</code>，第600行-608行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$qry = <span class="string">'SELECT * FROM '</span> . $addTable . rex::getTablePrefix() . <span class="string">'media f WHERE '</span> . $where . <span class="string">' ORDER BY f.updatedate desc, f.id desc'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ----- EXTENSION POINT</span></span><br><span class="line">    $qry = rex_extension::registerPoint(<span class="keyword">new</span> rex_extension_point(<span class="string">'MEDIA_LIST_QUERY'</span>, $qry, [</span><br><span class="line">        <span class="string">'category_id'</span> =&gt; $rex_file_category,</span><br><span class="line">    ]));</span><br><span class="line">    $files = rex_sql::factory();</span><br><span class="line"><span class="comment">//   $files-&gt;setDebug();</span></span><br><span class="line">    $files-&gt;setQuery($qry);</span><br></pre></td></tr></table></figure>
-<p>看到<code>$qry</code>变量拼接了<code>$where</code>变量，而<code>$where</code>里面又拼接了<code>$media_name</code>变量，第586行</p>
-<pre><code>$where = &quot;(f.filename LIKE &apos;%&quot; . $media_name . &quot;%&apos; OR f.title LIKE &apos;%&quot; . $media_name . &quot;%&apos;)&quot;;
-</code></pre><p>最后sql语句$qry变量传入了setQuery函数，找到setQuery函数的实现，定位到<code>/redaxo-cms-5.0.0/redaxo/src/core/lib/sql/sql.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">     * Executes the given sql-query.</span><br><span class="line">     *</span><br><span class="line">     * If parameters will be provided, a prepared statement will be executed.</span><br><span class="line">     *</span><br><span class="line">     * example 1:</span><br><span class="line">     *    $sql-&gt;setQuery('SELECT * FROM mytable where id=:id, 'array('id' =&gt; 3));</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">NOTE:</span> named-parameters/?-placeholders are not supported in LIMIT clause!</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@param</span> string $query  The sql-query</span><br><span class="line">     * <span class="doctag">@param</span> array  $params An optional array of statement parameter</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@return</span> $this</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@throws</span> rex_sql_exception on errors</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setQuery</span><span class="params">($query, array $params = [])</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// Alle Werte zuruecksetzen</span></span><br><span class="line">        $this-&gt;flush();</span><br><span class="line">        $this-&gt;query = $query;</span><br><span class="line">        $this-&gt;params = $params;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>($params)) &#123;</span><br><span class="line">            $this-&gt;prepareQuery($query);</span><br><span class="line">            $this-&gt;execute($params);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                $this-&gt;stmt = <span class="keyword">self</span>::$pdo[$this-&gt;DBID]-&gt;query($query);</span><br><span class="line">                $this-&gt;rows = $this-&gt;stmt-&gt;rowCount();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (PDOException $e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> rex_sql_exception(<span class="string">'Error while executing statement "'</span> . $query . <span class="string">'! '</span> . $e-&gt;getMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($this-&gt;debug) &#123;</span><br><span class="line">            $this-&gt;printError($query, $params);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $this;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>由于没有传递<code>$params</code>参数，所以if语句直接进入else逻辑，使用<code>query</code>直接执行了sql语句中我们拼接的恶意代码。</p>
-<p>到这里其实还没完，又惊奇的发现<code>sqlmap</code>提供的<code>payload</code>里面使用了多语句，这让我想到了<em>php+mysql</em>多语句执行，mysql本身从<code>4.1</code>版本就已经开始支持多语句执行了，只是php自身限制了这种用法，虽然<code>connect</code>的时候可以设置<code>CLIENT_MULTI_STATEMENTS</code>，但是php在<code>mysql_query/mysqli_query</code>函数实现的源码级别仍然会去除掉该设置。但<code>pdo</code>方式连数据后默认是允许多语句执行的，但并不是完全没限制，因为<code>pdo</code>方式操作数据库都是采用参数绑定预编译sql语句的，而这种绑定是在客户端执行的，这种情况是不需要多语句执行的。以前在zone里面有一篇<a href="http://zone.wooyun.org/content/50" target="_blank" rel="external">帖子</a></p>
-<blockquote>
-<p>“真正可以利用的多语句注射，只能是存在于利用PDO连接数据库，并直接使用exec或者query函数进行执行sql语句的地方”</p>
-</blockquote>
-<p>由于恰巧该cms在执行sql语句的时候未严格执行<code>pdo</code>标准使用参数绑定方式，而采用了直接拼接参数到sql语句，执行的时候直接使用了<code>query</code>函数，因此造成了多语句执行。</p>
-
+        
+          <a class="article-more-a" href="/2016/06/04/Redaxo-CMS-5-0-0-SQL-Injection/#more">more >></a>
+        
       
 
       
@@ -266,50 +317,10 @@
       
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Server-Side Request Forgery即我们平常所说的SSRF攻击，翻译过来也就是服务器端请求伪造。漏洞的本质就是攻击者通过应用的正常功能（分享、转码、翻译、图片加载/下载、图片/文章收藏等）使服务器作为代理来访问到原本无法访问到的内网资源。</p>
 <h1 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h1><p>为了更清楚的认识到SSRF可以干什么，我写了个存在SSRF漏洞的PHP小程序</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">// getContent.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'url'</span>])) &#123;</span><br><span class="line"></span><br><span class="line">	$url = $_POST[<span class="string">'url'</span>];</span><br><span class="line"></span><br><span class="line">	$curl = curl_init();</span><br><span class="line">	curl_setopt($curl, CURLOPT_POST, <span class="keyword">true</span>);</span><br><span class="line">	curl_setopt($curl, CURLOPT_URL, $url);</span><br><span class="line">	curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">	$result = curl_exec($curl);</span><br><span class="line">	curl_close($curl);</span><br><span class="line"></span><br><span class="line">	$filename = <span class="string">'user'</span>.rand().<span class="string">'.txt'</span>;</span><br><span class="line">	file_put_contents($filename, $result);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">echo</span> $result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="代理访问"><a href="#代理访问" class="headerlink" title="代理访问"></a>代理访问</h2><p>该漏洞的本质就是可以利用存在漏洞服务器作为跳板去访问服务器所在内网的资源，于是可以用这作为判断是否存在SSRF漏洞的第一步，为什么说是第一步呢，因为我们利用SSRF是要获取到内网的信息，可能服务器允许本身请求其他域名（比如此处的ssrftest域名），但是对内网地址全部黑名单了，利用该SSRF是探测不到内网信息的，那么这就不能算漏洞了，所以，接下来可以尝试访问一些通过前期收集的内网域名，记录下数据包返回内容、数据包返回延时等，最终判断是否存在该漏洞。</p>
-<p><img src="/images/ssrf-1.png" alt="代理访问"></p>
-<p>然后在cloudeye上收到了日志，ip是我本地的出口ip，而本地浏览器网络接口只发起了一次到服务器的请求，说明日志是服务器端发起访问ssrftest域名生成的。</p>
-<blockquote>
-<p>[29/May/2016:00:18:31 +0800] 123.122.x.x - - ssrftest.xxxxx.dnslog.info POST / HTTP/1.1 200 “-“ “-“</p>
-</blockquote>
-<h2 id="攻击内网web应用（指纹识别、漏洞攻击）"><a href="#攻击内网web应用（指纹识别、漏洞攻击）" class="headerlink" title="攻击内网web应用（指纹识别、漏洞攻击）"></a>攻击内网web应用（指纹识别、漏洞攻击）</h2><p>指纹识别其实就是访问一些已知系统（cms等）的特有文件/路径，来达到识别系统的效果。我在内网50机器上部署了一个web服务，如果该web服务存在使用get参数就能实现的漏洞（struts，sqli，xss…），那么就可以通过SSRF漏洞直接对web服务进行攻击。</p>
-<p><img src="/images/ssrf-2.png" alt="攻击内网web应用"></p>
-<h2 id="对服务器内网所在机器进行端口扫描"><a href="#对服务器内网所在机器进行端口扫描" class="headerlink" title="对服务器内网所在机器进行端口扫描"></a>对服务器内网所在机器进行端口扫描</h2><p>写了个py小程序，对目标机器的1-10000端口进行扫描</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding=utf8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ssrf_port_scan.py</span></span><br><span class="line"><span class="comment"># require library: requests</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">vulSite = <span class="string">"http://localhost:8888/getContent.php"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">portScan</span><span class="params">(host)</span>:</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">"Scan "</span> + host</span><br><span class="line">	<span class="keyword">for</span> port <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">10000</span>):</span><br><span class="line">		payload = &#123;</span><br><span class="line">			<span class="string">'url'</span>: host + <span class="string">":"</span> + str(port)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			res = requests.post(vulSite, data=payload, timeout=<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> res.text != <span class="string">""</span>:</span><br><span class="line">				<span class="keyword">print</span> <span class="string">"[+] port open: "</span> + str(port)</span><br><span class="line">			<span class="keyword">else</span>:</span><br><span class="line">				<span class="keyword">pass</span></span><br><span class="line">		<span class="keyword">except</span> Exception, e:</span><br><span class="line">			<span class="keyword">print</span> str(e), <span class="string">"port--&gt;"</span> + str(port)</span><br><span class="line">			<span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(host)</span>:</span></span><br><span class="line">	portScan(host)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	<span class="comment"># 若不指定扫描host，则默认扫服务器本机</span></span><br><span class="line">	host = sys.argv[<span class="number">1</span>] <span class="keyword">if</span> len(sys.argv) == <span class="number">2</span> <span class="keyword">else</span> <span class="string">"127.0.0.1"</span></span><br><span class="line">	main(host)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/ssrf-3.png" alt="端口扫描"></p>
-<p>然后通过访问这些开放的端口，可以得到端口所部署的服务banner信息</p>
-<p><img src="/images/ssrf-4.png" alt="服务发现"></p>
-<h2 id="本地文件读取"><a href="#本地文件读取" class="headerlink" title="本地文件读取"></a>本地文件读取</h2><p>可以利用file协议去读取本地文件，这里我以读/etc/passwd为例</p>
-<p><img src="/images/ssrf-5.png" alt="本地文件读取"></p>
-<h1 id="绕过技巧"><a href="#绕过技巧" class="headerlink" title="绕过技巧"></a>绕过技巧</h1><h2 id="利用URL特性"><a href="#利用URL特性" class="headerlink" title="利用URL特性"></a>利用URL特性</h2><p>一个完整的URL格式如下</p>
-<blockquote>
-<p>scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]</p>
-</blockquote>
-<p>为了避免某些启用了BASIC认证的web服务弹出登录对话框，可以使用如下方式去访问URL，即将BASIC认证所需信息拼接到URL地址中</p>
-<blockquote>
-<p><a href="https://username:password@www.example.com/index.html" target="_blank" rel="external">https://username:password@www.example.com/index.html</a></p>
-</blockquote>
-<p>也就是说浏览器是支持something@domain这样格式的URL的，利用这个特性可以绕过服务器端对URL的简单过滤，可以看到，下图中实际访问的地址是ssrftest.xxx.dnslog.info。</p>
-<p><img src="/images/ssrf-6.png" alt="URL特性"></p>
-<h2 id="xip-io"><a href="#xip-io" class="headerlink" title="xip.io"></a>xip.io</h2><p><a href="http://xip.io/" target="_blank" rel="external">xip.io</a>为任意ip地址提供了DNS泛解析</p>
-<pre><code>        10.0.0.1.xip.io   resolves to   10.0.0.1
-   www.10.0.0.1.xip.io   resolves to   10.0.0.1
- mysite.10.0.0.1.xip.io   resolves to   10.0.0.1
-foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
-</code></pre><h2 id="ip地址进制转换"><a href="#ip地址进制转换" class="headerlink" title="ip地址进制转换"></a>ip地址进制转换</h2><p>比如127.0.0.1的8进制=017700000001</p>
-<p><img src="/images/ssrf-7.png" alt="IP地址进制转换"></p>
-<h1 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h1><ul>
-<li>如果业务不需要从内部拿资源，那么就黑名单内网ip吧</li>
-<li>限制请求协议仅为HTTP</li>
-<li>控制返回信息，若正常业务请求的文件类型是特定的，那么在返回给用户前先验证下，避免被用户利用。若有报错信息，请直接返回统一error样式。</li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="http://drops.wooyun.org/papers/146" target="_blank" rel="external">http://drops.wooyun.org/papers/146</a></li>
-<li><a href="https://sobug.com/article/detail/11" target="_blank" rel="external">https://sobug.com/article/detail/11</a></li>
-<li><a href="http://www.freebuf.com/articles/web/20407.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/20407.html</a></li>
-</ul>
-
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span> </div><div class="line"><span class="comment">// getContent.php</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'url'</span>])) &#123;</div><div class="line"></div><div class="line">	$url = $_POST[<span class="string">'url'</span>];</div><div class="line"></div><div class="line">	$curl = curl_init();</div><div class="line">	curl_setopt($curl, CURLOPT_POST, <span class="keyword">true</span>);</div><div class="line">	curl_setopt($curl, CURLOPT_URL, $url);</div><div class="line">	curl_setopt($curl, CURLOPT_RETURNTRANSFER, <span class="keyword">true</span>);</div><div class="line"></div><div class="line">	$result = curl_exec($curl);</div><div class="line">	curl_close($curl);</div><div class="line"></div><div class="line">	$filename = <span class="string">'user'</span>.rand().<span class="string">'.txt'</span>;</div><div class="line">	file_put_contents($filename, $result);</div><div class="line"></div><div class="line">	<span class="keyword">echo</span> $result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2016/05/30/Server-side-request-forgery/#more">more >></a>
+        
       
 
       
@@ -371,237 +382,14 @@ foo.bar.10.0.0.1.xip.io   resolves to   10.0.0.1
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>来源：<a href="http://www.contextis.com/resources/blog/security-http-headers" target="_blank" rel="external">http://www.contextis.com/resources/blog/security-http-headers</a></p>
+<p>来源：<a href="http://www.contextis.com/resources/blog/security-http-headers">http://www.contextis.com/resources/blog/security-http-headers</a></p>
 </blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当谈论到web应用安全，我们经常考虑到的是：过滤用户的输入、加密渠道传递数据和使用安全的函数这些明显的点，而忽略在web安全上HTTP返回头部和现代web浏览器相结合产生的正面影响，这篇文章试图阐明<code>HTTP Headers</code>对web安全的主动和被动影响。</p>
-<h1 id="主动安全"><a href="#主动安全" class="headerlink" title="主动安全"></a>主动安全</h1><p>我们查阅<a href="https://www.owasp.org/index.php/Main_Page" target="_blank" rel="external">OWASP</a>推荐的<code>HTTP Headers</code>，下面这些<code>headers</code>能够被利用起来主动地增加web应用的安全性。</p>
-<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2><p>这个头部属性是告诉浏览器某个页面是否应该被展示在另一个页面中（比如在<code>IFRAME</code>标签中）。允许一个页面被加载在<code>IFRAME</code>中会造成<strong>点击劫持</strong>攻击的风险。攻击中目标站点被载入在背景位置，对受害者隐藏。然后受害者被引诱去网站上执行点击动作（例如通过一个调查或者抽奖），这些点击被处在背景位置的目标站点秘密的执行了。如果受害者当前是登录了目标站点的，那这些点击是带着用户的<code>session</code>被执行的。通过这样的方式能以用户身份执行命令，以及从用户资料里获取信息。</p>
-<p><code>X-Frame-Options</code>可以被设置为以下值：</p>
-<blockquote>
-<p>DENY</p>
-<p>SAMEORIGIN</p>
-<p>ALLOW-FROM <uri></uri></p>
-</blockquote>
-<p>除非你的应用明确的需要在<code>IFRAME</code>里载入页面，否则请设置该头部值为<code>DENY</code></p>
-<pre><code>X-Frame-Options: DENY
-</code></pre><p>如果你的应用使用<code>IFRAME</code>只是载入应用本身包含的（同源）页面，那么你应该设置该头部值为<code>SAMEORIGIN</code></p>
-<pre><code>X-Frame-Options: SAMEORIGIN
-</code></pre><p>如果你的应用使用<code>IFRAME</code>需要载入非同源下的地址，那么你应该明确定义外部的源</p>
-<pre><code>X-Frame-Options: ALLOW-FROM contextis.co.uk
-</code></pre><p>请注意<code>X-Frame-Options</code>头部的指令<code>ALLOW-FROM</code>接受一个确定的域名。没有协议，没有端口，没有路径和没有通配符。</p>
-<p>兼容矩阵：</p>
-<table>
-<thead>
-<tr>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4.0</td>
-<td>3.6</td>
-<td>8.0</td>
-<td>10.5</td>
-<td>4.0</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Strict-Transport-Security"><a href="#Strict-Transport-Security" class="headerlink" title="Strict-Transport-Security"></a>Strict-Transport-Security</h2><p>这个头部经常缩写成<code>HSTS</code>（HTTP Strict Transport Security），告诉浏览器每当用户发送这个头部访问站点时强制使用<code>HTTPS</code>连接。所有主流浏览器都支持这个特性，并且应该：</p>
-<ul>
-<li>仅仅通过<code>HTTPS</code>连接站点</li>
-<li>转换站点所有的<code>HTTP</code>引用为<code>HTTPS</code></li>
-<li>在<code>SSL</code>证书错误时拒绝载入站点</li>
-</ul>
-<p>此外还需要注意这个头部只能通过<code>HTTPS</code>响应进行设置，也就是说用户通过<code>HTTPS</code>至少连接过一次该站点。除非你做了一些特殊的准备，（比如说将域名添加到浏览器的预置<code>HSTS</code>域名列表）。同样重要的是要注意头部信息仅在一段时间内有效：过期时间以秒为单位，推荐如下设置半年，告诉浏览器去遵从<code>STS</code>。</p>
-<pre><code>Strict-Transport-Security: max-age=15768000
-</code></pre><p>如果这条规则应该扩展到覆盖所有子域，那么可以通过在这个头部里面加入属性<code>includeSubDomains</code>：</p>
-<pre><code>Strict-Transport-Security: max-age=15768000; includeSubDomains
-</code></pre><p>一些浏览器（至少Chrome， Firefox，IE11/Edge 和 Safari）都有一个<strong>预加载列表</strong>，里面的<code>URL</code>都明确指定了他们想使用<code>HSTS</code>，如果用户打算访问该列表的这些<code>URL</code>，那么浏览器就会自动强制应用<code>HSTS</code>规则，尽管是第一次连接，否则可能会受到中间人攻击。把你的网站添加到预加载列表需要把<code>URL</code>提交到这个<a href="https://hstspreload.appspot.com/" target="_blank" rel="external">页面</a>，并追加<code>preload</code>命令在到该头部里。例如：</p>
-<pre><code>Strict-Transport-Security: max-age=15768000; includeSubDomains; preload
-</code></pre><h2 id="X-XSS-Protection"><a href="#X-XSS-Protection" class="headerlink" title="X-XSS-Protection"></a>X-XSS-Protection</h2><p>关于这个头部一直都饱受争议，甚至有人明确指定建议禁用它。那么，这个头部到底做了些什么呢？</p>
-<p>设置</p>
-<pre><code>X-XSS-Protection: 1
-</code></pre><p>这个头部的目的是告诉浏览器利用其<code>XSS</code>防护。目前仅在Chrome，Internet Explorer 和 Safari浏览器有这样的内建引擎并且能识别该头部（Firefox似乎要依赖第三方插件<code>NoScript</code>）。</p>
-<p>可能在浏览器端去过滤一些造成攻击的恶意请求看起来挺不错的，但是，其实过滤非常困难。尤其是在有人尝试试探性的检测恶意代码，过滤它并且同时又尽力维护站点正常工作。这将会导致一些过滤被绕过，甚至给先前健康的站点引入跨站脚本攻击。</p>
-<p>设置</p>
-<pre><code>X-XSS-Protection: 1; mode=block
-</code></pre><p>告诉浏览器不渲染整个页面，而是显示空白页。但是即使这样，由于方法早期有缺陷，从而导致一些大型站点（如facebook.com，live.com 和 slack.com）明确禁用<code>XSS</code>过滤器（<code>X-XSS-Protection: 0</code>）。</p>
-<p>所以尽管很难对这个头部给出一个明确的建议，似乎看起来变体<code>X-XSS-Protection: 1; mode=block</code>的写法更加成熟些，而且已经摒弃了早期的缺陷。除此之外，针对跨站脚本攻击最好的防护仍然是过滤所有的输入和输出。</p>
-<p>设置如下头部明确开启过滤器去过滤恶意的输入</p>
-<pre><code>X-XSS-Protection: 1;
-</code></pre><p>设置如下头部阻止当前检测到恶意输入的站点</p>
-<pre><code>X-XSS-Protection: 1; mode=block
-</code></pre><p>另外可以设置包含一个<code>URL</code>的<code>report</code>参数，如果<code>Webkit-XSS-Auditors</code>（Chrome，Safari）其中之一检测到攻击就会发送一个<code>POST</code>消息到<code>URL</code>，消息包含事件的详细信息：</p>
-<pre><code>X-XSS-Protection: 1; mode=block; report=https://domain.tld/folder/file.ext
-</code></pre><p>兼容矩阵</p>
-<table>
-<thead>
-<tr>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4.0</td>
-<td>4.0</td>
-<td>11</td>
-<td>12</td>
-<td>7</td>
-</tr>
-</tbody>
-</table>
-<h2 id="X-Content-Type-Options"><a href="#X-Content-Type-Options" class="headerlink" title="X-Content-Type-Options"></a>X-Content-Type-Options</h2><p>这个头部用来阻止特定版本的IE浏览器“嗅探”页面的<code>MIME</code>类型。它是IE浏览器的一个特性，当页面（<code>Content-Type: text/plaintext</code>）包含<code>HTML</code>标签时，浏览器将其作为<code>HTML</code>解释。然而，当处理用户提供的内容时引入了跨站脚本攻击的风险。这个头部仅有一个设置项<code>nosniff</code>，这样就阻止了浏览器嗅探页面的<code>MIME</code>类型。</p>
-<pre><code>X-Content-Type-Options: nosniff
-</code></pre><p>兼容矩阵</p>
-<table>
-<thead>
-<tr>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>?</td>
-<td>?</td>
-<td>8</td>
-<td>?</td>
-<td>?</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Public-Key-Pins"><a href="#Public-Key-Pins" class="headerlink" title="Public-Key-Pins"></a>Public-Key-Pins</h2><p><code>Public-Key-Pins</code>也叫作<code>HTTP Public Key Pinning</code>（缩写为<code>HPKP</code>）是相对较新的头部，还没有被广泛的使用。然而，它具有很强的安全潜能，因为它允许网站经营者指定（<code>pin</code>，密钥）一个有效的证书，减少对CA的依赖，在过去这种方式已经被证明是容易受到攻击的（如任何CA都可以创建一个技术上可行且受信任的证书，但是并不是由你指定的）。和<code>HSTS</code>一样，浏览器开始支持记住这个密钥，并且仅仅接受证书密钥和头部提供的秘钥匹配的网站连接。然而这意味着一个意想不到的证书改动会造成访问者被锁定在网站外。因此在第一个失败的时候很有必要提供一个可用的备份证书密钥。它也应该包含一个<code>max-age</code>属性，还有指定剩余时间（秒为单位），请记住，对不知情的用户这也可能是锁定时间。</p>
-<pre><code>Public-Key-Pins: pin-sha256=&quot;&lt;sha256&gt;&quot;; pin-sha256=&quot;&lt;sha256&gt;&quot;; max-age=15768000;
-</code></pre><p>该规则如果要被扩展到覆盖所有子域，那么这个头部能通过添加属性<code>includeSubDomains</code>被扩展：</p>
-<pre><code>Public-Key-Pins: pin-sha256=&quot;&lt;sha256&gt;&quot;; pin-sha256=&quot;&lt;sha256&gt;&quot;; max-age=15768000; includeSubDomains
-</code></pre><p>兼容矩阵</p>
-<table>
-<thead>
-<tr>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>35</td>
-<td>35</td>
-<td>   -</td>
-<td>23</td>
-<td>-</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Content-Security-Policy-取代-X-Content-Security-Policy-和-X-WebKit-CSP"><a href="#Content-Security-Policy-取代-X-Content-Security-Policy-和-X-WebKit-CSP" class="headerlink" title="Content-Security-Policy (取代 X-Content-Security-Policy 和 X-WebKit-CSP)"></a>Content-Security-Policy (取代 X-Content-Security-Policy 和 X-WebKit-CSP)</h2><p><code>Content-Security-Policy</code>（缩写为<code>CSP</code>）是一个灵活的方式去指定站点哪些内容可能被执行，哪些内容不能被执行。现在的一个问题是浏览器并不知道哪个源值得信任，哪个源不能被信任。比如来自<code>apis.google.com</code>的包含第三方<code>JavaScript</code>是否值得信任？唯一合理的解决方式是白名单，由开发者指定合法的资源位置。下面是一个基本的例子如何允许来自于本地和<code>apis.google.com</code>的<code>JavaScript</code></p>
-<pre><code>Content-Security-Policy: script-src &apos;self&apos; https://apis.google.com
-</code></pre><p><code>CSP</code>有一些额外的关键字，允许进行非常细粒度的访问控制，此外还要注意<code>CSP</code>是作为每个站点的模型，因此每一个站点都需要一个自己的<code>HTTP</code>头部集。</p>
-<p>兼容矩阵</p>
-<table>
-<thead>
-<tr>
-<th>Chrome</th>
-<th>Firefox</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>14</td>
-<td>4</td>
-<td> 10* /12 通过X-Content-Security-Policy</td>
-<td>15</td>
-<td>5.1* /7.1 通过X-Webkit-CSP</td>
-</tr>
-</tbody>
-</table>
-<h1 id="被动安全"><a href="#被动安全" class="headerlink" title="被动安全"></a>被动安全</h1><p>下面要介绍的头部并不会主动启用任何安全相关的特性，而是被动地影响着安全，通常通过这些头部会泄露不必要展示的信息。</p>
-<h2 id="Cookie-attributes-HttpOnly-and-Secure"><a href="#Cookie-attributes-HttpOnly-and-Secure" class="headerlink" title="Cookie attributes (HttpOnly and Secure)"></a>Cookie attributes (HttpOnly and Secure)</h2><p>与<code>cookie</code>相关的一些特殊属性经常被忽视，而设置这些属性能很大程度上减少<code>cookie</code>被偷的风险。</p>
-<h3 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h3><p><code>HttpOnly</code>属性告诉浏览器拒绝<code>JavaScript</code>访问<code>cookie</code>，这使得通过跨站脚本攻击更加困难获取访问<code>cookie</code></p>
-<pre><code>Set-Cookie: cookie=xxxxxxxxx; HttpOnly
-</code></pre><h3 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h3><p>这个属性告诉浏览器仅在<code>HTTPS</code>连接的情况下发送<code>cookie</code>信息，这个应该是所有的会话和认证相关的<code>cookie</code>规范，因为它可以轻松拦截通过未加密的<code>HTTP</code>连接。</p>
-<pre><code>Set-Cookie: cookie=xxxxxxxxx; Secure
-</code></pre><p>当然这些属性能被组合使用：</p>
-<pre><code>Set-Cookie: cookie=xxxxxxxxx; HttpOnly; Secure
-</code></pre><h2 id="Server-X-Powered-By"><a href="#Server-X-Powered-By" class="headerlink" title="Server / X-Powered-By"></a>Server / X-Powered-By</h2><p>这两个头部会显示在用的服务器软件和它的版本号，这些头部可能在调试的适合很有用，但是对用户体验没有任何用处，应该要么被去掉或者减少到不泄露任何版本信息。</p>
-<h2 id="Caching-directives"><a href="#Caching-directives" class="headerlink" title="Caching directives"></a>Caching directives</h2><p>另一个经常被忽视的问题是浏览器缓存的敏感信息，浏览器经常存储网站元素到本地高速缓存以加速浏览体验。对一些不敏感的站点和元素比如图片或样式信息来说，这样是可以的，但是对于敏感信息（比如来自<code>web</code>应用认证区域的页面）要避免这样做。这个问题在共享计算机环境（比如说办公室，学校，网咖）下变得更糟糕，其他用户可以很容易的接触到你的浏览器缓存。要告诉浏览器（可能是中间缓存，如代理）不存储任何东西在它的缓存里面需要使用如下命令：</p>
-<pre><code>Cache-Control: no-cache, no-store
-Expires: 0
-Pragma: no-cache
-</code></pre><p>要注意的是经常遇到的命令<code>Cache-Control: private</code>在共享计算机的环境中不能被认为是安全的，因为它允许浏览器去存储这些元素到他的缓存里面。</p>
-<h3 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h3><p><code>Entity Tag</code>（缩写<code>ETag</code>）头部是作缓存用途的，服务器使用特殊的算法为它提供的每个文件版本计算一个单独的<code>ETag</code>，浏览器然后能够请求服务器查看是否该<code>ETag</code>文件仍然可用，如果可用，服务器返回一个<code>304</code>状态码给浏览器，让它使用本地缓存的版本，否则服务器发送完整的资源和<code>200</code>状态码。</p>
-<p>虽然这是一个有用的头部，你会发现有时会在漏洞相关的文章或报告对它的引用。问题是<code>Apache</code>的某些版本（2.3.14之前的版本中）用于披露对于在其默认的配置提供服务的文件索引节点。索引节点可用于进一步的攻击，例如通过网络文件系统（<code>NFS</code>），使用这些<code>INode</code>节点来创建文件句柄。有问题的默认配置已经在最近版本的<code>Apache</code>得到了纠正，但是你扔应该确保在<code>httpd.conf</code>里你相应的<code>FileETag</code>设置不包含<code>INode</code>属性。下面这行是好的设置：</p>
-<pre><code>FileETag MTime Size
-</code></pre><p>下面这行不是：</p>
-<pre><code>FileETag INode MTime Size
-</code></pre><h2 id="X-Robots-Tag-和-Robots-txt"><a href="#X-Robots-Tag-和-Robots-txt" class="headerlink" title="X-Robots-Tag 和 Robots.txt"></a>X-Robots-Tag 和 Robots.txt</h2><p><code>X-Robots-Tag</code>头部能被用告诉搜索引擎（支持该头部）页面或文件如何被索引。和<code>robots.txt</code>或者<code>robots</code>的<code>meta</code>标签比起来，<code>X-Robots-Tag</code>的优点是它的头部能被全局配置，还可以调整到一个非常精细的和灵活的水平（比如正则表达式匹配特定的<code>URL</code>）。发送一个<code>meta</code>标签和媒体文件是不可能的，发送<code>HTTP</code>头部和媒体文件是没问题的。它还有优点就是在每个请求的基础上公开信息而不是在单一的文件上。试想一下，你不想让任何人知道的秘密目录，把它们列成一个清单在<code>robots.txt</code>文件上？也许因为一个不好的想法就会让所有人马上知道你想隐藏什么–你可能只是发了一个连接在你的网站上。</p>
-<p>所以你应该干脆抛弃<code>robots.txt</code>而完全依赖<code>X-Robots-Tag</code>呢？或许不会，应该在最大兼容性下将他们组合使用。然而要记住，<code>robots.txt</code>应该仅仅包含你需要索引的文件和目录。你不应该列出哪些你想要隐藏的文件，相反的，可以放置一个不允许条目在<code>robots.txt</code>文件里。</p>
-<p>阻止一切的例子：</p>
-<pre><code>User-Agent: *
-Disallow: /
-</code></pre><p>告诉爬虫索引<code>/Public/</code>目录下的所有文件，剩下的不让索引：</p>
-<pre><code>User-Agent: *
-Allow: /Public/
-Disallow: /
-</code></pre><h2 id="给不同的HTTP服务器添加自定义的头部"><a href="#给不同的HTTP服务器添加自定义的头部" class="headerlink" title="给不同的HTTP服务器添加自定义的头部"></a>给不同的HTTP服务器添加自定义的头部</h2><p>下面你能找到关于如何在不同的<code>HTTP</code>服务器软件里设置静态自定义的<code>HTTP</code>头部的例子。</p>
-<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h3><p>对于<code>Apache</code>，推荐使用模块<code>mod_headers</code>去控制<code>http</code>头。命令<code>Header</code>能够被置于配置文件的任何地方，比如：</p>
-<pre><code>&lt;Directory &quot;/var/www/dir1&quot;&gt;
-    Options +Indexes
-    Header set X-XSS-Protection “1; mode=block”
-&lt;/Directory&gt;
-</code></pre><p>要更详细的了解关于如何使用<code>mod_headers</code>设置<code>HTTP</code>头的指导请参考这个<a href="http://httpd.apache.org/docs/current/mod/mod_headers.html" target="_blank" rel="external">页面</a></p>
-<h3 id="Internet-Information-Services-IIS"><a href="#Internet-Information-Services-IIS" class="headerlink" title="Internet Information Services (IIS)"></a>Internet Information Services (IIS)</h3><p>对于<code>IIS 6.0-10.0</code>，这里有两个方式设置自定义头部：</p>
-<ul>
-<li><p>通过命令行</p>
-<pre><code>appcmd set config /section:httpProtocol /+customHeaders.[name=&apos;X-XSS-Protection&apos;,value=&apos;1; mode=block&apos;]
-</code></pre></li>
-<li><p>通过图形界面</p>
-<p>  打开<code>IIS Manager</code>，使用<strong>Conections</strong>面板找到你想要开启的头部合适的级别，双击<strong>HTTP Response Headers</strong>。现在单击<strong>Add…</strong>然后为这个头部设置你想要设置的名称和值。例子中名称将会是<code>X-XSS-Protection</code>，值将会是<code>1; mode=block</code>。</p>
-</li>
-</ul>
-<p>要更详细的了解关于如何使用<code>IIS</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders" target="_blank" rel="external">页面</a></p>
-<h3 id="Lighttpd"><a href="#Lighttpd" class="headerlink" title="Lighttpd"></a>Lighttpd</h3><p>对于<code>Lighttpd</code>推荐使用模块<code>mod_setenvs</code>去控制<code>apache</code>头部，命令<code>setenv.add-response-header</code>能够被置于配置文件的任何地方，比如：</p>
-<pre><code>setenv.add-response-header = (
-  &quot;X-XSS-Protection&quot; =&gt; &quot;1; mode=Block&quot; 
-)
-</code></pre><p>要更详细的了解关于如何使用<code>Lighttpd</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://redmine.lighttpd.net/projects/1/wiki/Docs_ModSetEnv" target="_blank" rel="external">页面</a></p>
-<h3 id="NGINX"><a href="#NGINX" class="headerlink" title="NGINX"></a>NGINX</h3><p>对于<code>NGINX</code>推荐使用模块<code>ngx_http_headers_module</code>去控制<code>HTTP</code>头，命令<code>add_header</code>能够被置于配置文件中合适的位置，比如：</p>
-<pre><code>server {
-    listen       80;
-    server_name  domain1.com www.domain1.com;
-    root         html;
-
-    location / {
-      add_header X-XSS-Protection “1; mode=Block” always
-    }
-}
-</code></pre><p>要更详细的了解关于使用<code>NGINX</code>设置<code>HTTP</code>头的指导请参考这个<a href="http://nginx.org/en/docs/http/ngx_http_headers_module.html" target="_blank" rel="external">页面</a></p>
-<h1 id="总结和结论"><a href="#总结和结论" class="headerlink" title="总结和结论"></a>总结和结论</h1><p>已经看到有或多或少的新的<code>HTTP</code>头能够主动的促进站点安全。我们还能看到有几个公认的头部可能值得重新审视，以减少被泄露的信息量。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://www.chromium.org/hsts" target="_blank" rel="external">HTTP Strict Transport Security Pre-Load.</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers" target="_blank" rel="external">Mozilla Developer Network – HTTP Headers.</a></li>
-<li><a href="https://tools.ietf.org/html/rfc6797" target="_blank" rel="external">RFC6797: HTTP Strict Transport Security (HSTS).</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7034" target="_blank" rel="external">RFC7034: HTTP Header Field X-Frame-Options.</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7469" target="_blank" rel="external">RFC7469: Public Key Pinning Extension for HTTP.</a></li>
-</ul>
-<hr>
-<p>PS：没有完全一字一句的翻译，有些内容翻译不出那种味道，部分内容按照自己的理解整理的。</p>
-
+<h1 id="主动安全"><a href="#主动安全" class="headerlink" title="主动安全"></a>主动安全</h1><p>我们查阅<a href="https://www.owasp.org/index.php/Main_Page">OWASP</a>推荐的<code>HTTP Headers</code>，下面这些<code>headers</code>能够被利用起来主动地增加web应用的安全性。</p>
+<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2>
+        
+          <a class="article-more-a" href="/2016/05/23/The-Security-of-HTTP-Headers/#more">more >></a>
+        
       
 
       
@@ -670,30 +458,10 @@ Disallow: /
 <h1 id="0x02-审计"><a href="#0x02-审计" class="headerlink" title="0x02 审计"></a>0x02 审计</h1><h2 id="框架简介"><a href="#框架简介" class="headerlink" title="框架简介"></a>框架简介</h2><blockquote>
 <p>iWebshop是单一入口系统，所有的处理都要通过入口文件<code>index.php</code>来运行。<br>系统框架对当前<code>URL</code>路径进行分析，找到<code>controller(控制器)</code>和<code>action(动作)</code>，去调用控制器文件里面的动作方法。<br>在<code>action</code>动作中可以读取数据，处理业务逻辑，然后把完成的数据渲染到视图，给终端客户呈现出来。</p>
 </blockquote>
-<h2 id="漏洞概况"><a href="#漏洞概况" class="headerlink" title="漏洞概况"></a>漏洞概况</h2><blockquote>
-<p>漏洞功能：后台-&gt;系统-&gt;配送方式-&gt;删除</p>
-<p>漏洞文件：/controllers/system.php</p>
-</blockquote>
-<h2 id="审计"><a href="#审计" class="headerlink" title="审计"></a>审计</h2><blockquote>
-<p>/controllers/system.php</p>
-</blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * <span class="doctag">@brief</span> 配送方式删除和还原</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delivery_operate</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	$id = IReq::get(<span class="string">'id'</span>);</span><br><span class="line">	$op = IReq::get(<span class="string">'op'</span>);</span><br><span class="line">       <span class="keyword">if</span>(is_array($id)) $id = implode(<span class="string">','</span>,$id);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span>(<span class="keyword">empty</span>($id))</span><br><span class="line">       &#123;</span><br><span class="line">       	<span class="keyword">if</span>($op == <span class="string">'del'</span> || $op == <span class="string">'recover'</span>)</span><br><span class="line">       	&#123;</span><br><span class="line">       		$this-&gt;redirect(<span class="string">'delivery_recycle'</span>,<span class="keyword">false</span>);</span><br><span class="line">       	&#125;</span><br><span class="line">       	<span class="keyword">else</span></span><br><span class="line">       	&#123;</span><br><span class="line">       		$this-&gt;redirect(<span class="string">'delivery'</span>,<span class="keyword">false</span>);</span><br><span class="line">       	&#125;</span><br><span class="line">       	Util::showMessage(<span class="string">'请选择要操作的选项'</span>);</span><br><span class="line">       	<span class="keyword">exit</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">	$delivery     =  <span class="keyword">new</span> IModel(<span class="string">'delivery'</span>);</span><br><span class="line">	$deliveryData = $delivery-&gt;query(<span class="string">'id in ('</span>.$id.<span class="string">')'</span>,<span class="string">'name'</span>);</span><br><span class="line">	$deliveryName = <span class="keyword">array</span>();</span><br><span class="line">	<span class="keyword">foreach</span>($deliveryData <span class="keyword">as</span> $val)</span><br><span class="line">	&#123;</span><br><span class="line">		$deliveryName[] = $val[<span class="string">'name'</span>];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	$logObj = <span class="keyword">new</span> log(<span class="string">'db'</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//物理删除</span></span><br><span class="line">	<span class="keyword">if</span>($op==<span class="string">'del'</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		$delivery-&gt;del(<span class="string">'id in('</span>.$id.<span class="string">')'</span>);</span><br><span class="line"></span><br><span class="line">		$logObj-&gt;write(<span class="string">'operation'</span>,<span class="keyword">array</span>(<span class="string">"管理员:"</span>.$this-&gt;admin[<span class="string">'admin_name'</span>],<span class="string">"删除了回收站中的配送方式"</span>,<span class="string">"被删除的配送方式为："</span>.join(<span class="string">','</span>,$deliveryName)));</span><br><span class="line"></span><br><span class="line">		$this-&gt;redirect(<span class="string">'delivery_recycle'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>($op ==<span class="string">'recover'</span>)<span class="comment">//还原</span></span><br><span class="line">	&#123;</span><br><span class="line">		$delivery-&gt;setData(<span class="keyword">array</span>(<span class="string">'is_delete'</span>=&gt;<span class="number">0</span>));</span><br><span class="line">		<span class="keyword">if</span>($delivery-&gt;update(<span class="string">'id in('</span>.$id.<span class="string">')'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			$logObj-&gt;write(<span class="string">'operation'</span>,<span class="keyword">array</span>(<span class="string">'管理员:'</span>.$this-&gt;admin[<span class="string">'admin_name'</span>],<span class="string">'恢复了回收站中的配送方式'</span>,<span class="string">'被恢复的配送方式为：'</span>.join(<span class="string">','</span>,$deliveryName)));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$this-&gt;redirect(<span class="string">'delivery_recycle'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span><span class="comment">//逻辑删除</span></span><br><span class="line">	&#123;</span><br><span class="line">		$delivery-&gt;setData(<span class="keyword">array</span>(<span class="string">'is_delete'</span>=&gt;<span class="number">1</span>));</span><br><span class="line">		<span class="keyword">if</span>($delivery-&gt;update(<span class="string">'id in('</span>.$id.<span class="string">')'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			$logObj-&gt;write(<span class="string">'operation'</span>,<span class="keyword">array</span>(<span class="string">"管理员:"</span>.$this-&gt;admin[<span class="string">'admin_name'</span>],<span class="string">"把配送方式移除到回收站中"</span>,<span class="string">"被移除到回收站中的配送方式为："</span>.join(<span class="string">','</span>,$deliveryName)));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$this-&gt;redirect(<span class="string">'delivery'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>跟进<code>$id = IReq::get(&#39;id&#39;);</code></p>
-<blockquote>
-<p>/lib/core/util/req_class.php</p>
-</blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * <span class="doctag">@class</span> IReq</span><br><span class="line"> * <span class="doctag">@brief</span> 获取$_GET,$_POST的数据</span><br><span class="line"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IReq</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * <span class="doctag">@brief</span> 获取键为$key的 $_GET 和 $_POST 传送方式的数据</span><br><span class="line">	 * <span class="doctag">@param</span> string $key $_GET 或 $_POST 的键</span><br><span class="line">	 * <span class="doctag">@param</span> string $type 传送方式 值: false:默认(先get后post); get:get方式; post:post方式;</span><br><span class="line">	 * <span class="doctag">@return</span> string $_GET 或者 $_POST 的值</span><br><span class="line">	 * <span class="doctag">@note</span> 优先获取 $_GET 方式的数据,如果不存在则获取 $_POST 方式的数据</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key, $type=false)</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		<span class="comment">//默认方式</span></span><br><span class="line">		<span class="keyword">if</span>($type==<span class="keyword">false</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[$key])) <span class="keyword">return</span> $_GET[$key];</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[$key])) <span class="keyword">return</span> $_POST[$key];</span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//get方式</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>($type==<span class="string">'get'</span> &amp;&amp; <span class="keyword">isset</span>($_GET[$key]))</span><br><span class="line">			<span class="keyword">return</span> $_GET[$key];</span><br><span class="line"></span><br><span class="line">		<span class="comment">//post方式</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>($type==<span class="string">'post'</span> &amp;&amp; <span class="keyword">isset</span>($_POST[$key]))</span><br><span class="line">			<span class="keyword">return</span> $_POST[$key];</span><br><span class="line"></span><br><span class="line">		<span class="comment">//无匹配</span></span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此处获取<code>$_GET</code>参数后是没有任何过滤直接返回值的。再回到<code>delivery_operate</code>函数，<br><code>$deliveryData = $delivery-&gt;query(&#39;id in (&#39;.$id.&#39;)&#39;,&#39;name&#39;);</code>可以看到<code>$id</code>被直接带入了SQL语句中，造成了SQL注入问题。</p>
-<h1 id="0x03-漏洞验证"><a href="#0x03-漏洞验证" class="headerlink" title="0x03 漏洞验证"></a>0x03 漏洞验证</h1><p>由于此处是删除（逻辑删除）操作，没有回显，不过可以构造如下请求验证漏洞</p>
-<blockquote>
-<p><a href="http://localhost:8888/iwebshop4.4/index.php?controller=system&amp;action=delivery_operate&amp;id=2" target="_blank" rel="external">http://localhost:8888/iwebshop4.4/index.php?controller=system&amp;action=delivery_operate&amp;id=2</a>) and if(1=1, sleep(4), 0)#</p>
-</blockquote>
-<p>请求效果如下</p>
-<p><img src="/images/iwebshop-1.png" alt="iWebshop-01"></p>
-<p>poc中只指定<code>sleep 4s</code> 可是这个请求一共消耗了<code>8s</code>，这是由于<code>delivery_operate</code>函数中在<code>query/select</code>后又进行了一次<code>update</code>操作，所以该poc代码执行了两次（共<code>8s</code>），另外也可以通过mysql log也可以反馈<code>8s</code>的由来。</p>
-<p><img src="/images/mysql-log.png" alt="iWebshop-02"></p>
-<h1 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h1><p>该漏洞产生的直接原因是<code>$id</code>变量未经过任何过滤就拼接SQL语句，因此一定要确保所有带入数据库的参数都经过了严格的过滤。当然，如果是PHP应用，推荐采用<code>PDO</code>方式操作数据库，使用参数绑定能有效的防止<code>SQL Injection</code>问题。</p>
-
+<h2 id="漏洞概况"><a href="#漏洞概况" class="headerlink" title="漏洞概况"></a>漏洞概况</h2>
+        
+          <a class="article-more-a" href="/2016/05/20/iWebshop-4-4-SQL-Injection/#more">more >></a>
+        
       
 
       
@@ -763,36 +531,11 @@ Disallow: /
 </blockquote>
 <p>说明：第<code>1</code>点中 Redis 服务暴露公网的情况下，若使用的是默认端口 6379，则很容易被黑客全网批量扫描到。</p>
 <h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>首先在一台虚拟机（<code>inet 10.0.100.210</code>）中安装了 redis，完全采用默认配置（意味着未设置 Bind ip，未设置口令）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost redis-3.0.5]<span class="comment"># ps -ef | grep redis</span></span><br><span class="line">root      4448  3629  0 15:24 pts/2    00:00:00 src/redis-server *:6379</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost redis-3.0.5]<span class="comment"># ps -ef | grep redis</span></div><div class="line">root      4448  3629  0 15:24 pts/2    00:00:00 src/redis-server *:6379</div></pre></td></tr></table></figure>
 <p>另外，可以看到 Redis 还是以 root 用户启动运行的。</p>
-<p>现在从另一台机器（<code>inet 10.0.100.164</code>）去攻击此台 Redis 服务器</p>
-<h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><p>生成一个新的 SSH Public Key，并保存在文件<code>foo.txt</code>中</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>; cat id_rsa.pub; <span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"\n\n"</span>) &gt; foo.txt</span><br></pre></td></tr></table></figure>
-<p><img src="/images/redis-1.png" alt="redis-1"></p>
-<p>这里有换行是关键，体现在后面将内存数据导出到<code>authorized_keys</code>文件的时候</p>
-<h3 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h3><p>将<code>foo.txt</code>内容写入 redis 内存，flushall 将清除数据库所有的 key，后面一步是将公钥保存给 crackit</p>
-<p><img src="/images/redis-2.png" alt="redis-2"></p>
-<h3 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h3><p>将内存中得数据导出到<code>authorized_keys</code>文件中</p>
-<p><img src="/images/redis-3.1.png" alt="redis-3.1"></p>
-<p>再去 Redis 服务所在的机器上去看 root 用户的<code>authorized_keys</code></p>
-<p><img src="/images/redis-3.2.png" alt="redis-3.2"></p>
-<p>可以看到我的 Public Key 已经写到了这台机器的<code>authorized_key</code>里面了，从这里也可以看出如果当时第一步的时候<code>foo.txt</code>内保存的 Public Key 没有空行，那么得到的就是一串乱码了，尽管其中含有我的 Public Key，仍然不能登录，就像下面这个样子：</p>
-<p><img src="/images/redis-3.3.png" alt="redis-3.3"></p>
-<h3 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h3><p>成功登录</p>
-<p><img src="/images/redis-4.png" alt="redis-4"></p>
-<h2 id="如何防御"><a href="#如何防御" class="headerlink" title="如何防御"></a>如何防御</h2><p>可以看到执行的命令都是 Redis 的一些正常功能，漏洞发生的本质还是配置不合理。Redis 的官方文档中明确指定了</p>
-<p><img src="/images/redis-5.png" alt="redis-5"></p>
-<p>具体如何防御可以根据前面提到的漏洞发生的前提针对性采取如下措施：</p>
-<blockquote>
-<p>1、Redis 不要开放到公网访问</p>
-<p>2、为 Redis 建立单独用户和强密码</p>
-<p>3、为 Redis 绑定 ip 地址</p>
-<p>4、Redis 所在服务器的 OpenSSH 服务（<code>default port 22</code>）不对外开放</p>
-</blockquote>
-<p>当然对常见服务（Redis，MySQL，OpenSSH 等）修改其默认端口，在出现 Bug 时候也能阻止一些脚本黑客的针对默认端口的批量扫描攻击。</p>
-<h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><p>网上公布了一组调查数据“针对 15 万台对公网开放的 Redis 服务器跟踪分析，发现有 15238 台未进行认证配置，也就是说超过<code>10%</code>的服务器可以直接连接；其中又有 10312 台服务器被入侵，总比例超过<code>67%</code>”。这个是我在 ZoomEye 上搜一下全网开放 6379 端口的主机，可以看到还是有不少的</p>
-<p><img src="/images/redis-6.png" alt="redis-6"></p>
-
+        
+          <a class="article-more-a" href="/2015/11/11/Redis-crackIT/#more">more >></a>
+        
       
 
       
@@ -888,8 +631,6 @@ Disallow: /
       
     
       
-      
-      
     
       
       
@@ -901,15 +642,13 @@ Disallow: /
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -996,18 +735,6 @@ Disallow: /
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://lvwei.me/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>呆子不开口</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     

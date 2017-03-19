@@ -5,7 +5,7 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://wismartzy.github.io">
   <title>The Security of HTTP Headers | Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="来源：http://www.contextis.com/resources/blog/security-http-headers
@@ -14,13 +14,13 @@
 主动安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="The Security of HTTP Headers">
-<meta property="og:url" content="http://yoursite.com/2016/05/23/The-Security-of-HTTP-Headers/index.html">
+<meta property="og:url" content="http://wismartzy.github.io/2016/05/23/The-Security-of-HTTP-Headers/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="来源：http://www.contextis.com/resources/blog/security-http-headers
 
 前言当谈论到web应用安全，我们经常考虑到的是：过滤用户的输入、加密渠道传递数据和使用安全的函数这些明显的点，而忽略在web安全上HTTP返回头部和现代web浏览器相结合产生的正面影响，这篇文章试图阐明HTTP Headers对web安全的主动和被动影响。
 主动安全">
-<meta property="og:updated_time" content="2017-01-09T16:16:54.000Z">
+<meta property="og:updated_time" content="2017-03-19T06:30:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The Security of HTTP Headers">
 <meta name="twitter:description" content="来源：http://www.contextis.com/resources/blog/security-http-headers
@@ -31,7 +31,7 @@
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.2d7529.css">
   <style type="text/css">
@@ -55,7 +55,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="null" class="js-avatar">
+			<img src="/images/wismartzy.png" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Wismartzy</a></h1>
@@ -78,8 +78,6 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -89,7 +87,11 @@
 		<nav class="header-nav">
 			<div class="social">
 				
+					<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+		        
 					<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 		        
 			</div>
 		</nav>
@@ -107,7 +109,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="null" class="js-avatar">
+				<img src="/images/wismartzy.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Wismartzy</h1>
@@ -124,7 +126,11 @@
 			<nav class="header-nav">
 				<div class="social">
 					
+						<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+			        
 						<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 			        
 				</div>
 			</nav>
@@ -173,7 +179,8 @@
 </blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当谈论到web应用安全，我们经常考虑到的是：过滤用户的输入、加密渠道传递数据和使用安全的函数这些明显的点，而忽略在web安全上HTTP返回头部和现代web浏览器相结合产生的正面影响，这篇文章试图阐明<code>HTTP Headers</code>对web安全的主动和被动影响。</p>
 <h1 id="主动安全"><a href="#主动安全" class="headerlink" title="主动安全"></a>主动安全</h1><p>我们查阅<a href="https://www.owasp.org/index.php/Main_Page" target="_blank" rel="external">OWASP</a>推荐的<code>HTTP Headers</code>，下面这些<code>headers</code>能够被利用起来主动地增加web应用的安全性。</p>
-<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2><p>这个头部属性是告诉浏览器某个页面是否应该被展示在另一个页面中（比如在<code>IFRAME</code>标签中）。允许一个页面被加载在<code>IFRAME</code>中会造成<strong>点击劫持</strong>攻击的风险。攻击中目标站点被载入在背景位置，对受害者隐藏。然后受害者被引诱去网站上执行点击动作（例如通过一个调查或者抽奖），这些点击被处在背景位置的目标站点秘密的执行了。如果受害者当前是登录了目标站点的，那这些点击是带着用户的<code>session</code>被执行的。通过这样的方式能以用户身份执行命令，以及从用户资料里获取信息。</p>
+<h2 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h2><a id="more"></a>
+<p>这个头部属性是告诉浏览器某个页面是否应该被展示在另一个页面中（比如在<code>IFRAME</code>标签中）。允许一个页面被加载在<code>IFRAME</code>中会造成<strong>点击劫持</strong>攻击的风险。攻击中目标站点被载入在背景位置，对受害者隐藏。然后受害者被引诱去网站上执行点击动作（例如通过一个调查或者抽奖），这些点击被处在背景位置的目标站点秘密的执行了。如果受害者当前是登录了目标站点的，那这些点击是带着用户的<code>session</code>被执行的。通过这样的方式能以用户身份执行命令，以及从用户资料里获取信息。</p>
 <p><code>X-Frame-Options</code>可以被设置为以下值：</p>
 <blockquote>
 <p>DENY</p>
@@ -298,7 +305,7 @@
 <tr>
 <td>35</td>
 <td>35</td>
-<td>   -</td>
+<td>-</td>
 <td>23</td>
 <td>-</td>
 </tr>
@@ -322,7 +329,7 @@
 <tr>
 <td>14</td>
 <td>4</td>
-<td> 10* /12 通过X-Content-Security-Policy</td>
+<td>10* /12 通过X-Content-Security-Policy</td>
 <td>15</td>
 <td>5.1* /7.1 通过X-Webkit-CSP</td>
 </tr>
@@ -343,7 +350,7 @@ Expires: 0
 Pragma: no-cache
 </code></pre><p>要注意的是经常遇到的命令<code>Cache-Control: private</code>在共享计算机的环境中不能被认为是安全的，因为它允许浏览器去存储这些元素到他的缓存里面。</p>
 <h3 id="ETag"><a href="#ETag" class="headerlink" title="ETag"></a>ETag</h3><p><code>Entity Tag</code>（缩写<code>ETag</code>）头部是作缓存用途的，服务器使用特殊的算法为它提供的每个文件版本计算一个单独的<code>ETag</code>，浏览器然后能够请求服务器查看是否该<code>ETag</code>文件仍然可用，如果可用，服务器返回一个<code>304</code>状态码给浏览器，让它使用本地缓存的版本，否则服务器发送完整的资源和<code>200</code>状态码。</p>
-<p>虽然这是一个有用的头部，你会发现有时会在漏洞相关的文章或报告对它的引用。问题是<code>Apache</code>的某些版本（2.3.14之前的版本中）用于披露对于在其默认的配置提供服务的文件索引节点。索引节点可用于进一步的攻击，例如通过网络文件系统（<code>NFS</code>），使用这些<code>INode</code>节点来创建文件句柄。有问题的默认配置已经在最近版本的<code>Apache</code>得到了纠正，但是你扔应该确保在<code>httpd.conf</code>里你相应的<code>FileETag</code>设置不包含<code>INode</code>属性。下面这行是好的设置：</p>
+<p>虽然这是一个有用的头部，你会发现有时会在漏洞相关的文章或报告对它的引用。问题是<code>Apache</code>的某些版本（2.3.14之前的版本中）用于披露对于在其默认的配置提供服务的文件索引节点。索引节点可用于进一步的攻击，例如通过网络文件系统（<code>NFS</code>），使用这些<code>INode</code>节点来创建文件句柄。有问题的默认配置已经在最近版本的<code>Apache</code>得到了纠正，但是你扔应该确保在<code>httpd.conf</code>里你相应的<code>FileETag</code>设置不包含<code>INode</code>属性。下面这行是好的设置：</p>
 <pre><code>FileETag MTime Size
 </code></pre><p>下面这行不是：</p>
 <pre><code>FileETag INode MTime Size
@@ -375,7 +382,7 @@ Disallow: /
 <p>要更详细的了解关于如何使用<code>IIS</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders" target="_blank" rel="external">页面</a></p>
 <h3 id="Lighttpd"><a href="#Lighttpd" class="headerlink" title="Lighttpd"></a>Lighttpd</h3><p>对于<code>Lighttpd</code>推荐使用模块<code>mod_setenvs</code>去控制<code>apache</code>头部，命令<code>setenv.add-response-header</code>能够被置于配置文件的任何地方，比如：</p>
 <pre><code>setenv.add-response-header = (
-  &quot;X-XSS-Protection&quot; =&gt; &quot;1; mode=Block&quot; 
+  &quot;X-XSS-Protection&quot; =&gt; &quot;1; mode=Block&quot;
 )
 </code></pre><p>要更详细的了解关于如何使用<code>Lighttpd</code>设置<code>HTTP</code>头的指导请参考这个<a href="https://redmine.lighttpd.net/projects/1/wiki/Docs_ModSetEnv" target="_blank" rel="external">页面</a></p>
 <h3 id="NGINX"><a href="#NGINX" class="headerlink" title="NGINX"></a>NGINX</h3><p>对于<code>NGINX</code>推荐使用模块<code>ngx_http_headers_module</code>去控制<code>HTTP</code>头，命令<code>add_header</code>能够被置于配置文件中合适的位置，比如：</p>
@@ -472,7 +479,7 @@ Disallow: /
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2016/05/23/The-Security-of-HTTP-Headers/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2016/05/23/The-Security-of-HTTP-Headers/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -511,7 +518,7 @@ Disallow: /
   
   <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="The-Security-of-HTTP-Headers" data-title="The Security of HTTP Headers" data-url="http://yoursite.com/2016/05/23/The-Security-of-HTTP-Headers/"></div>
+	<div class="ds-thread" data-thread-key="The-Security-of-HTTP-Headers" data-title="The Security of HTTP Headers" data-url="http://wismartzy.github.io/2016/05/23/The-Security-of-HTTP-Headers/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -577,8 +584,6 @@ Disallow: /
       
     
       
-      
-      
     
       
       
@@ -590,15 +595,13 @@ Disallow: /
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -685,18 +688,6 @@ Disallow: /
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://lvwei.me/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>呆子不开口</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     

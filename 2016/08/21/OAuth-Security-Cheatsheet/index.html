@@ -5,34 +5,34 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://wismartzy.github.io">
   <title>OAuth Security Cheatsheet | Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
 CSRF防护初始请求/connect/provider的时候，总是使用和需要state参数，不允许动态的redirect_uri，默认不允许response_type">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OAuth Security Cheatsheet">
-<meta property="og:url" content="http://yoursite.com/2016/08/21/OAuth-Security-Cheatsheet/index.html">
+<meta property="og:url" content="http://wismartzy.github.io/2016/08/21/OAuth-Security-Cheatsheet/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
 CSRF防护初始请求/connect/provider的时候，总是使用和需要state参数，不允许动态的redirect_uri，默认不允许response_type">
-<meta property="og:image" content="http://yoursite.com/images/oath-1.png">
-<meta property="og:image" content="http://yoursite.com/images/oath-2.png">
-<meta property="og:image" content="http://yoursite.com/images/oath-21.png">
-<meta property="og:image" content="http://yoursite.com/images/auth-3.png">
-<meta property="og:image" content="http://yoursite.com/images/auth-4.png">
-<meta property="og:image" content="http://yoursite.com/images/auth-5.png">
-<meta property="og:updated_time" content="2017-01-09T15:36:53.000Z">
+<meta property="og:image" content="http://wismartzy.github.io/images/oath-1.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/oath-2.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/oath-21.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/auth-3.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/auth-4.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/auth-5.png">
+<meta property="og:updated_time" content="2017-03-19T06:32:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth Security Cheatsheet">
 <meta name="twitter:description" content="State-Of-The-Art OAuth2 Homakov Edition考虑到官方OAuth2规范的脆弱性以及易受攻击的服务提供商和客户端的集成数，有了满足secure-by-default原则的OAuth版本-Homakov
 CSRF防护初始请求/connect/provider的时候，总是使用和需要state参数，不允许动态的redirect_uri，默认不允许response_type">
-<meta name="twitter:image" content="http://yoursite.com/images/oath-1.png">
+<meta name="twitter:image" content="http://wismartzy.github.io/images/oath-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.2d7529.css">
   <style type="text/css">
@@ -56,7 +56,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="null" class="js-avatar">
+			<img src="/images/wismartzy.png" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Wismartzy</a></h1>
@@ -79,8 +79,6 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -90,7 +88,11 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 		<nav class="header-nav">
 			<div class="social">
 				
+					<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+		        
 					<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 		        
 			</div>
 		</nav>
@@ -108,7 +110,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="null" class="js-avatar">
+				<img src="/images/wismartzy.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Wismartzy</h1>
@@ -125,7 +127,11 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 			<nav class="header-nav">
 				<div class="social">
 					
+						<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+			        
 						<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 			        
 				</div>
 			</nav>
@@ -173,6 +179,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
 <p>CSRF防护初始请求<code>/connect/provider</code>的时候，总是使用和需要<code>state</code>参数，不允许动态的<code>redirect_uri</code>，默认不允许<code>response_type=hash</code>（以前是<code>token</code>），废弃<code>refresh_token</code>和<code>token</code>，而不是用<code>appsecret_proof</code>去认证每个<code>access_token</code>，仔细检查用户想要连接的服务提供商账户，<code>access_token</code>永不过期（把它当做公开的<code>user_id</code>）</p>
 <p>1、用户点击连接服务提供商的按钮，无论是发起一个<code>POST</code>表单提交（受<code>CSRF Token</code>防护的）到<code>/connect/provider_name</code>，还是由<code>GET</code>导航到<code>/connect/provider?csrf_token=TOKEN</code>，初始步骤一定要受<code>CSRF</code>防护，它不应该被来自其他源的连接触发，必须有来自于用户的明确的确认。</p>
 <p>2、在服务端<code>/connect/provider</code>客户端的控制器应该确认<code>csrf_token</code>和来自于<code>session</code>里的<code>token</code>一致，然后生成<code>state token</code>（CSRF Token，确保OAuth流程完整性），并命名为<code>&lt;provider&gt;-state</code>存储在<code>session</code>里。然后跳转到<code>provider.com/oauth/authorize?client_id=CLIENT_ID&amp;redirect_uri=CLIENT/callback&amp;state=STAT</code>，<code>scope</code>参数是可选的（应该仅仅允许被认证过的客户端接触一些关键的作用域）</p>
+<a id="more"></a>
 <p>3、服务提供商检查<code>redirect_uri</code>是否在重定向URI的白名单中（主机，路径，查询参数，<code>hash</code>必须是静态的）。每一个<code>redirect_uri</code>它不能是一个参数，还必须要有响应的返回类型，默认是<code>query</code>，移动app是<code>hash</code>。<code>state</code>参数必须由服务供应商要求（尽管规范上说该参数是可选的—对大多数开发者来说这就是不需要的代名词）。</p>
 <p>4、用户在服务提供商域下看到同意/拒绝按钮，在点击同意按钮后受<code>CSRF Token</code>防护的<code>POST</code>表单被提交到相同的<code>URL</code>（不要像<code>Outlook</code>或<code>Doorkeeper</code>或者在授权的时候<code>CSRF</code>攻击服务提供商）。</p>
 <p>5、<code>response_type</code>为<code>query</code>时候重定向到<code>CLIENT/callback?access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在中央服务器，并且每个API请求用<code>appsecret_proof</code>签名），<code>response_type</code>为<code>hash</code>的时候会重定向到<code>CLIENT/callback#access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在本地应用里，并不需要<code>appsecret_proof</code>）。这两种情况下客户端都一定要检查<code>STATE</code>是否等于来自<code>season</code>的<code>provider-state</code>。</p>
@@ -316,7 +323,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2016/08/21/OAuth-Security-Cheatsheet/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2016/08/21/OAuth-Security-Cheatsheet/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -355,7 +362,7 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
   
   <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="OAuth-Security-Cheatsheet" data-title="OAuth Security Cheatsheet" data-url="http://yoursite.com/2016/08/21/OAuth-Security-Cheatsheet/"></div>
+	<div class="ds-thread" data-thread-key="OAuth-Security-Cheatsheet" data-title="OAuth Security Cheatsheet" data-url="http://wismartzy.github.io/2016/08/21/OAuth-Security-Cheatsheet/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -421,8 +428,6 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
       
     
       
-      
-      
     
       
       
@@ -434,15 +439,13 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -529,18 +532,6 @@ CSRF防护初始请求/connect/provider的时候，总是使用和需要state参
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://lvwei.me/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>呆子不开口</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     

