@@ -90,11 +90,12 @@
     <link href="http://wismartzy.github.io/2016/11/21/fu-wen-ben-xss/"/>
     <id>http://wismartzy.github.io/2016/11/21/fu-wen-ben-xss/</id>
     <published>2016-11-21T14:52:03.000Z</published>
-    <updated>2017-03-21T15:01:24.000Z</updated>
+    <updated>2017-03-21T15:04:01.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>内部一次渗透测试中发现页面提供了富文本输入功能，经过简单的测试发现存在 XSS 问题，这里把考虑的防御方案记录一下。</p>
 <h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p>富文本的情况和我们平常遇到的一些 XSS 案例不一样，不是简单的在输出位置做针对性过滤就行的，因为既然提供富文本编辑器，那么肯定是内容需要支持某些标签输入输出，如果 XSS FILTER 直接干掉了标签，会影响到内容的展示，所以有必要对富文本情况拎出来单独处理。</p>
 <p>有人说用黑名单处理，过滤掉那些危险的标签，那么你会掉进一个有无限 case 要处理的坑里，暂且不说能把现有的危险标签罗列完整，H5 出来后新增的那些标签特性简直就是噩梦。另外，就算考虑再周到，也要知道这个世界上还有一款浏览器叫做 IE，奇葩的解析方式简直让人防不胜防，完全不按套路出牌。</p>
+<a id="more"></a>
 <h1 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h1><p>既然黑名单不适合，那么自然就想到白名单的方式，这是目前来说比较好的防御富文本 XSS 方式。具体工作分以下几个方面：</p>
 <ul>
 <li><p>确定白名单</p>
@@ -123,6 +124,8 @@
     <summary type="html">
     
       &lt;h1 id=&quot;0x01&quot;&gt;&lt;a href=&quot;#0x01&quot; class=&quot;headerlink&quot; title=&quot;0x01&quot;&gt;&lt;/a&gt;0x01&lt;/h1&gt;&lt;p&gt;内部一次渗透测试中发现页面提供了富文本输入功能，经过简单的测试发现存在 XSS 问题，这里把考虑的防御方案记录一下。&lt;/p&gt;
+&lt;h1 id=&quot;0x02&quot;&gt;&lt;a href=&quot;#0x02&quot; class=&quot;headerlink&quot; title=&quot;0x02&quot;&gt;&lt;/a&gt;0x02&lt;/h1&gt;&lt;p&gt;富文本的情况和我们平常遇到的一些 XSS 案例不一样，不是简单的在输出位置做针对性过滤就行的，因为既然提供富文本编辑器，那么肯定是内容需要支持某些标签输入输出，如果 XSS FILTER 直接干掉了标签，会影响到内容的展示，所以有必要对富文本情况拎出来单独处理。&lt;/p&gt;
+&lt;p&gt;有人说用黑名单处理，过滤掉那些危险的标签，那么你会掉进一个有无限 case 要处理的坑里，暂且不说能把现有的危险标签罗列完整，H5 出来后新增的那些标签特性简直就是噩梦。另外，就算考虑再周到，也要知道这个世界上还有一款浏览器叫做 IE，奇葩的解析方式简直让人防不胜防，完全不按套路出牌。&lt;/p&gt;
     
     </summary>
     
