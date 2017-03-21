@@ -146,6 +146,77 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-zenphoto-1-4-8-second-order-sql-injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">ZenPhoto 1.4.8 二阶 SQL 注入漏洞</a>
+    </h1>
+  
+
+        
+        <a href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/" class="archive-article-date">
+  	<time datetime="2016-06-30T07:01:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>来源：<a href="https://www.exploit-db.com/exploits/37602/">https://www.exploit-db.com/exploits/37602/</a></p>
+</blockquote>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>ZenPhoto 是一款小巧的相册软件，具备 RSS 输出、FTP 上传方式、Tag、评论回复等功能。基于 PHP+MySQL 环境，它的主旨是简单，这也就是说不管是用户还是网站管理员，都可以很容易的使用它。</p>
+<p>关于二阶注入，上一篇文章有写过<a href="http://wismartzy.github.io/2016/06/22/Second-Order-SQL-Injection/">Second Order SQL Injection</a></p>
+<h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>访问</p>
+<pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-options.php?saved&amp;tab=gallery
+</code></pre><p>找到<code>Sort gallery by</code>字段，设置为<code>Custom</code>，并在<code>custom filed</code>字段后面输入<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，最后点<code>Apply</code></p>
+        
+          <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-Second-Order-SQL-Injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -669,15 +740,19 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">OAuth</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">运维</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
               </li>
              
               <li class="article-tag-list-item">

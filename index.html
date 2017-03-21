@@ -230,6 +230,97 @@
 
 
   
+    <article id="post-fu-wen-ben-xss" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/21/fu-wen-ben-xss/">富文本 xss 问题</a>
+    </h1>
+  
+
+        
+        <a href="/2016/11/21/fu-wen-ben-xss/" class="archive-article-date">
+  	<time datetime="2016-11-21T14:52:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>内部一次渗透测试中发现页面提供了富文本输入功能，经过简单的测试发现存在 XSS 问题，这里把考虑的防御方案记录一下。</p>
+<h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p>富文本的情况和我们平常遇到的一些 XSS 案例不一样，不是简单的在输出位置做针对性过滤就行的，因为既然提供富文本编辑器，那么肯定是内容需要支持某些标签输入输出，如果 XSS FILTER 直接干掉了标签，会影响到内容的展示，所以有必要对富文本情况拎出来单独处理。</p>
+<p>有人说用黑名单处理，过滤掉那些危险的标签，那么你会掉进一个有无限 case 要处理的坑里，暂且不说能把现有的危险标签罗列完整，H5 出来后新增的那些标签特性简直就是噩梦。另外，就算考虑再周到，也要知道这个世界上还有一款浏览器叫做 IE，奇葩的解析方式简直让人防不胜防，完全不按套路出牌。</p>
+<h1 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h1><p>既然黑名单不适合，那么自然就想到白名单的方式，这是目前来说比较好的防御富文本 XSS 方式。具体工作分以下几个方面：</p>
+<ul>
+<li><p>确定白名单</p>
+</li>
+<li><p>解析 DOM 树，非白名单直接丢弃</p>
+</li>
+</ul>
+<p>比如该处内容用不到 svg 标签，但要用 img 标签，那么可以把 img 标签加入白名单，那么在 DOM 解析结束时候就会丢弃所有非 img 标签的 html 代码。除了标签，还需要注意到标签属性，比如我在白名单标签 img 里面插入这样的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img src=“<span class="comment">#” onerror=alert(/xss/)&gt;</span></div></pre></td></tr></table></figure>
+<p>这就造成了 XSS 问题，所以针对属性也要做白名单处理，当然，也可以对属性做过滤转义，尤其是单、双引号，括号等控制字符。</p>
+<ul>
+<li>解析属性位置</li>
+</ul>
+<p>有两种情况，属性值位置出现在 href 这类位置的时候，其实可以利用 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascript:alert(<span class="number">1</span>)&gt;</div></pre></td></tr></table></figure>
+<p>这样构造 XSS payload，那么这个时候应该解析出协议，判断协议是否在白名单内，协议在白名单内的情况下再判断域名是否在白名单内，符合则继续渲染，否则清空该属性值。</p>
+<p>另外一种是属性位置在 CSS 位置，这里的 XSS 也很常见，一般通过检测是否含有敏感词，比如 javascript、background、eval 等，一般富文本里不会这么写的，遇到这样的就可以清空属性了，由于 CSS 输出在 HTML 环境，所以还得考虑 payload 被编码的情况，比如 &amp;# 这样的字符实体编码，另外据了解，IE 这货居然还支持 CSS 位置解析 Unicode 编码，表示摊手。</p>
+<ul>
+<li>flash xss 处理</li>
+</ul>
+<p>这个参考网上解决方案，比较粗暴，我们没用到 flash ，所以统一设置：allowScriptAccess 设置为 never，allowNetworking 设置为 none，下面是两参数的解释：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">allowScriptAccess用来控制flash与html的通讯，可选的值为：</div><div class="line">	always <span class="comment">//对与html的通讯也就是执行javascript不做任何限制</span></div><div class="line">	sameDomain <span class="comment">//只允许来自于本域的flash与html通讯，这是默认值</span></div><div class="line">	never <span class="comment">//绝对禁止flash与页面的通讯</span></div><div class="line"></div><div class="line">allowNetworking <span class="comment">//用来控制flash与外部的网络通讯，可选的值为：</span></div><div class="line">	all <span class="comment">//允许使用所有的网络通讯，也是默认值</span></div><div class="line">	internal <span class="comment">//flash不能与浏览器通讯如navigateToURL，但是可以调用其他的API</span></div><div class="line">	none <span class="comment">//禁止任何的网络通讯</span></div></pre></td></tr></table></figure>
+<h1 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h1><p>富文本防御 XSS 的方案大致就这样，自己如果不想实现这样一个白名单过滤器的话，可以参考网上的 <a href="http://htmlpurifier.org/" target="_blank" rel="external">HTML Purifie</a>，PHP 实现的一个 XSS 过滤器，使用起来比较方便。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">xss</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/11/21/fu-wen-ben-xss/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-how-codeigniter-do-CSRF-protection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -651,77 +742,6 @@
 
 
   
-    <article id="post-zenphoto-1-4-8-second-order-sql-injection" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">ZenPhoto 1.4.8 二阶 SQL 注入漏洞</a>
-    </h1>
-  
-
-        
-        <a href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/" class="archive-article-date">
-  	<time datetime="2016-06-30T07:01:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>来源：<a href="https://www.exploit-db.com/exploits/37602/">https://www.exploit-db.com/exploits/37602/</a></p>
-</blockquote>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>ZenPhoto 是一款小巧的相册软件，具备 RSS 输出、FTP 上传方式、Tag、评论回复等功能。基于 PHP+MySQL 环境，它的主旨是简单，这也就是说不管是用户还是网站管理员，都可以很容易的使用它。</p>
-<p>关于二阶注入，上一篇文章有写过<a href="http://wismartzy.github.io/2016/06/22/Second-Order-SQL-Injection/">Second Order SQL Injection</a></p>
-<h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>访问</p>
-<pre><code>http://localhost:8888/zenphoto-zenphoto-1.4.8/zp-core/admin-options.php?saved&amp;tab=gallery
-</code></pre><p>找到<code>Sort gallery by</code>字段，设置为<code>Custom</code>，并在<code>custom filed</code>字段后面输入<code>id,extractvalue(0x0a,concat(0x0a,(select version())))%23</code>，最后点<code>Apply</code></p>
-        
-          <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">安全</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/06/30/zenphoto-1-4-8-second-order-sql-injection/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -811,15 +831,19 @@
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">OAuth</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">运维</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">xss</a>
               </li>
              
               <li class="article-tag-list-item">

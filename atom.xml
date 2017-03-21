@@ -86,6 +86,54 @@
   </entry>
   
   <entry>
+    <title>富文本 xss 问题</title>
+    <link href="http://wismartzy.github.io/2016/11/21/fu-wen-ben-xss/"/>
+    <id>http://wismartzy.github.io/2016/11/21/fu-wen-ben-xss/</id>
+    <published>2016-11-21T14:52:03.000Z</published>
+    <updated>2017-03-21T15:01:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h1><p>内部一次渗透测试中发现页面提供了富文本输入功能，经过简单的测试发现存在 XSS 问题，这里把考虑的防御方案记录一下。</p>
+<h1 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h1><p>富文本的情况和我们平常遇到的一些 XSS 案例不一样，不是简单的在输出位置做针对性过滤就行的，因为既然提供富文本编辑器，那么肯定是内容需要支持某些标签输入输出，如果 XSS FILTER 直接干掉了标签，会影响到内容的展示，所以有必要对富文本情况拎出来单独处理。</p>
+<p>有人说用黑名单处理，过滤掉那些危险的标签，那么你会掉进一个有无限 case 要处理的坑里，暂且不说能把现有的危险标签罗列完整，H5 出来后新增的那些标签特性简直就是噩梦。另外，就算考虑再周到，也要知道这个世界上还有一款浏览器叫做 IE，奇葩的解析方式简直让人防不胜防，完全不按套路出牌。</p>
+<h1 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h1><p>既然黑名单不适合，那么自然就想到白名单的方式，这是目前来说比较好的防御富文本 XSS 方式。具体工作分以下几个方面：</p>
+<ul>
+<li><p>确定白名单</p>
+</li>
+<li><p>解析 DOM 树，非白名单直接丢弃</p>
+</li>
+</ul>
+<p>比如该处内容用不到 svg 标签，但要用 img 标签，那么可以把 img 标签加入白名单，那么在 DOM 解析结束时候就会丢弃所有非 img 标签的 html 代码。除了标签，还需要注意到标签属性，比如我在白名单标签 img 里面插入这样的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img src=“<span class="comment">#” onerror=alert(/xss/)&gt;</span></div></pre></td></tr></table></figure>
+<p>这就造成了 XSS 问题，所以针对属性也要做白名单处理，当然，也可以对属性做过滤转义，尤其是单、双引号，括号等控制字符。</p>
+<ul>
+<li>解析属性位置</li>
+</ul>
+<p>有两种情况，属性值位置出现在 href 这类位置的时候，其实可以利用 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href=javascript:alert(<span class="number">1</span>)&gt;</div></pre></td></tr></table></figure>
+<p>这样构造 XSS payload，那么这个时候应该解析出协议，判断协议是否在白名单内，协议在白名单内的情况下再判断域名是否在白名单内，符合则继续渲染，否则清空该属性值。</p>
+<p>另外一种是属性位置在 CSS 位置，这里的 XSS 也很常见，一般通过检测是否含有敏感词，比如 javascript、background、eval 等，一般富文本里不会这么写的，遇到这样的就可以清空属性了，由于 CSS 输出在 HTML 环境，所以还得考虑 payload 被编码的情况，比如 &amp;# 这样的字符实体编码，另外据了解，IE 这货居然还支持 CSS 位置解析 Unicode 编码，表示摊手。</p>
+<ul>
+<li>flash xss 处理</li>
+</ul>
+<p>这个参考网上解决方案，比较粗暴，我们没用到 flash ，所以统一设置：allowScriptAccess 设置为 never，allowNetworking 设置为 none，下面是两参数的解释：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">allowScriptAccess用来控制flash与html的通讯，可选的值为：</div><div class="line">	always <span class="comment">//对与html的通讯也就是执行javascript不做任何限制</span></div><div class="line">	sameDomain <span class="comment">//只允许来自于本域的flash与html通讯，这是默认值</span></div><div class="line">	never <span class="comment">//绝对禁止flash与页面的通讯</span></div><div class="line"></div><div class="line">allowNetworking <span class="comment">//用来控制flash与外部的网络通讯，可选的值为：</span></div><div class="line">	all <span class="comment">//允许使用所有的网络通讯，也是默认值</span></div><div class="line">	internal <span class="comment">//flash不能与浏览器通讯如navigateToURL，但是可以调用其他的API</span></div><div class="line">	none <span class="comment">//禁止任何的网络通讯</span></div></pre></td></tr></table></figure>
+<h1 id="0x04"><a href="#0x04" class="headerlink" title="0x04"></a>0x04</h1><p>富文本防御 XSS 的方案大致就这样，自己如果不想实现这样一个白名单过滤器的话，可以参考网上的 <a href="http://htmlpurifier.org/" target="_blank" rel="external">HTML Purifie</a>，PHP 实现的一个 XSS 过滤器，使用起来比较方便。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;0x01&quot;&gt;&lt;a href=&quot;#0x01&quot; class=&quot;headerlink&quot; title=&quot;0x01&quot;&gt;&lt;/a&gt;0x01&lt;/h1&gt;&lt;p&gt;内部一次渗透测试中发现页面提供了富文本输入功能，经过简单的测试发现存在 XSS 问题，这里把考虑的防御方案记录一下。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="安全" scheme="http://wismartzy.github.io/tags/%E5%AE%89%E5%85%A8/"/>
+    
+      <category term="xss" scheme="http://wismartzy.github.io/tags/xss/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Codeigniter 是怎么做 CSRF 防御的</title>
     <link href="http://wismartzy.github.io/2016/09/27/how-codeigniter-do-CSRF-protection/"/>
     <id>http://wismartzy.github.io/2016/09/27/how-codeigniter-do-CSRF-protection/</id>
